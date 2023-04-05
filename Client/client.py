@@ -5,7 +5,6 @@ try:
     from flask import Flask, render_template, redirect, url_for, request, Markup
     from dotenv import load_dotenv
     from flask_bootstrap import Bootstrap
-    from form.InputPromptForm import InputPromptForm
 except Exception:
     # import all package
     os.system("pip install -r requirements.txt")
@@ -13,7 +12,6 @@ except Exception:
     from flask import Flask, render_template, redirect, url_for, request, Markup
     from dotenv import load_dotenv
     from flask_bootstrap import Bootstrap
-    from form.InputPromptForm import InputPromptForm
 
 
 load_dotenv()  # take environment variables from .env.
