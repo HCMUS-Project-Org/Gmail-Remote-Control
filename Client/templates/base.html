@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Email Remote Control</title>
+
+		<!-- bootstrap 5 -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+		/>
+
+		<!-- style -->
+		<link rel="stylesheet" href="/static/style.css" />
+		<link rel="stylesheet" href="/static/color.css" />
+		<link rel="stylesheet" href="/static/scrollbar.css" />
+		{% block style %}{% endblock %}
+
+		<!-- icon -->
+		<!-- <link rel="icon" href="/static/assets/logo/openai-logo.png" /> -->
+	</head>
+
+	<body>
+		<div class="container shadow-lg bg-yellow rounded position-relative">
+			<!-- begin ribbon bar -->
+			<div class="ribbon-bar bg-light position-relative top-0">
+				<div
+					class="group-action-dot d-flex align-items-center gap-2 position-absolute start-0 ms-3"
+				>
+					<span class="action-dot dot-red"></span>
+					<span class="action-dot dot-yellow"></span>
+					<span class="action-dot dot-green"></span>
+				</div>
+				<div
+					class="ribbon-title h-100 d-flex flex-column align-items-center justify-content-center"
+				>
+					{% block email %} {% endblock %}
+				</div>
+			</div>
+			<!-- end ribbon bar -->
+
+			<div class="w-100 d-flex justify-content-center align-items-center">
+				{% block body %}{% endblock %}
+			</div>
+		</div>
+		<div
+			class="group-info text-center pb-2 position-fixed bottom-0 start-0 w-100"
+		>
+			Made by
+			<a href="https://github.com/QuanBlue" target="_blank">Thanh Quan</a
+			>&nbsp;+&nbsp;
+			<a href="https://github.com/To-Gia-Hao" target="_blank">Gia Hao</a
+			>&nbsp;+&nbsp;
+			<a href="https://github.com/chivanz128" target="_blank">Chi Van</a>
+		</div>
+	</body>
+
+	<script
+		src="https://kit.fontawesome.com/c67e626608.js"
+		crossorigin="anonymous"
+	></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"
+	></script>
+	{% block script %}{% endblock %}
+</html>

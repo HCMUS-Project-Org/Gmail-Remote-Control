@@ -1,0 +1,41 @@
+/* copntainer color */
+.bg-yellow {
+	background-color: #eab13d;
+}
+
+.bg-dark-yellow {
+	background-color: #b97f0b;
+}
+
+.bg-black {
+	background-color: #011111;
+}
+
+.bg-light-black {
+	background-color: #333939;
+}
+
+.bg-light {
+	background-color: #effaff;
+}
+
+/* text */
+.text-light-black {
+	color: #333939;
+}
+
+/* ribbon dot */
+.dot-red {
+	background-color: #f85a5b;
+}
+.dot-yellow {
+	background-color: #f5ce5c;
+}
+.dot-green {
+	background-color: #1fd31c;
+}
+
+/* action button */
+.action-disconnect {
+	background-color: #ec3f3f;
+}

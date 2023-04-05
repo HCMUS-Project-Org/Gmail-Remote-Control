@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+<!-- ------------------------------ -->
+{% block style %}
+<link rel="stylesheet" href="/static/login_page.css" />
+{% endblock %}
+
+<!-- ------------------------------ -->
+{% block email %} Email Remote Control {% endblock %}
+
+<!-- ------------------------------ -->
+{% block body %}
+<div class="w-100">
+	<!-- begin background -->
+	<div class="login-bg w-100 d-flex justify-content-center align-items-center">
+		<img
+			class="bg-computer"
+			src="../static/assets/setComputer.png"
+			alt="bg_computer"
+		/>
+	</div>
+	<!-- end background -->
+
+	<!-- begin login form -->
+	<div
+		class="d-flex flex-column justify-content-center align-items-center gap-4"
+	>
+		<h1>Login</h1>
+		<form method="post">
+			<button
+				class="login-btn d-flex justify-content-between align-items-center"
+				type="submit"
+			>
+				<img src="../static/assets/icons/google.png" alt="google icon" />
+				<div class="w-100 pe-2">
+					<span> Login with Google </span>
+				</div>
+			</button>
+			<div class="text-center text-danger">{{error}}</div>
+		</form>
+	</div>
+	<!-- end login form -->
+</div>
+{% endblock %}

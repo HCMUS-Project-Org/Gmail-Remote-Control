@@ -1,0 +1,77 @@
+.background {
+	width: 100%;
+	height: 600px !important;
+	background-image: url("./assets/background/bg_light.png");
+	background-size: 400px;
+}
+
+.action-board {
+	height: 450px;
+	width: 100%;
+	background-color: #011111;
+	border-radius: 0px 0px 50px 50px;
+}
+.action-side > button,
+.extend-command button {
+	width: 150px;
+	height: 60px;
+	background-color: #f1d7a3;
+	border-radius: 20px;
+	border-width: 0px;
+}
+
+.action-side > button:hover,
+.extend-command button:hover {
+	background-color: #eab13d;
+}
+
+.action-side > button.selected,
+.extend-command button.selected {
+	background-color: #eab13d;
+	border: 10px solid #b97f0b;
+	font-weight: bold;
+}
+
+.command-btn {
+	height: 100px;
+}
+
+.command-btn button {
+	font-size: 20px;
+	font-weight: bold;
+	border-width: 0px;
+	border-radius: 20px;
+	padding: 15px 30px;
+}
+
+.extend-command-container {
+	left: 165px;
+}
+
+.extend-command {
+	width: auto;
+	border-radius: 20px;
+	background-color: #7b7b7b;
+	/* padding: 15px; */
+}
+
+.disconnect-btn:hover,
+.cancel-btn:hover,
+.send-btn:hover {
+	filter: brightness(90%);
+	transform: scale(1.01);
+	transition: 0.2s;
+}
+
+.email-from,
+.email-body {
+	background-color: #333939;
+	border: 5px solid #eab13d;
+	color: white;
+	padding: 10px;
+	margin: 0px !important;
+}
+
+.email-body {
+	border-radius: 0px 0px 40px 0px;
+}

@@ -1,0 +1,79 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background-image: linear-gradient(to bottom right, #011111, #eab13d);
+	font-size: 16px;
+	width: 90vw;
+	height: 94vh;
+	margin: auto;
+	padding: auto;
+}
+
+.container {
+	height: 600px !important;
+	width: 850px !important;
+	padding: 0px;
+	margin-top: 50px !important;
+	overflow: hidden;
+}
+
+.ribbon-bar {
+	height: 40px;
+	width: 100%;
+	background: white;
+}
+
+.ribbon-bar .action-dot {
+	height: 15px !important;
+	width: 15px !important;
+	border-radius: 50%;
+}
+
+.ribbon-title {
+	font-size: 14px;
+	line-height: 15px;
+}
+
+.ribbon-title span {
+	font-size: 12px;
+	color: gray;
+}
+
+.group-action-dot {
+	width: 70px !important;
+	height: 100% !important;
+}
+
+.group-info {
+	color: black;
+}
+
+.group-info a {
+	text-decoration: none;
+	color: rgb(58, 58, 255);
+}
+
+.group-info a:hover {
+	text-decoration: underline;
+}
+
+.rounded {
+	border-radius: 10px !important;
+}
+
+.row {
+	margin: 0px;
+}
+
+h1 {
+	font-size: 65px;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 50px;
+	font-weight: bold;
+}

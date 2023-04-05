@@ -1,0 +1,21 @@
+.computer-img {
+	width: 120px;
+}
+
+.bg-theme {
+	width: 150px;
+}
+.original-mail {
+	font-size: 12px;
+	color: gray;
+}
+
+.ok-btn {
+	line-height: 20px;
+}
+
+.detail-info {
+	color: gray;
+	font-size: 14px;
+	font-weight: 400;
+}

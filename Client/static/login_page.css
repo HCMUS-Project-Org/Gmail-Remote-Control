@@ -1,0 +1,39 @@
+.login-bg {
+	height: 340px;
+	width: 100%;
+	background-image: url("./assets/background/bg_dark.png");
+	background-size: 400px;
+}
+
+.bg-computer {
+	width: 400px;
+}
+
+.login-btn {
+	width: 300px;
+	height: 70px;
+	background-color: #ea4335;
+	border-radius: 40px;
+	border-width: 0px;
+}
+
+.login-btn:hover {
+	background-color: #b83024;
+}
+
+.login-btn > img {
+	width: 50px;
+	background-color: white;
+	border-radius: 50%;
+	padding: 7px;
+	margin: auto 7px !important;
+}
+
+.login-btn:hover > img {
+	background-color: rgb(215, 215, 215);
+}
+
+.login-btn span {
+	color: white;
+	font-size: 22px;
+}

@@ -1,0 +1,8 @@
+aiohttp==3.8.4
+Flask==2.2.3
+Flask-Bootstrap==3.3.7.1
+Flask-WTF==1.1.1
+openai==0.26.5
+WTForm==1.0
+WTForms==3.0.1
+

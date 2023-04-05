@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+<!-- ------------------------------ -->
+{% block style %}
+<link rel="stylesheet" href="/static/control.css" />
+<link rel="stylesheet" href="/static/review.css" />
+{% endblock %}
+
+<!-- ------------------------------ -->
+{% block email %} Email Remote Control <br />
+<span>{{client_email}}</span>
+{% endblock %}
+
+<!-- ------------------------------ -->
+{% block body %}
+<div class="background">
+	<div class="action-board d-flex position-relative">
+		<div class="bg-theme text-center mx-3 my-4">
+			<h2>Server Reply</h2>
+			<img
+				class="computer-img"
+				src="../static/assets/computer.png"
+				alt="bg_computer"
+			/>
+			<div class="original-mail text-center">
+				Open original email
+				<a href="{{original_email_url}}" target="_blank">here!</a>
+			</div>
+		</div>
+		<div
+			class="w-100 d-flex flex-column justify-content-center gap-2 px-3 my-3"
+		>
+			<div class="email-from">
+				<span class="fw-bold">From:&nbsp;</span>
+				<span>{{server_email}}</span>
+			</div>
+			<div class="email-body h-100">
+				<span class="fw-bold">Content:</span><br />
+				<span id="email_body"></span>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="command-btn d-flex align-items-center justify-content-between px-3"
+	>
+		<form action="/disconnect" method="POST">
+			<button class="disconnect-btn action-disconnect text-white">
+				<span>DISCONNECT&nbsp;</span>
+				<i class="fas fa-power-off"></i>
+			</button>
+		</form>
+
+		<form action="/another-request" method="POST">
+			<button class="send-btn bg-light-black text-white">
+				<div class="d-flex justify-content-center align-items-center">
+					<div class="ok-btn">
+						<div
+							class="d-flex justify-content-center align-items-center gap-2"
+						>
+							<span>OK</span>
+							<i class="far fa-thumbs-up"></i>
+						</div>
+						<span class="detail-info">Send other request</span>
+					</div>
+				</div>
+			</button>
+		</form>
+	</div>
+</div>
+{% endblock %} {% block script %}
+<script>
+	let list_command = [];
+	let extend_board_index = 0;
+	for (let i = 0; i < 5; i++) {
+		list_command.push([]);
+	}
+
+	let command_tree = [
+		{
+			command: "Key logger",
+			child_command: [
+				{
+					command: "Hook",
+					child_command: [],
+				},
+				{
+					command: "Print",
+					child_command: [],
+				},
+				{
+					command: "Lock",
+					child_command: [],
+				},
+			],
+		},
+		{
+			command: "Capture Screen",
+			child_command: [],
+		},
+		{
+			command: "MAC address",
+			child_command: [],
+		},
+		{
+			command: "Shutdown/Logout",
+
+			child_command: [
+				{
+					command: "Shutdown",
+					child_command: [],
+				},
+				{
+					command: "Logout",
+					child_command: [],
+				},
+			],
+		},
+
+		{
+			command: "Application/Process",
+			child_command: [
+				{
+					command: "Application",
+					child_command: [],
+				},
+				{
+					command: "List",
+					child_command: [],
+				},
+				{
+					command: "Kill",
+					child_command: [],
+				},
+				{
+					command: "Clear",
+					child_command: [],
+				},
+				{
+					command: "Start",
+					child_command: [],
+				},
+			],
+		},
+	];
+
+	function ClearAllCommand() {
+		// update list command
+		list_command = [];
+
+		// update command button
+		let controlCommandBtn = document.getElementsByClassName(
+			"control-command-btn",
+		);
+		for (let i = 0; i < controlCommandBtn.length; i++) {
+			controlCommandBtn[i].className = "control-command-btn";
+		}
+
+		// update command board
+		let email_body = document.getElementById("email_body");
+		email_body.innerHTML = list_command.filter(Boolean).join("<br/>");
+	}
+
+	function UpdateExtendBoard(index) {
+		extend_board_index = index;
+		OpenExtendCommandBoard();
+	}
+
+	function CheckCommandExist(command) {
+		for (let i = 0; i < list_command.length; i++) {
+			for (let j = 0; j < list_command[i].length; j++)
+				if (list_command[i][j] == command) {
+					return true;
+				}
+		}
+
+		return false;
+	}
+
+	function CloseExtendCommandBoard() {
+		document
+			.getElementById("extend-command-container")
+			.classList.add("d-none");
+		for (let i = 0; i < command_tree.length; i++) {
+			group_command = document.getElementById(`group-command-${i}`);
+			if (group_command) {
+				group_command.className = "d-none";
+			}
+		}
+	}
+
+	function OpenExtendCommandBoard() {
+		index = extend_board_index;
+
+		document
+			.getElementById("extend-command-container")
+			.classList.remove("d-none");
+
+		for (let i = 0; i < command_tree.length; i++) {
+			group_command = document.getElementById(`group-command-${i}`);
+			parent_command = document.getElementById(`command-${index}`);
+
+			if (group_command) {
+				group_command.className =
+					index == i ? "d-flex flex-column gap-2 p-3" : "d-none";
+				// }
+			}
+		}
+	}
+
+	function AddCommand(in_command) {
+		console.log("======================");
+		command = in_command.split("_")[1];
+		index = in_command.split("_")[0];
+		parentIndex = index.split(".")[0];
+		childIndex = index.split(".")[1] ? index.split(".")[1] : null;
+
+		console.log("index:", index, " - type:", typeof index);
+		console.log("parent index:", parentIndex);
+		console.log("child index:", childIndex);
+
+		// update list_command
+		if (CheckCommandExist(command)) {
+			// remove command
+			if (childIndex) {
+				//is child command
+				console.log("remove - child command");
+				list_command[parentIndex][parseInt(childIndex) + 1] = null;
+
+				// remove parent if not pick any child
+				let clearParent = true;
+
+				for (let i = 1; i < list_command[parentIndex].length; i++) {
+					if (list_command[parentIndex][i]) {
+						clearParent = false;
+						break;
+					}
+				}
+				if (clearParent) {
+					list_command[parentIndex] = [];
+				}
+				console.log("clear parent: ", clearParent);
+			} //is parent command
+			else {
+				console.log("remove - parent command");
+				list_command[parentIndex] = [];
+			}
+		} else {
+			// add command
+			if (childIndex) {
+				//is child command
+				console.log("add - child command");
+				list_command[parentIndex][parseInt(childIndex) + 1] = [command];
+				list_command[parentIndex][0] = [command_tree[parentIndex].command];
+			} //is parent command
+			else {
+				console.log("add - parent command");
+				list_command[parentIndex][0] = [command];
+			}
+		}
+
+		// open extend command board if command has child command
+		OpenExtendCommandBoard(parentIndex);
+
+		// print selected command in command board
+		let email_body = document.getElementById("email_body");
+		let content = ``;
+		for (let i = 0; i < list_command.length; i++) {
+			if (list_command[i].length != 0) {
+				content += list_command[i].filter(Boolean).join(" - ");
+				content += "<br/>";
+			}
+		}
+		email_body.innerHTML = content;
+
+		// set selected
+		UpdateCommandBtnState();
+	}
+
+	function UpdateCommandBtnState() {
+		console.log("-----------------------");
+		for (let i = 0; i < command_tree.length; i++) {
+			for (let j = 0; j <= command_tree[i].child_command.length; j++) {
+				id = j == 0 ? `command-${i}` : `command-${i}.${j - 1}`;
+
+				try {
+					let selectedCommand = document.getElementById(id);
+
+					selectedCommand.className = list_command[i][j]
+						? "control-command-btn selected"
+						: "control-command-btn";
+				} catch (error) {}
+			}
+		}
+		console.log("list:", list_command);
+	}
+</script>
+{% endblock %}
