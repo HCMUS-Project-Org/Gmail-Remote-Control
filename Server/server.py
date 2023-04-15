@@ -4,11 +4,12 @@ import service.capture_webcam as cw
 import service.mac_address as mac
 import service.app_process as ap
 
-IMG_PATH = "assets"
+ASSET_PATH = "assets"
 
 command = []
 
 if __name__ == "__main__":
+    # TODO: combine all check and create Assets folder in this file
     msg = "SCREEN"
 
     if "SCREEN" in msg:
