@@ -23,6 +23,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    # TODO: check in window
-    shutdown(20)
-    # logout()
+    # shutdown(20)
+    logout()
