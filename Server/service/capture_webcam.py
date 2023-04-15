@@ -2,8 +2,8 @@ import cv2
 import os
 from shared_function import *
 
-IMG_PATH = "../assets"
-IMG_PATH = convert_to_path(IMG_PATH)
+ASSET_PATH = "../assets"
+ASSET_PATH = convert_to_path(ASSET_PATH)
 
 
 def capture_webcam_image():
@@ -18,11 +18,11 @@ def capture_webcam_image():
         _, image = camera.read()
 
         # check directory and create if not exist
-        if not check_file_exist(IMG_PATH):
-            os.mkdir(IMG_PATH)
+        if not check_file_exist(ASSET_PATH):
+            os.mkdir(ASSET_PATH)
 
         # specify the file path and name
-        file_path = os.path.join(IMG_PATH, "webcam_image.png")
+        file_path = os.path.join(ASSET_PATH, "webcam_image.png")
         print("file_path: ", file_path)
 
         # Save image

