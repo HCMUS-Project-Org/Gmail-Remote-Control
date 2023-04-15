@@ -1,7 +1,10 @@
-import re, winreg, json
+import re
+import winreg
+import json
 import os
 
 from live_screen_client import BUFSIZ
+
 
 def parse_data(full_path):
     try:
@@ -25,10 +28,12 @@ def parse_data(full_path):
     except:
         return None, None, None
 
+
 def query_value(full_path):
     value_list = parse_data(full_path)
     try:
-        opened_key = winreg.OpenKey(getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
+        opened_key = winreg.OpenKey(
+            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
         winreg.QueryValueEx(opened_key, value_list[2])
         winreg.CloseKey(opened_key)
         return ["1", "1"]
@@ -39,12 +44,15 @@ def query_value(full_path):
 def get_value(full_path):
     value_list = parse_data(full_path)
     try:
-        opened_key = winreg.OpenKey(getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
-        value_of_value, value_type = winreg.QueryValueEx(opened_key, value_list[2])
+        opened_key = winreg.OpenKey(
+            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
+        value_of_value, value_type = winreg.QueryValueEx(
+            opened_key, value_list[2])
         winreg.CloseKey(opened_key)
         return ["1", value_of_value]
     except:
         return ["0", "0"]
+
 
 def dec_value(c):
     c = c.upper()
@@ -54,6 +62,7 @@ def dec_value(c):
         return ord(c) - ord('A') + 10
     return 0
 
+
 def str_to_bin(s):
     res = b""
     for i in range(0, len(s), 2):
@@ -61,6 +70,7 @@ def str_to_bin(s):
         b = dec_value(s[i + 1])
         res += (a * 16 + b).to_bytes(1, byteorder='big')
     return res
+
 
 def str_to_dec(s):
     s = s.upper()
@@ -75,7 +85,8 @@ def set_value(full_path, value, value_type):
     value_list = parse_data(full_path)
     try:
         winreg.CreateKey(getattr(winreg, value_list[0]), value_list[1])
-        opened_key = winreg.OpenKey(getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_WRITE)
+        opened_key = winreg.OpenKey(
+            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_WRITE)
         if 'REG_BINARY' in value_type:
             if len(value) % 2 == 1:
                 value += '0'
@@ -87,9 +98,10 @@ def set_value(full_path, value, value_type):
         if 'REG_QWORD' in value_type:
             if len(value) > 16:
                 value = value[:16]
-            value = str_to_dec(value)                 
-        
-        winreg.SetValueEx(opened_key, value_list[2], 0, getattr(winreg, value_type), value)
+            value = str_to_dec(value)
+
+        winreg.SetValueEx(opened_key, value_list[2], 0, getattr(
+            winreg, value_type), value)
         winreg.CloseKey(opened_key)
         return ["1", "1"]
     except:
@@ -99,7 +111,8 @@ def set_value(full_path, value, value_type):
 def delete_value(full_path):
     value_list = parse_data(full_path)
     try:
-        opened_key = winreg.OpenKey(getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_WRITE)
+        opened_key = winreg.OpenKey(
+            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_WRITE)
         winreg.DeleteValue(opened_key, value_list[2])
         winreg.CloseKey(opened_key)
         return ["1", "1"]
@@ -110,7 +123,8 @@ def delete_value(full_path):
 def query_key(full_path):
     value_list = parse_data(full_path)
     try:
-        opened_key = winreg.OpenKey(getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2], 0, winreg.KEY_READ)
+        opened_key = winreg.OpenKey(getattr(
+            winreg, value_list[0]), value_list[1] + r'\\' + value_list[2], 0, winreg.KEY_READ)
         winreg.CloseKey(opened_key)
         return ["1", "1"]
     except:
@@ -120,7 +134,8 @@ def query_key(full_path):
 def create_key(full_path):
     value_list = parse_data(full_path)
     try:
-        winreg.CreateKey(getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2])
+        winreg.CreateKey(
+            getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2])
         return ["1", "1"]
     except:
         return ["0", "0"]
@@ -129,16 +144,18 @@ def create_key(full_path):
 def delete_key(full_path):
     value_list = parse_data(full_path)
     try:
-        winreg.DeleteKey(getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2])
+        winreg.DeleteKey(
+            getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2])
         return ["1", "1"]
     except:
         return ["0", "0"]
+
 
 def registry(client):
     BUFSIZ = 32768
     while True:
         header = client.recv(BUFSIZ).decode("utf8")
-        if("STOP_EDIT_REGISTRY" in header):
+        if ("STOP_EDIT_REGISTRY" in header):
             break
         data_sz = int(header)
         data = b""
@@ -149,11 +166,11 @@ def registry(client):
         msg = json.loads(data.decode('utf8'))
         # extract elements
         ID = msg['ID']
-        full_path = msg['path'] 
+        full_path = msg['path']
         name_value = msg['name_value']
         value = msg['value']
         v_type = msg['v_type']
-        res = ['0','0']
+        res = ['0', '0']
 
         print(ID)
         print(full_path)
@@ -161,8 +178,8 @@ def registry(client):
         print(value)
         print(v_type)
 
-        #ID==0 run file.reg
-        #path is detail of file .reg
+        # ID==0 run file.reg
+        # path is detail of file .reg
         if ID == 0:
             try:
                 outout_file = os.getcwd() + '\\run.reg'
@@ -177,10 +194,10 @@ def registry(client):
                 print('cannot create file reg')
 
         elif ID == 1:
-            res = get_value(full_path + r'\\' + name_value)     
+            res = get_value(full_path + r'\\' + name_value)
 
         elif ID == 2:
-            res = set_value(full_path + r'\\' + name_value, value, v_type)       
+            res = set_value(full_path + r'\\' + name_value, value, v_type)
 
         elif ID == 3:
             res = create_key(full_path)

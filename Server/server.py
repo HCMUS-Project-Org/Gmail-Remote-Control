@@ -1,19 +1,31 @@
 # Work with Image
-from PIL import ImageGrab
-import io
+import service.capture_screen as cs
+import service.capture_webcam as cw
+import service.mac_address as mac
+import service.app_process as ap
 
+IMG_PATH = "assets"
 
-def capture_screen(self, client):
-    INFO_SZ = 100
+command = []
 
-    img = ImageGrab.grab()
-    img_bytes = io.BytesIO()
-    img.save(img_bytes, format='PNG')
+if __name__ == "__main__":
+    msg = "SCREEN"
 
-    data = img_bytes.getvalue()
+    if "SCREEN" in msg:
+        cs.capture_screen()
+    elif "WEBCAM" in msg:
+        cw.capture_webcam_image()
+    elif "MAC" in msg:
+        mac.mac_address()
+    elif "APP_PRO" in msg:
+        ap.app_process()
 
-    # send frame size
-    client.sendall(bytes(str(len(data)), "utf8"))
+    # # capture the screen
+    # server.capture_screen()
 
-    # send frame data
-    client.sendall(data)
+    # # get the mac address
+    # mac_address = server.get_mac_address()
+    # print(mac_address)
+
+    # capture an image by the camera
+    # server.capture_webcam_image()

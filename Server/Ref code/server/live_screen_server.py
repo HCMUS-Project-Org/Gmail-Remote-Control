@@ -16,7 +16,7 @@ def capture_screen(client):
         img_bytes = io.BytesIO()
         img.save(img_bytes, format='PNG')
         data = img_bytes.getvalue()
-        
+
         # send frame size
         client.sendall(bytes(str(len(data)), "utf8"))
 
@@ -25,11 +25,5 @@ def capture_screen(client):
 
         # listen to next command from client: continue or back
         check_stop = client.recv(INFO_SZ).decode("utf8")
-        if("STOP_RECEIVING" in check_stop):
+        if ("STOP_RECEIVING" in check_stop):
             break
-
-
-            
-
-
-

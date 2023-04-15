@@ -1,5 +1,9 @@
+# Client
 Client/__pycache__
 Client/.env
 Client/credentials.json
 Client/token.json
 Client/watch.json
+
+# Server
+Server/assets
