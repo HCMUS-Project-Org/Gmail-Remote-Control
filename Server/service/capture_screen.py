@@ -13,3 +13,5 @@ def capture_screen():
 
     # save the captured image
     screenshot.save(file_path)
+
+# TODO: check in window

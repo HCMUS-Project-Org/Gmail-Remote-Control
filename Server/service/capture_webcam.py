@@ -19,3 +19,5 @@ def capture_webcam_image():
 
     # release the camera
     camera.release()
+
+# TODO: check in window

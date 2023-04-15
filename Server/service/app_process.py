@@ -90,6 +90,7 @@ def parse_msg(msg):
 
 if __name__ == '__main__':
     # TODO: done all functions -> need to process these function
+    # TODO: check all function in Window (Linux is ok!)
     '''
     if linux -> list_app = list_proc
     '''
