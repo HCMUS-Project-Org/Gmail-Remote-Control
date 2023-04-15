@@ -63,7 +63,7 @@ def list_processes():
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
 
-    return proc_pid, proc_name, proc_thread
+    return proc_name, proc_pid,  proc_thread
 
 
 def kill(pid):
@@ -89,15 +89,10 @@ def parse_msg(msg):
 
 
 if __name__ == '__main__':
-    # TODO: done all functions -> need to process these function
-    # TODO: check all function in Window (Linux is ok!)
     '''
     if linux -> list_app = list_proc
     '''
-
-    # check_os()
-    # # kill(30611)
-    # start('chrome')
+    pass
     # # commands = parse_msg("Application/Process - List")
 
     # for command in commands:

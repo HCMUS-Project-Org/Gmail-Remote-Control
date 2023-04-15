@@ -1,23 +1,36 @@
 import cv2
 import os
+from shared_function import *
 
-IMG_PATH = "assets"
+IMG_PATH = "../assets"
+IMG_PATH = convert_to_path(IMG_PATH)
 
 
 def capture_webcam_image():
     # initialize the camera
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-    # capture a frame from the camera
-    ret, image = camera.read()
+    # check if camera is opened successfully
+    if not camera.isOpened():
+        print("Unable to open camera")
+    else:
+        # capture a frame from the camera
+        _, image = camera.read()
 
-    # specify the file path and name
-    file_path = os.path.join(IMG_PATH, "webcam_image.png")
+        # check directory and create if not exist
+        if not check_file_exist(IMG_PATH):
+            os.mkdir(IMG_PATH)
 
-    # Save image
-    cv2.imwrite(file_path, image)
+        # specify the file path and name
+        file_path = os.path.join(IMG_PATH, "webcam_image.png")
+        print("file_path: ", file_path)
 
-    # release the camera
-    camera.release()
+        # Save image
+        cv2.imwrite(file_path, image)
 
-# TODO: check in window
+        # release the camera
+        camera.release()
+
+
+if __name__ == "__main__":
+    capture_webcam_image()

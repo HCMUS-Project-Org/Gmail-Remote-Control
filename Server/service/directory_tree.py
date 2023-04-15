@@ -5,16 +5,6 @@ import shutil
 from shared_function import *
 
 
-def convert_to_path(file_path):
-    '''convert file path to path object'''
-    return Path(os.path.expanduser(file_path))
-
-
-def check_file_exist(file_path):
-    '''check if file exist'''
-    return os.path.exists(file_path)
-
-
 def show_directory_tree(root, deep_level=2):
     # prefix components:
     space = '    '
@@ -115,12 +105,12 @@ def delete_file(file_path):
 
 
 if __name__ == "__main__":
-    # show_directory_tree(root="~/Desktop/Gmail-Remote-Control", deep_level=2)
-    # print(delete_file(file_path="~/Desktop/hi.txt"))
+    # # linux: root = ~
+    # # windows: root = C:/
+    show_directory_tree(root="C:/", deep_level=2)
+
+    # print(delete_file(file_path=r'C:\Users\Admin\Desktop\hi.txt'))
     # copy_file(src_path="~/Desktop/hi.txt", dst_path="~/hi2.txt")
 
-    send_file_to_folder(src_path="~/Desktop/hi.txt",
-                        dst_dir="~/Desktop/Gmail-Remote-Controls.txt")
-
-
-# TODO: check in window
+    # send_file_to_folder(src_path="~/Desktop/hi.txt",
+    #                     dst_dir="~/Desktop/Gmail-Remote-Controls.txt")
