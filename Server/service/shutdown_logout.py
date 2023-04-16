@@ -21,7 +21,3 @@ def logout():
     else:
         os.system(f"logout")
 
-
-if __name__ == "__main__":
-    # shutdown(20)
-    logout()
