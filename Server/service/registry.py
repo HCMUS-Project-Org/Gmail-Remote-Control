@@ -1,4 +1,6 @@
-# Linux do not have REGISTRY
+'''
+NOTE: Linux do not have REGISTRY
+'''
 
 import re
 import winreg
@@ -29,31 +31,6 @@ def parse_data(full_path):
         return None, None, None
 
 
-def query_value(full_path):
-    value_list = parse_data(full_path)
-    try:
-        opened_key = winreg.OpenKey(
-            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
-        winreg.QueryValueEx(opened_key, value_list[2])
-        winreg.CloseKey(opened_key)
-        return ["1", "1"]
-    except:
-        return ["0", "0"]
-
-
-def get_value(full_path):
-    value_list = parse_data(full_path)
-    try:
-        opened_key = winreg.OpenKey(
-            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
-        value_of_value, value_type = winreg.QueryValueEx(
-            opened_key, value_list[2])
-        winreg.CloseKey(opened_key)
-        return ["1", value_of_value]
-    except:
-        return ["0", "0"]
-
-
 def dec_value(c):
     c = c.upper()
     if ord('0') <= ord(c) and ord(c) <= ord('9'):
@@ -81,6 +58,41 @@ def str_to_dec(s):
     return res
 
 
+
+
+'''
+Get a value of a registry key
+Input: 
+    full_path = <full_path> + r'\\' + <name_value>
+        <full_path>: full path of the registry key
+        <name_value>: name of the value of key
+Usage: 
+    res = get_value(full_path + r'\\' + name_value)
+'''
+def get_value(full_path):
+    value_list = parse_data(full_path)
+    try:
+        opened_key = winreg.OpenKey(
+            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_READ)
+        value_of_value, value_type = winreg.QueryValueEx(
+            opened_key, value_list[2])
+        winreg.CloseKey(opened_key)
+        return ["1", value_of_value]
+    except:
+        return ["0", "0"]
+
+
+'''
+Set a value of a registry key
+Input: 
+    full_path = <full_path> + r'\\' + <name_value>
+        <full_path>: full path of the registry key
+        <name_value>: name of the value of key
+    value: value of the value of key
+    value_type: type of the value of key
+Usage: 
+    res = get_value(full_path + r'\\' + name_value, value, value_type)
+'''
 def set_value(full_path, value, value_type):
     value_list = parse_data(full_path)
     try:
@@ -107,28 +119,6 @@ def set_value(full_path, value, value_type):
     except:
         return ["0", "0"]
 
-
-def delete_value(full_path):
-    value_list = parse_data(full_path)
-    try:
-        opened_key = winreg.OpenKey(
-            getattr(winreg, value_list[0]), value_list[1], 0, winreg.KEY_WRITE)
-        winreg.DeleteValue(opened_key, value_list[2])
-        winreg.CloseKey(opened_key)
-        return ["1", "1"]
-    except:
-        return ["0", "0"]
-
-
-def query_key(full_path):
-    value_list = parse_data(full_path)
-    try:
-        opened_key = winreg.OpenKey(getattr(
-            winreg, value_list[0]), value_list[1] + r'\\' + value_list[2], 0, winreg.KEY_READ)
-        winreg.CloseKey(opened_key)
-        return ["1", "1"]
-    except:
-        return ["0", "0"]
 
 
 def create_key(full_path):

