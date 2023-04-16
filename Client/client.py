@@ -31,6 +31,8 @@ gmail_credential = None
 gmail_service = None
 client_profile = {}
 
+# TODO: auto insatll Library
+
 
 @app.route('/')
 def index():
