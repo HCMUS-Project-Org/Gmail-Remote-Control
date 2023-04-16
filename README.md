@@ -13,3 +13,8 @@ python client
 cd Server
 python server
 ```
+
+pynput: pip install pynput
+PIL: pip install Pillow
+cv2: pip install opencv-python
+psutil: pip install psutil
