@@ -14,10 +14,19 @@
 .action-side > button,
 .extend-command button {
 	width: 150px;
-	height: 60px;
+	min-height: 60px;
+	padding: 10px;
 	background-color: #f1d7a3;
 	border-radius: 20px;
 	border-width: 0px;
+}
+
+.extend-command button input {
+	width: 100%;
+	border-width: 0px;
+	border-radius: 5px;
+	margin-top: 4px;
+	padding: 5px;
 }
 
 .action-side > button:hover,
