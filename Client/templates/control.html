@@ -36,7 +36,7 @@
 	<div class="w-100 bg-white">
 		<!-- mail box -->
 		<div
-			class="mail-box d-flex flex-column justify-content-center gap-2 px-3 py-3"
+			class="h-100 mail-box d-flex flex-column justify-content-center gap-2 px-3 py-3"
 		>
 			<div class="email-from">
 				<span class="fw-bold">To:&nbsp;</span>
@@ -46,31 +46,26 @@
 				<span class="fw-bold">Content:</span><br />
 				<span id="email_body"></span>
 			</div>
-		</div>
 
-		<!-- action button -->
-		<div
-			class="command-btn d-flex align-items-start justify-content-end px-3"
-		>
-			<!-- <form action="/disconnect" method="POST">
-				<button class="disconnect-btn dot-red text-white">
-					<span>Disconnect&nbsp;</span>
-					<img src="../static/assets/icons/exit.png" alt="exit icon" />
-				</button>
-			</form> -->
-			<div class="d-flex gap-2">
-				<button class="cancel-btn bg-light" onclick="ClearAllCommand()">
-					Cancel
-				</button>
+			<!-- action button -->
+			<div
+				class="command-btn d-flex align-items-start justify-content-end px-3 mt-2"
+			>
+				<div class="d-flex gap-2">
+					<button class="cancel-btn bg-light" onclick="ClearAllCommand()">
+						Cancel
+					</button>
 
-				<button
-					class="send-btn bg-light-black text-white"
-					onclick="SendRequest()"
-				>
-					<span>Send&nbsp;</span>
-					<img src="../static/assets/icons/send.png" alt="send icon" />
-				</button>
+					<button
+						class="send-btn bg-light-black text-white d-flex justify-content-center"
+						onclick="SendRequest()"
+					>
+						<span>Send&nbsp;</span>
+						<img src="../static/assets/icons/send.png" alt="send icon" />
+					</button>
+				</div>
 			</div>
+			<!-- end action button -->
 		</div>
 	</div>
 
@@ -83,7 +78,6 @@
 <div class="ribbon-btn-group">
 	<form action="/disconnect" method="POST">
 		<button
-			type="button"
 			data-bs-toggle="tooltip"
 			data-bs-placement="top"
 			title="Disconnect"
