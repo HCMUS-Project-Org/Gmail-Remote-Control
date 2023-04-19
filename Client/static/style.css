@@ -4,7 +4,10 @@
 }
 
 body {
-	background-image: linear-gradient(to bottom right, #011111, #eab13d);
+	/* background-image: linear-gradient(to bottom right, #011111, #eab13d);
+	 */
+	background-image: url(../static/assets/background/big-sur-bg.jpg);
+	background-size: cover;
 	font-size: 16px;
 	width: 90vw;
 	height: 94vh;
@@ -18,12 +21,14 @@ body {
 	padding: 0px;
 	margin-top: 50px !important;
 	overflow: hidden;
+	background-color: rgb(255, 255, 255, 0.75);
 }
 
 .ribbon-bar {
 	height: 40px;
 	width: 100%;
 	background: white;
+	border-bottom: thin solid rgba(117, 117, 117, 0.1);
 }
 
 .ribbon-bar .action-dot {
@@ -74,6 +79,6 @@ h1 {
 }
 
 h2 {
-	font-size: 50px;
+	font-size: 45px;
 	font-weight: bold;
 }

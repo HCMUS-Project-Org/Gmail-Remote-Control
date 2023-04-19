@@ -16,7 +16,7 @@
 }
 
 .bg-light {
-	background-color: #effaff;
+	background-color: #f2f2f2 !important;
 }
 
 /* text */
@@ -33,9 +33,4 @@
 }
 .dot-green {
 	background-color: #1fd31c;
-}
-
-/* action button */
-.action-disconnect {
-	background-color: #ec3f3f;
 }

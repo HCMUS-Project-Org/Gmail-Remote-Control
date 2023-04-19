@@ -107,7 +107,7 @@ def delete_file(file_path):
 if __name__ == "__main__":
     # # linux: root = ~
     # # windows: root = C:/
-    show_directory_tree(root="C:/", deep_level=2)
+    show_directory_tree(root="~", deep_level=2)
 
     # print(delete_file(file_path=r'C:\Users\Admin\Desktop\hi.txt'))
     # copy_file(src_path="~/Desktop/hi.txt", dst_path="~/hi2.txt")

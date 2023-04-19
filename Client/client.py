@@ -71,7 +71,7 @@ def disconnect():
 @app.route('/control', methods=['GET', 'POST'])
 def control():
     print("server email:", SERVER_EMAIL)
-    return render_template('control_copy.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL)
+    return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL)
 
 
 @app.route('/review', methods=['GET', 'POST'])

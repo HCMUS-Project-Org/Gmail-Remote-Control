@@ -18,6 +18,8 @@ logging.basicConfig(filename=logfile_path,
                     level=logging.DEBUG,
                     format='%(asctime)s [%(levelname)s] %(message)s'
                     )
+
+
 def key_logger():
     def key_logger():
         global listener
@@ -47,4 +49,3 @@ def stop_key_logger():
     # end test
 
     listener.stop()
-

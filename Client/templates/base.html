@@ -23,9 +23,9 @@
 	</head>
 
 	<body>
-		<div class="container shadow-lg bg-yellow rounded position-relative">
+		<div class="container shadow-lg rounded position-relative">
 			<!-- begin ribbon bar -->
-			<div class="ribbon-bar bg-light position-relative top-0">
+			<div class="ribbon-bar bg-white position-relative top-0">
 				<div
 					class="group-action-dot d-flex align-items-center gap-2 position-absolute start-0 ms-3"
 				>
@@ -37,6 +37,11 @@
 					class="ribbon-title h-100 d-flex flex-column align-items-center justify-content-center"
 				>
 					{% block email %} {% endblock %}
+				</div>
+				<div
+					class="d-flex align-items-center gap-2 position-absolute h-100 top-0 end-0 me-3"
+				>
+					{% block ribbon_button %} {% endblock %}
 				</div>
 			</div>
 			<!-- end ribbon bar -->

@@ -1,23 +1,21 @@
 .background {
 	width: 100%;
 	height: 600px !important;
-	background-image: url("./assets/background/bg_light.png");
 	background-size: 400px;
 }
 
 .action-board {
-	height: 450px;
-	width: 100%;
-	background-color: #011111;
-	border-radius: 0px 0px 50px 50px;
+	background-color: rgb(255, 255, 255, 0.4);
 }
+
 .action-side > button,
 .extend-command button {
 	width: 150px;
-	min-height: 60px;
-	padding: 10px;
-	background-color: #f1d7a3;
-	border-radius: 20px;
+	padding: 7px 10px;
+	margin-bottom: 7px;
+	background-color: transparent;
+	text-align: left;
+	border-radius: 7px;
 	border-width: 0px;
 }
 
@@ -31,26 +29,12 @@
 
 .action-side > button:hover,
 .extend-command button:hover {
-	background-color: #eab13d;
+	background-color: rgba(0, 0, 0, 0.075);
 }
 
 .action-side > button.selected,
 .extend-command button.selected {
-	background-color: #eab13d;
-	border: 10px solid #b97f0b;
-	font-weight: bold;
-}
-
-.command-btn {
-	height: 100px;
-}
-
-.command-btn button {
-	font-size: 20px;
-	font-weight: bold;
-	border-width: 0px;
-	border-radius: 20px;
-	padding: 15px 30px;
+	background-color: rgba(0, 0, 0, 0.075);
 }
 
 .extend-command-container {
@@ -59,28 +43,52 @@
 
 .extend-command {
 	width: auto;
-	border-radius: 20px;
-	background-color: #7b7b7b;
-	/* padding: 15px; */
+	border-radius: 10px;
+	background-color: rgba(255, 255, 255, 1);
 }
 
-.disconnect-btn:hover,
-.cancel-btn:hover,
-.send-btn:hover {
+.command-btn {
+	height: 100px;
+}
+
+.command-btn button {
+	border-width: 0px;
+	border-radius: 7px;
+	padding: 5px 20px;
+}
+
+.command-btn button:hover,
+.ribbon-btn-group button:hover {
 	filter: brightness(90%);
-	transform: scale(1.01);
+	transform: scale(1.05);
 	transition: 0.2s;
 }
 
-.email-from,
-.email-body {
-	background-color: #333939;
-	border: 5px solid #eab13d;
-	color: white;
-	padding: 10px;
-	margin: 0px !important;
+.command-btn img,
+.ribbon-btn-group img {
+	width: 25px;
 }
 
-.email-body {
-	border-radius: 0px 0px 40px 0px;
+.ribbon-btn-group button {
+	border: none;
+}
+
+.mail-box {
+	height: 450px;
+}
+.email-from,
+.email-body,
+.modal-dialog input {
+	background-color: #f2f2f2;
+	padding: 10px;
+	margin: 0px !important;
+
+	border: thin solid rgba(117, 117, 117, 0.1);
+	border-radius: 7px;
+}
+
+.modal-body label {
+	text-transform: capitalize;
+	display: flex;
+	align-items: center;
 }

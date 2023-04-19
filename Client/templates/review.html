@@ -14,21 +14,17 @@
 <!-- ------------------------------ -->
 {% block body %}
 <div class="background">
-	<div class="action-board d-flex position-relative">
+	<div class="action-board d-flex position-relative h-100">
 		<div class="bg-theme text-center mx-3 my-4">
 			<h2>Server Reply</h2>
-			<img
-				class="computer-img"
-				src="../static/assets/computer.png"
-				alt="bg_computer"
-			/>
+
 			<div class="original-mail text-center">
 				Open original email
 				<a href="{{original_email_url}}" target="_blank">here!</a>
 			</div>
 		</div>
 		<div
-			class="w-100 d-flex flex-column justify-content-center gap-2 px-3 my-3"
+			class="w-100 d-flex flex-column justify-content-center gap-2 p-3 bg-white"
 		>
 			<div class="email-from">
 				<span class="fw-bold">From:&nbsp;</span>
@@ -38,36 +34,44 @@
 				<span class="fw-bold">Content:</span><br />
 				<span id="email_body"></span>
 			</div>
+
+			<div
+				class="h-25 command-btn d-flex align-items-start justify-content-end p-3"
+			>
+				<form action="/another-request" method="POST">
+					<button class="send-btn bg-light-black text-white">
+						<div class="d-flex justify-content-center align-items-center">
+							<div class="ok-btn">
+								<div
+									class="d-flex justify-content-center align-items-center gap-2"
+								>
+									<span>OK</span>
+									<i class="far fa-thumbs-up"></i>
+								</div>
+								<span class="detail-info">Send other request</span>
+							</div>
+						</div>
+					</button>
+				</form>
+			</div>
 		</div>
 	</div>
-
-	<div
-		class="command-btn d-flex align-items-center justify-content-between px-3"
-	>
-		<form action="/disconnect" method="POST">
-			<button class="disconnect-btn action-disconnect text-white">
-				<span>DISCONNECT&nbsp;</span>
-				<i class="fas fa-power-off"></i>
-			</button>
-		</form>
-
-		<form action="/another-request" method="POST">
-			<button class="send-btn bg-light-black text-white">
-				<div class="d-flex justify-content-center align-items-center">
-					<div class="ok-btn">
-						<div
-							class="d-flex justify-content-center align-items-center gap-2"
-						>
-							<span>OK</span>
-							<i class="far fa-thumbs-up"></i>
-						</div>
-						<span class="detail-info">Send other request</span>
-					</div>
-				</div>
-			</button>
-		</form>
-	</div>
 </div>
+{% endblock %} {% block ribbon_button %}
+
+<div class="ribbon-btn-group">
+	<form action="/disconnect" method="POST">
+		<button
+			type="button"
+			data-bs-toggle="tooltip"
+			data-bs-placement="top"
+			title="Disconnect"
+		>
+			<img src="../static/assets/icons/exit.png" alt="exit icon" />
+		</button>
+	</form>
+</div>
+
 {% endblock %} {% block script %}
 <script>
 	let list_command = [];

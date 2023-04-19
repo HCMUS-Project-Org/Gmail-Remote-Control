@@ -12,148 +12,31 @@
 
 <!-- ------------------------------ -->
 {% block body %}
-<div class="background">
-	<div class="action-board d-flex position-relative">
-		<div
-			class="action-side d-flex flex-column justify-content-between align-items-center mx-3 my-5"
-		>
-			<button
-				id="command-0"
-				class="control-command-btn"
-				onmouseover="UpdateExtendBoard(0)"
-				onmouseout="CloseExtendCommandBoard()"
-			>
-				Key logger
-			</button>
-			<button
-				id="command-1"
-				class="control-command-btn"
-				onclick="AddCommand('1_Capture Screen')"
-				onmouseover="UpdateExtendBoard(1)"
-				onmouseout="CloseExtendCommandBoard()"
-			>
-				Capture Screen
-			</button>
 
-			<button
-				id="command-2"
-				class="control-command-btn"
-				onclick="AddCommand('2_MAC address')"
-				onmouseover="UpdateExtendBoard(2)"
+<div class="background d-flex">
+	<!-- command button -->
+	<div class="action-board d-flex position-relative w-25">
+		<div class="command-side">
+			<div
+				id="command-container"
+				class="action-side d-flex flex-column justify-content-between align-items-center mx-3 my-5"
+			></div>
+			<div
+				id="extend-command-container"
+				class="position-absolute top-0 h-100 extend-command-container d-flex flex-column pt-5 ps-3"
+				onmouseover="OpenExtendCommandBoard()"
 				onmouseout="CloseExtendCommandBoard()"
 			>
-				MAC address
-			</button>
-			<button
-				id="command-3"
-				class="control-command-btn"
-				onmouseover="UpdateExtendBoard(3)"
-				onmouseout="CloseExtendCommandBoard()"
-			>
-				Shutdown<br />Logout
-			</button>
-
-			<button
-				id="command-4"
-				class="control-command-btn"
-				onmouseover="UpdateExtendBoard(4)"
-				onmouseout="CloseExtendCommandBoard()"
-			>
-				Application<br />Process
-			</button>
-		</div>
-		<div
-			id="extend-command-container"
-			class="position-absolute top-0 h-100 extend-command-container d-flex flex-column pt-5 ps-3"
-			onmouseover="OpenExtendCommandBoard()"
-			onmouseout="CloseExtendCommandBoard()"
-		>
-			<div class="extend-command">
-				<!-- key logger group -->
-				<div id="group-command-0" class="d-none">
-					<button
-						id="command-0.0"
-						class="control-command-btn"
-						onclick="AddCommand('0.0_Hook')"
-					>
-						Hook
-					</button>
-					<button
-						id="command-0.1"
-						class="control-command-btn"
-						onclick="AddCommand('0.1_Print')"
-					>
-						Print
-					</button>
-					<button
-						id="command-0.2"
-						class="control-command-btn"
-						onclick="AddCommand('0.2_Lock')"
-					>
-						Lock
-					</button>
-				</div>
-
-				<!-- shutdown/logout group -->
-				<div id="group-command-3" class="d-none">
-					<button
-						id="command-3.0"
-						class="control-command-btn"
-						onclick="AddCommand('3.0_Shutdown')"
-					>
-						Shutdown
-					</button>
-					<button
-						id="command-3.1"
-						class="control-command-btn"
-						onclick="AddCommand('3.1_Logout')"
-					>
-						Logout
-					</button>
-				</div>
-
-				<!-- application/process group -->
-				<div id="group-command-4" class="d-none">
-					<button
-						id="command-4.0"
-						class="control-command-btn"
-						onclick="AddCommand('4.0_Application')"
-					>
-						Application
-					</button>
-					<button
-						id="command-4.1"
-						class="control-command-btn"
-						onclick="AddCommand('4.1_List')"
-					>
-						List
-					</button>
-					<button
-						id="command-4.2"
-						class="control-command-btn"
-						onclick="AddCommand('4.2_Kill')"
-					>
-						Kill
-					</button>
-					<button
-						id="command-4.3"
-						class="control-command-btn"
-						onclick="AddCommand('4.3_Clear')"
-					>
-						Clear
-					</button>
-					<button
-						id="command-4.4"
-						class="control-command-btn"
-						onclick="AddCommand('4.4_Start')"
-					>
-						Start
-					</button>
-				</div>
+				<div class="extend-command" id="extend-command"></div>
 			</div>
 		</div>
+	</div>
+
+	<!-- mail box + action button  -->
+	<div class="w-100 bg-white">
+		<!-- mail box -->
 		<div
-			class="w-100 d-flex flex-column justify-content-center gap-2 px-3 my-3"
+			class="mail-box d-flex flex-column justify-content-center gap-2 px-3 py-3"
 		>
 			<div class="email-from">
 				<span class="fw-bold">To:&nbsp;</span>
@@ -164,77 +47,181 @@
 				<span id="email_body"></span>
 			</div>
 		</div>
-	</div>
 
-	<div
-		class="command-btn d-flex align-items-center justify-content-between px-3"
-	>
-		<form action="/disconnect" method="POST">
-			<button class="disconnect-btn action-disconnect text-white">
-				<span>DISCONNECT&nbsp;</span>
-				<i class="fas fa-power-off"></i>
-			</button>
-		</form>
-		<div class="d-flex gap-2">
-			<button class="cancel-btn bg-light" onclick="ClearAllCommand()">
-				CANCEL
-			</button>
+		<!-- action button -->
+		<div
+			class="command-btn d-flex align-items-start justify-content-end px-3"
+		>
+			<!-- <form action="/disconnect" method="POST">
+				<button class="disconnect-btn dot-red text-white">
+					<span>Disconnect&nbsp;</span>
+					<img src="../static/assets/icons/exit.png" alt="exit icon" />
+				</button>
+			</form> -->
+			<div class="d-flex gap-2">
+				<button class="cancel-btn bg-light" onclick="ClearAllCommand()">
+					Cancel
+				</button>
 
-			<button
-				class="send-btn bg-light-black text-white"
-				onclick="SendRequest()"
-			>
-				<span>SEND&nbsp;</span>
-				<i class="fas fa-paper-plane"></i>
-			</button>
+				<button
+					class="send-btn bg-light-black text-white"
+					onclick="SendRequest()"
+				>
+					<span>Send&nbsp;</span>
+					<img src="../static/assets/icons/send.png" alt="send icon" />
+				</button>
+			</div>
 		</div>
 	</div>
+
+	<!-- Modal -->
+	<div id="modal-container"></div>
 </div>
+
+{% endblock %} {% block ribbon_button %}
+
+<div class="ribbon-btn-group">
+	<form action="/disconnect" method="POST">
+		<button
+			type="button"
+			data-bs-toggle="tooltip"
+			data-bs-placement="top"
+			title="Disconnect"
+		>
+			<img src="../static/assets/icons/exit.png" alt="exit icon" />
+		</button>
+	</form>
+</div>
+
 {% endblock %} {% block script %}
 <script>
-	let list_command = [];
-	let content = ``;
-	let extend_board_index = 0;
-	for (let i = 0; i < 5; i++) {
-		list_command.push([]);
-	}
+	window.onload = function () {
+		RenderCommandButton();
+	};
 
 	let command_tree = [
 		{
 			command: "Key logger",
+			id: "key-logger",
+			input: [],
 			child_command: [
 				{
 					command: "Hook",
+					id: "hook",
+					input: [],
 					child_command: [],
 				},
 				{
 					command: "Print",
-					child_command: [],
-				},
-				{
-					command: "Lock",
+					id: "print",
+					input: [],
 					child_command: [],
 				},
 			],
 		},
 		{
 			command: "Capture Screen",
+			id: "capture-screen",
+			input: [],
+			child_command: [],
+		},
+		{
+			command: "Capture Webcam",
+			id: "capture-webcam",
+			input: [],
 			child_command: [],
 		},
 		{
 			command: "MAC address",
+			id: "mac-address",
+			input: [],
 			child_command: [],
 		},
 		{
+			command: "Directory tree",
+			id: "directory-tree",
+			input: [],
+			child_command: [
+				{
+					command: "Show",
+					id: "show",
+					input: [
+						{
+							field: "path",
+							type: "text",
+							placeholder: 'C:"',
+						},
+						{
+							field: "level",
+							type: "number",
+							placeholder: "",
+						},
+					],
+					child_command: [],
+				},
+				{
+					command: "Copy file",
+					id: "copy-file",
+					input: [
+						{
+							field: "source",
+							type: "text",
+							placeholder: "C:/",
+						},
+						{
+							field: "destination",
+							type: "text",
+							placeholder: "C:/",
+						},
+					],
+					child_command: [],
+				},
+				{
+					command: "Send file to folder",
+					id: "send-file",
+					input: [
+						{
+							field: "source",
+							type: "text",
+							placeholder: "C:/",
+						},
+						{
+							field: "destination",
+							type: "text",
+							placeholder: "C:/",
+						},
+					],
+					child_command: [],
+				},
+				{
+					command: "Delete file",
+					id: "delete-file",
+					input: [
+						{
+							field: "path",
+							type: "text",
+							placeholder: "C:/",
+						},
+					],
+					child_command: [],
+				},
+			],
+		},
+		{
 			command: "Shutdown/Logout",
-
+			id: "shutdown-logout",
+			input: [],
 			child_command: [
 				{
 					command: "Shutdown",
+					id: "shutdown",
+					input: [],
 					child_command: [],
 				},
 				{
 					command: "Logout",
+					id: "logout",
+					input: [],
 					child_command: [],
 				},
 			],
@@ -242,30 +229,238 @@
 
 		{
 			command: "Application/Process",
+			id: "app-proc",
+			input: [],
 			child_command: [
 				{
 					command: "Application",
+					id: "application",
+					input: [],
 					child_command: [],
 				},
 				{
 					command: "List",
+					id: "list",
+					input: [],
 					child_command: [],
 				},
 				{
 					command: "Kill",
-					child_command: [],
-				},
-				{
-					command: "Clear",
+					id: "kill",
+					input: [
+						{
+							field: "id",
+							type: "number",
+							placeholder: "",
+						},
+					],
 					child_command: [],
 				},
 				{
 					command: "Start",
+					id: "start",
+					input: [
+						{
+							field: "id",
+							type: "number",
+							placeholder: "",
+						},
+					],
 					child_command: [],
 				},
 			],
 		},
 	];
+
+	let list_command = [];
+	let content = ``;
+	let extend_board_index = 0;
+	for (let i = 0; i < command_tree.length + 1; i++) {
+		list_command.push([]);
+	}
+
+	function CheckInputAll(parent_idx, child_idx) {
+		flag = true;
+		for (
+			let i = 0;
+			i < command_tree[parent_idx].child_command[child_idx].input.length;
+			i++
+		) {
+			id = `${parent_idx}.${child_idx}_input-${command_tree[parent_idx].child_command[child_idx].id}-${command_tree[parent_idx].child_command[child_idx].input[i].field}`;
+
+			element = document.getElementById(id);
+
+			if (!element.value) {
+				flag = false;
+				break;
+			}
+		}
+
+		return flag;
+	}
+
+	function InputValue(id) {
+		index = id.split("_")[0];
+		field = id.split("_")[1];
+
+		parent_idx = index.split(".")[0];
+		child_idx = parseInt(index.split(".")[1]);
+
+		input_ele = document.getElementById(id);
+
+		submit_modal_btn_id = `${parent_idx}.${child_idx}-submit-modal`;
+		submit_modal_btn = document.getElementById(submit_modal_btn_id);
+		submit_modal_btn.disabled = CheckInputAll(parent_idx, child_idx)
+			? false
+			: true;
+
+		// print("list_command", list_command);
+	}
+
+	function GenModalHTML(parent_idx, child_idx, child_command) {
+		modal_html = ``;
+
+		modal_html += `
+			<div
+				class="modal fade"
+				id="inputCommandModal-${child_command.id}"
+				tabindex="-1"
+				aria-labelledby="exampleModalLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content rounded">
+						<div class="ribbon-bar rounded py-2 d-flex justify-content-between align-items-center">
+							<button
+								class="action-dot dot-red border-0 ms-3"
+								data-bs-dismiss="modal"
+							>
+								<span class="action-dot dot-red"></span>
+							</button>
+							<h5 class="modal-title w-75 text-center" id="modal-label">${child_command.command}</h5>
+						</div>
+						<div class="modal-body">
+							<div>`;
+
+		for (let i = 0; i < child_command.input.length; i++) {
+			modal_html += `
+								<div class="mb-2 row">
+									<label class="col-2" for="input-${parent_idx}.${child_idx}_${child_command.input[i].field}" class="col-form-label">
+										${child_command.input[i].field}:
+									</label>
+									<input
+										type="${child_command.input[i].type}"
+										class="col"
+										id="${parent_idx}.${child_idx}_input-${command_tree[parent_idx].child_command[child_idx].id}-${child_command.input[i].field}"
+										placeholder="${child_command.input[i].placeholder}"
+										oninput="InputValue(this.id)"
+									/>
+								</div>
+						`;
+		}
+		modal_html += `
+							</div>
+						</div>
+						<div class="command-btn d-flex align-items-start justify-content-end p-3 pt-0 h-25 gap-2">
+							<button
+								type="button"
+								class="bg-light"
+								data-bs-dismiss="modal"
+							>
+								Cancel
+							</button>
+							<button
+								id="${parent_idx}.${child_idx}-submit-modal"
+								type="button"
+								class="bg-light-black text-white"
+								data-bs-dismiss="modal"
+								onclick="AddCommand(
+									'${parent_idx}.${child_idx}_${command_tree[parent_idx].child_command[child_idx].command}'
+								)"
+								disabled>
+								Submit
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>`;
+
+		return modal_html;
+	}
+
+	function RenderCommandButton() {
+		command_container = document.getElementById("command-container");
+		extend_command = document.getElementById("extend-command");
+		modal_container = document.getElementById("modal-container");
+
+		command_container_html = ``;
+		extend_command_html = ``;
+		modal_container_html = ``;
+
+		for (let i = 0; i < command_tree.length; i++) {
+			has_child = command_tree[i].child_command.length > 0 ? true : false;
+
+			// Render command button to command_container
+			command_container_html += `
+				<button
+					id= "command-${i}"
+					class="control-command-btn"
+
+					${has_child ? "" : `onclick="AddCommand('${i}_${command_tree[i].command}')"`}
+
+					onmouseover="UpdateExtendBoard(${i})"
+					onmouseout="CloseExtendCommandBoard()"
+				>
+					${command_tree[i].command}
+				</button>
+			`;
+
+			// Check if command has child command
+			// If it has, render it to extend_command
+			if (has_child) {
+				extend_command_html += `<div id="group-command-${i}" class="d-none">`;
+
+				for (let j = 0; j < command_tree[i].child_command.length; j++) {
+					if (command_tree[i].child_command[j].input.length > 0) {
+						//extend_command_html
+						extend_command_html += `
+							<button
+								id= "command-${i}.${j}"
+								type="button"
+								class="control-command-btn"
+								data-bs-toggle="modal"
+								data-bs-target="#inputCommandModal-${command_tree[i].child_command[j].id}"
+							>
+								${command_tree[i].child_command[j].command}
+							</button>
+					`;
+
+						modal_container_html += GenModalHTML(
+							i,
+							j,
+							command_tree[i].child_command[j],
+						);
+					} else {
+						extend_command_html += `
+							<button
+								id= "command-${i}.${j}"
+								class="control-command-btn"
+								onclick="AddCommand('${i}.${j}_${command_tree[i].child_command[j].command}')"
+							>
+								${command_tree[i].child_command[j].command}
+							</button>
+						`;
+					}
+				}
+
+				extend_command_html += `</div>`;
+			}
+		}
+
+		command_container.innerHTML = command_container_html;
+		extend_command.innerHTML = extend_command_html;
+		modal_container.innerHTML = modal_container_html;
+	}
 
 	function ClearAllCommand() {
 		// update list command
@@ -292,10 +487,19 @@
 
 	function CheckCommandExist(command) {
 		for (let i = 0; i < list_command.length; i++) {
-			for (let j = 0; j < list_command[i].length; j++)
-				if (list_command[i][j] == command) {
+			for (let j = 0; j < list_command[i].length; j++) {
+				cmd = list_command[i][j];
+
+				try {
+					if (cmd[0].includes("[")) {
+						cmd = [cmd[0].split("[")[0]];
+					}
+				} catch (error) {}
+
+				if (cmd == command) {
 					return true;
 				}
+			}
 		}
 
 		return false;
@@ -335,21 +539,41 @@
 	function AddCommand(in_command) {
 		console.log("======================");
 		command = in_command.split("_")[1];
+		console.log("🚀  in_command:", in_command);
 		index = in_command.split("_")[0];
+		console.log("index:", index, " - type:", typeof index);
 		parentIndex = index.split(".")[0];
 		childIndex = index.split(".")[1] ? index.split(".")[1] : null;
 
-		console.log("index:", index, " - type:", typeof index);
 		console.log("parent index:", parentIndex);
 		console.log("child index:", childIndex);
 
+		console.log(
+			"🚀  CheckCommandExist(command):",
+			CheckCommandExist(command),
+		);
 		// update list_command
 		if (CheckCommandExist(command)) {
 			// remove command
 			if (childIndex) {
 				//is child command
 				console.log("remove - child command");
+				console.log("🚀  childIndex:", childIndex);
 				list_command[parentIndex][parseInt(childIndex) + 1] = null;
+
+				// change data-bs-target
+				let command_btn = document.getElementById(
+					`command-${parentIndex}.${childIndex}`,
+				);
+
+				command_btn.dataset.bsTarget = `#inputCommandModal-${command_tree[parentIndex].child_command[childIndex].id}`;
+				// command_btn.onclick = () => {
+				// 	null;
+				// };
+				command_btn.innerHTML = `					
+					<div>
+						${command_tree[parentIndex].child_command[childIndex].command}
+					</div>					`;
 
 				// remove parent if not pick any child
 				let clearParent = true;
@@ -360,6 +584,7 @@
 						break;
 					}
 				}
+
 				if (clearParent) {
 					list_command[parentIndex] = [];
 				}
@@ -374,6 +599,56 @@
 			if (childIndex) {
 				//is child command
 				console.log("add - child command");
+
+				// if child command has input
+				if (
+					command_tree[parentIndex].child_command[childIndex].input
+						.length > 0
+				) {
+					command += "[";
+
+					for (
+						let i = 0;
+						i <
+						command_tree[parentIndex].child_command[childIndex].input
+							.length;
+						i++
+					) {
+						command_id = `${parentIndex}.${childIndex}_input-${command_tree[parentIndex].child_command[childIndex].id}-${command_tree[parentIndex].child_command[childIndex].input[i].field}`;
+
+						console.log("🚀  command_id:", command_id);
+						command_value = document.getElementById(command_id).value;
+
+						command += i == 0 ? "" : ", ";
+						command += `${command_tree[parentIndex].child_command[childIndex].input[i].field}:${command_value}`;
+					}
+
+					command += "]";
+
+					// change data-bs-target
+					let command_btn = document.getElementById(
+						`command-${parentIndex}.${childIndex}`,
+					);
+
+					command_btn.dataset.bsTarget = "#none";
+					// command_btn.onclick = () => {
+					// 	AddCommand(
+					// 		`${parentIndex}.${parseInt(childIndex) - 1}_${
+					// 			command_tree[parentIndex].child_command[
+					// 				parseInt(childIndex) - 1
+					// 			].command
+					// 		}`,
+					// 	);
+					// };
+					command_btn.innerHTML = `
+					<div
+						onclick="AddCommand('${parentIndex}.${childIndex}_${command_tree[parentIndex].child_command[childIndex].command}')"
+					> ${command_tree[parentIndex].child_command[childIndex].command} </div>
+					`;
+					console.log("-- none --");
+				}
+
+				// update list_command
 				list_command[parentIndex][parseInt(childIndex) + 1] = [command];
 				list_command[parentIndex][0] = [command_tree[parentIndex].command];
 			} //is parent command
@@ -383,8 +658,7 @@
 			}
 		}
 
-		// open extend command board if command has child command
-		OpenExtendCommandBoard(parentIndex);
+		// TODO: Remove command when it was selected (not open modal)
 
 		// print selected command in command board
 		let email_body = document.getElementById("email_body");
@@ -401,6 +675,8 @@
 
 		// set selected
 		UpdateCommandBtnState();
+
+		console.log("list:", list_command);
 	}
 
 	function UpdateCommandBtnState() {
@@ -415,10 +691,11 @@
 					selectedCommand.className = list_command[i][j]
 						? "control-command-btn selected"
 						: "control-command-btn";
-				} catch (error) {}
+				} catch (error) {
+					console.log("🚀  error:", error);
+				}
 			}
 		}
-		console.log("list:", list_command);
 	}
 
 	function SendRequest() {
