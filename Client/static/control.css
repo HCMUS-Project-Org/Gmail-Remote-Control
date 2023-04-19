@@ -71,6 +71,7 @@
 
 .ribbon-btn-group button {
 	border: none;
+	background-color: transparent;
 }
 
 .mail-box {

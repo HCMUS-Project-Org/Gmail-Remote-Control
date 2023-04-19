@@ -4,8 +4,9 @@
 }
 
 body {
-	/* background-image: linear-gradient(to bottom right, #011111, #eab13d);
-	 */
+	/* font-family: -apple-system, BlinkMacSystemFont, sans-serif; */
+	font-family: -apple-system, system-ui, BlinkMacSystemFont;
+
 	background-image: url(../static/assets/background/big-sur-bg.jpg);
 	background-size: cover;
 	font-size: 16px;
