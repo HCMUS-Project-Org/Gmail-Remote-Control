@@ -50,15 +50,121 @@
 				{% block body %}{% endblock %}
 			</div>
 		</div>
+
+		<!-- Modal -->
 		<div
-			class="group-info text-center pb-2 position-fixed bottom-0 start-0 w-100"
+			class="modal fade"
+			id="aboutUsModal"
+			tabindex="-1"
+			aria-hidden="true"
 		>
-			Made by
-			<a href="https://github.com/QuanBlue" target="_blank">Thanh Quan</a
-			>&nbsp;+&nbsp;
-			<a href="https://github.com/To-Gia-Hao" target="_blank">Gia Hao</a
-			>&nbsp;+&nbsp;
-			<a href="https://github.com/chivanz128" target="_blank">Chi Van</a>
+			<div class="modal-dialog modal-md">
+				<div class="modal-content rounded">
+					<div
+						class="ribbon-bar rounded py-2 d-flex justify-content-between align-items-center"
+					>
+						<button
+							class="action-dot dot-red border-0 ms-3"
+							data-bs-dismiss="modal"
+						>
+							<span class="action-dot dot-red"></span>
+						</button>
+						<h5 class="modal-title w-100 text-center" id="modal-label">
+							About us
+						</h5>
+					</div>
+					<div class="modal-body pb-0">
+						<div class="w-100 text-center mb-3">
+							<img src="../static/assets/fit-logo.png" alt="FIT Logo" />
+							<h3><b>Class:</b> Graduation topic on computer network</h3>
+						</div>
+
+						<div class="text-start mb-3">
+							<b>Teacher:</b> <br />
+							Đỗ Hoàng Cường <br />
+							Huỳnh Thụy Bảo Trân <br />
+							Dũng Trần Trung
+						</div>
+						<div class="group-info text-center pb-2 w-100">
+							<div
+								class="d-flex justify-content-around align-items-center gap-3"
+							>
+								<!-- 19127392- To Gia Hao -->
+								<div>
+									<img
+										class="rounded"
+										src="../static/assets/team_members/ToGiaHao.jpg"
+										alt="19127392 - ToGiaHao"
+									/>
+									<div>
+										<h4 class="m-0">19127392</h4>
+										<p class="m-0">To Gia Hao</p>
+										<p>
+											<b>Github:</b>
+											<a
+												href="https://github.com/https://github.com/To-Gia-Hao"
+												target="_blank"
+												>To-Gia-Hao
+											</a>
+										</p>
+									</div>
+								</div>
+								<!-- 19127525 - Nguyen Thanh Quan -->
+								<div>
+									<img
+										class="rounded"
+										src="../static/assets/team_members/NguyenThanhQuan.jpg"
+										alt="19127525 - NguyenThanhQuan"
+									/>
+									<div>
+										<h4 class="m-0">19127525</h4>
+										<p class="m-0">Nguyen Thanh Quan</p>
+										<p>
+											<b>Github:</b>
+											<a
+												href="https://github.com/QuanBlue"
+												target="_blank"
+												>QuanBlue
+											</a>
+										</p>
+									</div>
+								</div>
+								<!-- 19127625- Lam Chi Van -->
+								<div>
+									<img
+										class="rounded"
+										src="../static/assets/team_members/LamChiVan.png"
+										alt="19127625 - LamChiVan"
+									/>
+									<div>
+										<h4 class="m-0">19127625</h4>
+										<p class="m-0">Lam Chi Van</p>
+										<p>
+											<b>Github:</b>
+											<a
+												href="https://github.com/https://github.com/chivanz128"
+												target="_blank"
+												>chivanz128
+											</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="command-btn d-flex align-items-start justify-content-end p-3 pt-0 h-25 gap-2"
+					>
+						<button
+							type="button"
+							class="bg-light-black text-white"
+							data-bs-dismiss="modal"
+						>
+							Ok
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 

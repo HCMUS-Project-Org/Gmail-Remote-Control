@@ -13,7 +13,8 @@
 <!-- ------------------------------ -->
 {% block body %}
 
-<div class="background d-flex">
+<div class="background d-flex position-relative">
+	<div id="loading-view"></div>
 	<!-- command button -->
 	<div class="action-board d-flex position-relative w-25">
 		<div class="command-side">
@@ -57,6 +58,7 @@
 					</button>
 
 					<button
+						id="send-btn"
 						class="send-btn bg-light-black text-white d-flex justify-content-center"
 						onclick="SendRequest()"
 					>
@@ -75,7 +77,15 @@
 
 {% endblock %} {% block ribbon_button %}
 
-<div class="ribbon-btn-group">
+<div
+	class="ribbon-btn-group d-flex justify-content-center align-items-center gap-3"
+>
+	<button data-bs-toggle="modal" data-bs-target="#aboutUsModal">
+		<div data-bs-toggle="tooltip" data-bs-placement="top" title="About us">
+			<img src="../static/assets/icons/team.png" alt="about us icon" />
+		</div>
+	</button>
+
 	<form action="/disconnect" method="POST">
 		<button
 			data-bs-toggle="tooltip"
@@ -271,6 +281,23 @@
 	let extend_board_index = 0;
 	for (let i = 0; i < command_tree.length + 1; i++) {
 		list_command.push([]);
+	}
+
+	function SendingAnimate() {
+		loading_view = document.getElementById("loading-view");
+
+		loading_view.innerHTML = `
+			<div class="loading-view">
+				<div class="w-100 h-75 d-flex flex-column justify-content-center align-items-center gap-2">
+					<div class="spinner-border text-light" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+					<h4 class="text-white">Sending...</h4>
+				</div>
+			</div>`;
+
+		send_btn = document.getElementById("send-btn");
+		send_btn.disabled = true;
 	}
 
 	function CheckInputAll(parent_idx, child_idx) {
@@ -564,7 +591,7 @@
 				// command_btn.onclick = () => {
 				// 	null;
 				// };
-				command_btn.innerHTML = `					
+				command_btn.innerHTML = `
 					<div>
 						${command_tree[parentIndex].child_command[childIndex].command}
 					</div>					`;
@@ -625,15 +652,7 @@
 					);
 
 					command_btn.dataset.bsTarget = "#none";
-					// command_btn.onclick = () => {
-					// 	AddCommand(
-					// 		`${parentIndex}.${parseInt(childIndex) - 1}_${
-					// 			command_tree[parentIndex].child_command[
-					// 				parseInt(childIndex) - 1
-					// 			].command
-					// 		}`,
-					// 	);
-					// };
+
 					command_btn.innerHTML = `
 					<div
 						onclick="AddCommand('${parentIndex}.${childIndex}_${command_tree[parentIndex].child_command[childIndex].command}')"
@@ -695,6 +714,7 @@
 	function SendRequest() {
 		console.log("======== Send Request ========");
 		console.log("content:", content);
+		SendingAnimate();
 
 		fetch(`/send-request`, {
 			method: "POST",

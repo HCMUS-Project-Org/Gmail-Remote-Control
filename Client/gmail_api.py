@@ -1,4 +1,5 @@
 import os.path
+from time import sleep
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -93,18 +94,22 @@ def gmail_send_message(service, message):
     except Exception as error:
         print(F'An error occurred: {error}')
         message = None
+        thread_id = None
+
     return message, thread_id
 
 
 # function to fetch and print replies to an email thread
 def fetch_gmail_replies(service, thread_id):
     try:
-        thread = service.users().threads().get(userId='me', id=thread_id).execute()
-        messages = thread['messages']
+        response = service.users().threads().get(
+            userId='me', id=thread_id).execute()
+        messages = response['messages']
         print('Number of messages in thread: %d' % len(messages))
         print("messages:", messages)
         for message in messages:
-            if 'INBOX' in message['labelIds']:  # only consider messages in Inbox
+            # only consider messages in Inbox
+            if 'INBOX' in message['labelIds']:
                 print("---------------------------\nINBOX")
                 headers = message['payload']['headers']
 
@@ -115,13 +120,32 @@ def fetch_gmail_replies(service, thread_id):
 
                     if header['name'] == "Date":
                         date = header['value']
+                        date = date.split("+")[0].strip()
 
                 body = message['snippet']
+                body = body.split("&amp;&amp;&amp;")[0].strip()
+
                 print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
                       (sender, date, body))
                 return sender, date, body
+        return None, None, None
+
     except HttpError as error:
         print('An error occurred: %s' % error)
+        return None, None, None
+
+
+def BindIncomingEmails(service, thread_id):
+    while True:
+        try:
+            sender, date, body = fetch_gmail_replies(service, thread_id)
+
+            if (sender is not None) and (date is not None) and (body is not None):
+                return sender, date, body
+
+            sleep(5)
+        except:
+            pass
 
 
 def main():
@@ -142,8 +166,14 @@ def main():
         message = create_gmail_message(to, subject, message_text)
         message, thread_id = gmail_send_message(service, message)
 
-        thread_id = '1874c9e59110ddd5'
-        fetch_gmail_replies(service, thread_id)
+        while True:
+            sender, date, body = fetch_gmail_replies(service, thread_id)
+
+            if (sender is not None) and (date is not None) and (body is not None):
+                break
+
+            print("---")
+            sleep(5)
 
         # logout(service)
 

@@ -17,11 +17,6 @@
 	<div class="action-board d-flex position-relative h-100">
 		<div class="bg-theme text-center mx-3 my-4">
 			<h2>Server Reply</h2>
-
-			<div class="original-mail text-center">
-				Open original email
-				<a href="{{original_email_url}}" target="_blank">here!</a>
-			</div>
 		</div>
 		<div
 			class="w-100 d-flex flex-column justify-content-center gap-2 p-3 bg-white"
@@ -31,8 +26,11 @@
 				<span>{{server_email}}</span>
 			</div>
 			<div class="email-body h-100">
-				<span class="fw-bold">Content:</span><br />
-				<span id="email_body"></span>
+				<div class="d-flex justify-content-between align-items-center">
+					<span class="fw-bold">Content:</span>
+					<span class="date-recieve">{{date}}</span>
+				</div>
+				<span id="email_body">{{body}} </span>
 			</div>
 
 			<div
@@ -59,7 +57,15 @@
 </div>
 {% endblock %} {% block ribbon_button %}
 
-<div class="ribbon-btn-group">
+<div
+	class="ribbon-btn-group d-flex justify-content-center align-items-center gap-3"
+>
+	<button data-bs-toggle="modal" data-bs-target="#aboutUsModal">
+		<div data-bs-toggle="tooltip" data-bs-placement="top" title="About us">
+			<img src="../static/assets/icons/team.png" alt="about us icon" />
+		</div>
+	</button>
+
 	<form action="/disconnect" method="POST">
 		<button
 			data-bs-toggle="tooltip"

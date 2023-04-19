@@ -10,6 +10,11 @@
 	color: gray;
 }
 
+.date-recieve {
+	font-size: 12px;
+	color: gray;
+}
+
 .ok-btn {
 	line-height: 20px;
 }

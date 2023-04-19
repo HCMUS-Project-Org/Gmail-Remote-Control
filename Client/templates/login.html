@@ -3,6 +3,7 @@
 <!-- ------------------------------ -->
 {% block style %}
 <link rel="stylesheet" href="/static/login_page.css" />
+<link rel="stylesheet" href="/static/control.css" />
 {% endblock %}
 
 <!-- ------------------------------ -->
@@ -11,16 +12,6 @@
 <!-- ------------------------------ -->
 {% block body %}
 <div class="w-100">
-	<!-- begin background -->
-	<!-- <div class="login-bg w-100 d-flex justify-content-center align-items-center">
-		<img
-			class="bg-computer"
-			src="../static/assets/setComputer.png"
-			alt="bg_computer"
-		/>
-	</div> -->
-	<!-- end background -->
-
 	<!-- begin login form -->
 	<div
 		class="d-flex flex-column justify-content-center align-items-center gap-2 mt-5 pt-5"
@@ -41,4 +32,16 @@
 	</div>
 	<!-- end login form -->
 </div>
+{% endblock %} {% block ribbon_button %}
+
+<div
+	class="ribbon-btn-group d-flex justify-content-center align-items-center gap-3"
+>
+	<button data-bs-toggle="modal" data-bs-target="#aboutUsModal">
+		<div data-bs-toggle="tooltip" data-bs-placement="top" title="About us">
+			<img src="../static/assets/icons/team.png" alt="about us icon" />
+		</div>
+	</button>
+</div>
+
 {% endblock %}

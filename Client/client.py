@@ -29,6 +29,7 @@ Bootstrap(app)
 # init gmail api
 gmail_credential = None
 gmail_service = None
+thread_id = None
 client_profile = {}
 
 # TODO: auto insatll Library
@@ -76,10 +77,12 @@ def control():
 
 @app.route('/review', methods=['GET', 'POST'])
 def review():
-    # if request.method == "POST":
-    #     pass
+    sender, date, body = None, None, None
 
-    return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL)
+    if request.method == "GET":
+        sender, date, body = BindIncomingEmails(gmail_service, thread_id)
+
+    return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 
 
 @app.route('/send-request', methods=['GET', 'POST'])
@@ -89,14 +92,20 @@ def send_request():
 
         data = request.get_json()
 
+        print("data:", data)
+
         # email content
         to = SERVER_EMAIL
         subject = 'Control Request'
         message_text = data["content"].replace("<br/>", "\n")
 
+        print("message_txt:", message_text)
         # create and send email
         message = create_gmail_message(to, subject, message_text)
+        print("message:", message)
+
         message, thread_id = gmail_send_message(gmail_service, message)
+        print("thread_id:", thread_id)
 
     return redirect(url_for('review'))
 

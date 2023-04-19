@@ -53,17 +53,12 @@ body {
 	height: 100% !important;
 }
 
-.group-info {
-	color: black;
+.group-info img {
+	height: 110px;
 }
 
 .group-info a {
 	text-decoration: none;
-	color: rgb(58, 58, 255);
-}
-
-.group-info a:hover {
-	text-decoration: underline;
 }
 
 .rounded {
