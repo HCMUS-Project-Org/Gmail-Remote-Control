@@ -24,8 +24,6 @@ gmail_service = None
 thread_id = None
 client_profile = None
 
-# TODO: auto install Library
-
 
 def auto_install_lib():
     try:

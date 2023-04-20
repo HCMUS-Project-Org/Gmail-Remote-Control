@@ -125,6 +125,25 @@
 			],
 		},
 		{
+			command: "Shutdown/Logout",
+			id: "shutdown-logout",
+			input: [],
+			child_command: [
+				{
+					command: "Shutdown",
+					id: "shutdown",
+					input: [],
+					child_command: [],
+				},
+				{
+					command: "Logout",
+					id: "logout",
+					input: [],
+					child_command: [],
+				},
+			],
+		},
+		{
 			command: "Capture Screen",
 			id: "capture-screen",
 			input: [],
@@ -212,25 +231,6 @@
 				},
 			],
 		},
-		{
-			command: "Shutdown/Logout",
-			id: "shutdown-logout",
-			input: [],
-			child_command: [
-				{
-					command: "Shutdown",
-					id: "shutdown",
-					input: [],
-					child_command: [],
-				},
-				{
-					command: "Logout",
-					id: "logout",
-					input: [],
-					child_command: [],
-				},
-			],
-		},
 
 		{
 			command: "Application/Process",
@@ -269,6 +269,71 @@
 							field: "id",
 							type: "number",
 							placeholder: "",
+						},
+					],
+					child_command: [],
+				},
+			],
+		},
+		{
+			command: "Registry",
+			id: "registry",
+			input: [],
+			child_command: [
+				{
+					command: "Get Value",
+					id: "get-val",
+					input: [
+						{
+							field: "path",
+							type: "text",
+							placeholder: "C:/",
+						},
+					],
+					child_command: [],
+				},
+				{
+					command: "Set Value",
+					id: "set-val",
+					input: [
+						{
+							field: "path",
+							type: "text",
+							placeholder: "C:/",
+						},
+						{
+							field: "value",
+							type: "text",
+							placeholder: "C:/",
+						},
+						{
+							field: "value-type",
+							type: "text",
+							placeholder: "C:/",
+						},
+					],
+					child_command: [],
+				},
+				{
+					command: "Create Key",
+					id: "create-key",
+					input: [
+						{
+							field: "path",
+							type: "text",
+							placeholder: "C:/",
+						},
+					],
+					child_command: [],
+				},
+				{
+					command: "Delete Key",
+					id: "delete-key",
+					input: [
+						{
+							field: "path",
+							type: "text",
+							placeholder: "C:/",
 						},
 					],
 					child_command: [],
