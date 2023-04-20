@@ -3,7 +3,7 @@ import service.capture_screen as cs
 import service.capture_webcam as cw
 import service.mac_address as mac
 import service.app_process as ap
-
+import os
 import imaplib
 import smtplib
 import time
@@ -29,8 +29,18 @@ ASSET_PATH = "assets"
 
 command = []
 
+
+def auto_install_lib():
+    try:
+        os.system("python -m pip install --upgrade pip")
+    except:
+        os.system("python3 -m pip install --upgrade pip")
+
+    os.system("pip install -r requirements.txt")
+
+
 def connect():
-    # create an IMAP4 class with SSL 
+    # create an IMAP4 class with SSL
     imap = imaplib.IMAP4_SSL(imap_url, 993)
     smtp = smtplib.SMTP_SSL(smtp_url)
 
@@ -60,15 +70,18 @@ def send_mail(smtp, user, sender, subject):
     reply_msg.attach(MIMEText(reply_content, 'html'))
     smtp.sendmail(user, sender, reply_msg.as_string())
     print('Reply sent to', sender)
-    
-#receive and return mail
+
+# receive and return mail
+
+
 def receive_mail(imap, smtp):
     while True:
-        #refresh mail box
+        # refresh mail box
         imap.select('Inbox')
 
-        #search since last day
-        date_since = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%d-%b-%Y")
+        # search since last day
+        date_since = (datetime.date.today() -
+                      datetime.timedelta(days=1)).strftime("%d-%b-%Y")
         status, data = imap.search(None, '(UNSEEN SINCE "' + date_since + '")')
 
         if data[0] == b'':
@@ -84,7 +97,7 @@ def receive_mail(imap, smtp):
                 sender = mail_message['From']
                 subject = mail_message['Subject']
 
-                #check is multipart (ex: attachment, emoji, image)
+                # check is multipart (ex: attachment, emoji, image)
                 if mail_message.is_multipart():
                     content = mail_message.get_payload()[0].get_payload()
                 else:
@@ -98,12 +111,12 @@ def receive_mail(imap, smtp):
                 # Mark the message as read
                 imap.store(msg_id, '+FLAGS', '\\SEEN')
 
-                #do something here
-                #function(content)
+                # do something here
+                # function(content)
 
-                #reply back to sender
-                send_mail(smtp, user, sender,subject ='test',)
-                
+                # reply back to sender
+                send_mail(smtp, user, sender, subject='test',)
+
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)
 
@@ -131,18 +144,13 @@ def function(msg):
 
 if __name__ == "__main__":
     # TODO: combine all check and create Assets folder in this file
+    auto_install_lib()
+
     msg = "SCREEN"
 
     imap, smtp = connect()
-    receive_mail(imap,smtp)
+    receive_mail(imap, smtp)
 
     # logout and close mailbox #useless
     imap.logout()
     smtp.quit()
-
-
-
-
-
-
-

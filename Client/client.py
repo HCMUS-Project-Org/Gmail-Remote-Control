@@ -1,18 +1,9 @@
-import json
 import os
 from gmail_api import *
 
-try:
-    from flask import Flask, render_template, session, redirect, url_for, request, Markup
-    from dotenv import load_dotenv
-    from flask_bootstrap import Bootstrap
-except Exception:
-    # import all package
-    os.system("pip install -r requirements.txt")
-
-    from flask import Flask, render_template, session, redirect, url_for, request, Markup
-    from dotenv import load_dotenv
-    from flask_bootstrap import Bootstrap
+from flask import Flask, render_template, redirect, url_for, request
+from dotenv import load_dotenv
+from flask_bootstrap import Bootstrap
 
 
 load_dotenv()  # take environment variables from .env.
@@ -34,6 +25,15 @@ thread_id = None
 client_profile = None
 
 # TODO: auto install Library
+
+
+def auto_install_lib():
+    try:
+        os.system("python -m pip install --upgrade pip")
+    except:
+        os.system("python3 -m pip install --upgrade pip")
+
+    os.system("pip install -r requirements.txt")
 
 
 def authorize():
@@ -142,4 +142,5 @@ def new_request():
 
 
 if __name__ == '__main__':
+    auto_install_lib()
     app.run(host='0.0.0.0', port=PORT, threaded=True, debug=True)
