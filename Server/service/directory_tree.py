@@ -2,7 +2,7 @@ from itertools import islice
 from pathlib import Path
 import os
 import shutil
-from shared_function import *
+from . import shared_function as sf
 
 
 def show_directory_tree(root, deep_level=2):
@@ -47,7 +47,7 @@ def show_directory_tree(root, deep_level=2):
         print(f'\n{directories} directories' +
               (f', {files} files' if files else ''))
 
-    directory = convert_to_path(root)
+    directory = sf.convert_to_path(root)
 
     try:
         for line in tree(directory, level=deep_level, limit_to_directories=True):
@@ -58,14 +58,14 @@ def show_directory_tree(root, deep_level=2):
 
 def copy_file(src_path, dst_path):
     '''copy file from server to destination path in client'''
-    src_path = convert_to_path(src_path)
-    dst_path = convert_to_path(dst_path)
+    src_path = sf.convert_to_path(src_path)
+    dst_path = sf.convert_to_path(dst_path)
 
     # copy the file
     shutil.copy(src_path, dst_path)
 
     # check if the file was copied successfully
-    if check_file_exist(dst_path):
+    if sf.check_file_exist(dst_path):
         print("The file was copied successfully")
     else:
         print("The file could not be copied")
@@ -74,11 +74,11 @@ def copy_file(src_path, dst_path):
 def send_file_to_folder(src_path, dst_dir):
     '''send a file to another directory in server'''
 
-    src_path = convert_to_path(src_path)
-    dst_dir = convert_to_path(dst_dir)
+    src_path = sf.convert_to_path(src_path)
+    dst_dir = sf.convert_to_path(dst_dir)
 
     # create the destination directory if it doesn't exist
-    if not check_file_exist(dst_dir):
+    if not sf.check_file_exist(dst_dir):
         os.mkdir(dst_dir)
 
     # move the file to the destination directory
@@ -87,7 +87,7 @@ def send_file_to_folder(src_path, dst_dir):
     # check if the file was moved successfully
     dst_path = os.path.join(dst_dir, os.path.basename(src_path))
 
-    if check_file_exist(dst_path):
+    if sf.check_file_exist(dst_path):
         print("The file was moved successfully")
     else:
         print("The file could not be moved")
@@ -95,9 +95,9 @@ def send_file_to_folder(src_path, dst_dir):
 
 def delete_file(file_path):
     '''delete file in server'''
-    file_path = convert_to_path(file_path)
+    file_path = sf.convert_to_path(file_path)
 
-    if check_file_exist(file_path):
+    if sf.check_file_exist(file_path):
         os.remove(file_path)
         return "File deleted"
     else:

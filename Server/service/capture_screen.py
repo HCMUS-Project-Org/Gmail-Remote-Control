@@ -1,6 +1,6 @@
 from PIL import ImageGrab
 import os
-from shared_function import *
+from . import shared_function as sf
 
 
 def capture_screen():
@@ -8,7 +8,7 @@ def capture_screen():
     screenshot = ImageGrab.grab()
 
     # specify the file path and name
-    file_path = os.path.join(ASSET_PATH, "screenshot.png")
+    file_path = os.path.join(sf.ASSET_PATH, "screenshot.png")
 
     # save the captured image
     screenshot.save(file_path)

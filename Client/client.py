@@ -25,15 +25,6 @@ thread_id = None
 client_profile = None
 
 
-def auto_install_lib():
-    try:
-        os.system("python -m pip install --upgrade pip")
-    except:
-        os.system("python3 -m pip install --upgrade pip")
-
-    os.system("pip install -r requirements.txt")
-
-
 def authorize():
     return os.path.exists('token.json')
 
@@ -140,5 +131,4 @@ def new_request():
 
 
 if __name__ == '__main__':
-    auto_install_lib()
     app.run(host='0.0.0.0', port=PORT, threaded=True, debug=True)

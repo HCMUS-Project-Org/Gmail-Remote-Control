@@ -24,8 +24,6 @@ password = 'bjxuzmxcmpqserll'
 imap_url = 'imap.gmail.com'
 smtp_url = 'smtp.gmail.com'
 
-ASSET_PATH = "assets"
-ASSET_PATH = convert_to_path(ASSET_PATH)
 
 command = []
 
@@ -33,15 +31,6 @@ command = []
 def create_asset_folder():
     if not os.path.exists(ASSET_PATH):
         os.makedirs(ASSET_PATH)
-
-
-def auto_install_lib():
-    try:
-        os.system("python -m pip install --upgrade pip")
-    except:
-        os.system("python3 -m pip install --upgrade pip")
-
-    os.system("pip install -r requirements.txt")
 
 
 def connect():
@@ -148,8 +137,6 @@ def function(msg):
 
 
 if __name__ == "__main__":
-    auto_install_lib()
-
     create_asset_folder()
 
     msg = "SCREEN"

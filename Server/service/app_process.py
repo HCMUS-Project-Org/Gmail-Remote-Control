@@ -1,6 +1,6 @@
 import psutil
 import os
-from shared_function import *
+from . import shared_function as sf
 
 
 def list_apps():
@@ -69,7 +69,7 @@ def kill(pid):
     command = None
 
     # check OS to specify the command
-    if check_os() == "linux":
+    if sf.check_os() == "linux":
         command = "kill -9 " + str(pid)
     else:
         command = "taskkill /F /PID " + str(pid)
