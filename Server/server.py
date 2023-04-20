@@ -148,7 +148,6 @@ def function(msg):
 
 
 if __name__ == "__main__":
-    # TODO: combine all check and create Assets folder in this file
     auto_install_lib()
 
     create_asset_folder()

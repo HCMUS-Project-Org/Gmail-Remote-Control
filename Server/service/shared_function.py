@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 
+ASSET_PATH = "assets"
+ASSET_PATH = Path(os.path.expanduser(ASSET_PATH))
+
 
 def check_os():
     my_os = None

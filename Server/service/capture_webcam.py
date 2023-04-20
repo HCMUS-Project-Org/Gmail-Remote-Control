@@ -1,7 +1,6 @@
 import cv2
 import os
 from shared_function import *
-from server import ASSET_PATH
 
 
 def capture_webcam_image():
@@ -23,3 +22,7 @@ def capture_webcam_image():
 
         # release the camera
         camera.release()
+
+
+if __name__ == '__main__':
+    capture_webcam_image()

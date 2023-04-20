@@ -3,7 +3,6 @@ import threading
 from shared_function import *
 import time
 from pynput.keyboard import Listener
-from capture_screen import ASSET_PATH
 
 listener = None
 

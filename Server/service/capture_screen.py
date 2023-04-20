@@ -1,7 +1,6 @@
 from PIL import ImageGrab
 import os
 from shared_function import *
-from server import ASSET_PATH
 
 
 def capture_screen():

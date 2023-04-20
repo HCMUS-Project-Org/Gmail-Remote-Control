@@ -4,7 +4,6 @@ from shared_function import *
 
 
 def list_apps():
-    # TODO: check
     app_name = list()
     app_id = list()
     app_thread = list()
