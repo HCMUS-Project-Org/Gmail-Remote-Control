@@ -9,9 +9,6 @@ from googleapiclient.errors import HttpError
 import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.image import MIMEImage
-from datetime import datetime, timezone
-import email
 
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',

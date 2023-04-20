@@ -1,15 +1,16 @@
+import json
 import os
 from gmail_api import *
 
 try:
-    from flask import Flask, render_template, redirect, url_for, request, Markup
+    from flask import Flask, render_template, session, redirect, url_for, request, Markup
     from dotenv import load_dotenv
     from flask_bootstrap import Bootstrap
 except Exception:
     # import all package
     os.system("pip install -r requirements.txt")
 
-    from flask import Flask, render_template, redirect, url_for, request, Markup
+    from flask import Flask, render_template, session, redirect, url_for, request, Markup
     from dotenv import load_dotenv
     from flask_bootstrap import Bootstrap
 
@@ -30,9 +31,13 @@ Bootstrap(app)
 gmail_credential = None
 gmail_service = None
 thread_id = None
-client_profile = {}
+client_profile = None
 
-# TODO: auto insatll Library
+# TODO: auto install Library
+
+
+def authorize():
+    return os.path.exists('token.json')
 
 
 @app.route('/')
@@ -55,6 +60,7 @@ def login():
         if isSuccess:
             print("AUTHENTICATION: Success")
             print("CLIENT PROFILE:", client_profile)
+
             return redirect(url_for('control'))
         else:
             print("AUTHENTICATION: Fail")
@@ -65,21 +71,33 @@ def login():
 
 @app.route('/disconnect', methods=['GET', 'POST'])
 def disconnect():
-    logout(gmail_service)
+    try:
+        logout(gmail_service)
+    except:
+        pass
+
     return redirect(url_for('login'))
 
 
 @app.route('/control', methods=['GET', 'POST'])
 def control():
-    print("server email:", SERVER_EMAIL)
+    # authorize user
+    if not authorize():
+        return redirect(url_for('login'))
+
     return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL)
 
 
 @app.route('/review', methods=['GET', 'POST'])
 def review():
+    if not authorize():
+        return redirect(url_for('login'))
+
     sender, date, body = None, None, None
 
     if request.method == "GET":
+        # authorize user
+        authorize()
         sender, date, body = BindIncomingEmails(gmail_service, thread_id)
 
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
@@ -87,6 +105,10 @@ def review():
 
 @app.route('/send-request', methods=['GET', 'POST'])
 def send_request():
+    # authorize user
+    if not authorize():
+        return redirect(url_for('login'))
+
     if request.method == "POST":
         global thread_id
 
@@ -112,6 +134,10 @@ def send_request():
 
 @app.route('/another-request', methods=['GET', 'POST'])
 def new_request():
+    # authorize user
+    if not authorize():
+        return redirect(url_for('login'))
+
     return redirect(url_for('control'))
 
 
