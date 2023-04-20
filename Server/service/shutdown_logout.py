@@ -20,4 +20,3 @@ def logout():
         os.system(f"shutdown -l")
     else:
         os.system(f"logout")
-

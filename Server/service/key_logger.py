@@ -7,9 +7,6 @@ from capture_screen import ASSET_PATH
 
 listener = None
 
-# check directory and create if not exist
-if not check_file_exist(ASSET_PATH):
-    os.mkdir(ASSET_PATH)
 
 # setup logging
 logfile_path = os.path.join(ASSET_PATH, "key_logger.log")
@@ -41,11 +38,4 @@ def key_logger():
 
 def stop_key_logger():
     global listener
-
-    # for test
-    print("stop key logger")
-    time.sleep(10)
-    print("----- stopped ----")
-    # end test
-
     listener.stop()

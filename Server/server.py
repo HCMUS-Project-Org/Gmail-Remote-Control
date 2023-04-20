@@ -10,8 +10,7 @@ import time
 import email
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-# from email.mime.base import MIMEBase
-# from email import encoders
+from service.shared_function import *
 import datetime
 
 
@@ -26,8 +25,14 @@ imap_url = 'imap.gmail.com'
 smtp_url = 'smtp.gmail.com'
 
 ASSET_PATH = "assets"
+ASSET_PATH = convert_to_path(ASSET_PATH)
 
 command = []
+
+
+def create_asset_folder():
+    if not os.path.exists(ASSET_PATH):
+        os.makedirs(ASSET_PATH)
 
 
 def auto_install_lib():
@@ -145,6 +150,8 @@ def function(msg):
 if __name__ == "__main__":
     # TODO: combine all check and create Assets folder in this file
     auto_install_lib()
+
+    create_asset_folder()
 
     msg = "SCREEN"
 
