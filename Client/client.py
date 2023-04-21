@@ -1,10 +1,10 @@
 import os
-from pathlib import Path
 from gmail_api import *
 
 from flask import Flask, render_template, redirect, url_for, request
 from dotenv import load_dotenv
 from flask_bootstrap import Bootstrap
+import glob
 
 
 load_dotenv()  # take environment variables from .env.
@@ -12,6 +12,7 @@ load_dotenv()  # take environment variables from .env.
 SECRET_KEY = os.getenv("SECRET_KEY")
 PORT = os.getenv("PORT")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL")
+ASSET_PATH = "./static/assets/received_files"
 
 
 app = Flask(__name__)
@@ -25,6 +26,19 @@ gmail_credential = None
 gmail_service = None
 thread_id = None
 client_profile = None
+
+
+def create_asset_folder():
+    if not os.path.exists(ASSET_PATH):
+        os.makedirs(ASSET_PATH)
+
+
+def remove_asset_file():
+    files_path = os.path.join(ASSET_PATH, '/*')
+    files = glob.glob(files_path)
+
+    for f in files:
+        os.remove(f)
 
 
 def authorize():
@@ -73,6 +87,8 @@ def disconnect():
 
 @app.route('/control', methods=['GET', 'POST'])
 def control():
+    remove_asset_file()
+
     # authorize user
     if not authorize():
         return redirect(url_for('login'))
@@ -85,10 +101,12 @@ def review():
     if not authorize():
         return redirect(url_for('login'))
 
-    sender, date, body = None, None, None
-
+    client_profile = {}
+    client_profile["emailAddress"] = "quaadfsfn"
     if request.method == "GET":
-        sender, date, body = bind_incoming_emails(gmail_service, thread_id)
+        sender, date, body = None, None, None
+        # sender, date, body = bind_incoming_emails(gmail_service, thread_id)
+        sender, date, body = "quan", "21/04", "hi"
 
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 
@@ -132,4 +150,5 @@ def new_request():
 
 
 if __name__ == '__main__':
+    create_asset_folder()
     app.run(host='0.0.0.0', port=PORT, threaded=True, debug=True)

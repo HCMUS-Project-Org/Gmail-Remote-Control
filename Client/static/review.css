@@ -24,3 +24,50 @@
 	font-size: 14px;
 	font-weight: 400;
 }
+
+.image-show button {
+	overflow: hidden;
+	border: thin solid rgba(117, 117, 117, 0.1);
+	border-radius: 7px;
+	padding: 5px;
+	width: 180px;
+	height: 120px;
+}
+
+.image-show button:hover {
+	filter: brightness(70%);
+}
+
+.image-show img {
+	width: 100%;
+	height: 100%;
+}
+
+#image-txt {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 50%;
+}
+
+#image-txt img {
+	width: 20px;
+	height: 20px;
+}
+
+.modal-body img {
+	width: 100%;
+}
+
+.download-img {
+	background-color: transparent;
+	border: none;
+}
+
+.download-img img {
+	width: 20px;
+}

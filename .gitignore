@@ -1,7 +1,7 @@
 # Client
 Client/__pycache__
 Client/.env
-Client/assets
+Client/static/assets/received_files
 Client/credentials.json
 Client/token.json
 Client/watch.json
