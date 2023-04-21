@@ -52,7 +52,6 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # TODO: case not login + not pick all permission
     error = ""
 
     if request.method == "POST":
@@ -87,7 +86,10 @@ def disconnect():
 
 @app.route('/control', methods=['GET', 'POST'])
 def control():
-    remove_asset_file()
+    try:
+        remove_asset_file()
+    except:
+        pass
 
     # authorize user
     if not authorize():
@@ -101,12 +103,10 @@ def review():
     if not authorize():
         return redirect(url_for('login'))
 
-    client_profile = {}
-    client_profile["emailAddress"] = "quaadfsfn"
+    sender, date, body = None, None, None
     if request.method == "GET":
-        sender, date, body = None, None, None
-        # sender, date, body = bind_incoming_emails(gmail_service, thread_id)
-        sender, date, body = "quan", "21/04", "hi"
+        sender, date, body = bind_incoming_emails(
+            gmail_service, thread_id)
 
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 

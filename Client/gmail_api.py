@@ -10,10 +10,10 @@ from googleapiclient.errors import HttpError
 import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from client import ASSET_PATH
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
           'https://www.googleapis.com/auth/gmail.send']
+ASSET_PATH = "./static/assets/received_files"
 
 
 def create_asset_folder():
@@ -217,7 +217,7 @@ def main():
                 break
 
             print("---")
-            sleep(5)
+            sleep(10)
 
         # logout(service)
         # download_attachment(service, "187a1a3561d66ff3")
