@@ -78,3 +78,7 @@ h2 {
 	font-size: 45px;
 	font-weight: bold;
 }
+
+.modal-body img {
+	object-fit: cover;
+}

@@ -136,7 +136,13 @@
 										<span class="action-dot dot-red"></span>
 									</button>
 									<h5 class="modal-title w-50 text-center" id="modal-label">${images[i]["name"]}</h5>
-									<button	class="download-img me-3" onclick="DownloadImage('${images[i]["path"]}')">	
+									<button	
+										class="download-img me-3" 
+										onclick="DownloadImage('${images[i]["path"]}')"
+										data-bs-toggle="tooltip"
+										data-bs-placement="top"
+										title="Download"
+									>	
 										<img  src="../static/assets/icons/download.png" alt="download icon" />
 									</button>
 								</div>
