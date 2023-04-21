@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from gmail_api import *
 
 from flask import Flask, render_template, redirect, url_for, request
@@ -11,6 +12,7 @@ load_dotenv()  # take environment variables from .env.
 SECRET_KEY = os.getenv("SECRET_KEY")
 PORT = os.getenv("PORT")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL")
+
 
 app = Flask(__name__)
 
@@ -36,6 +38,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # TODO: case not login + not pick all permission
     error = ""
 
     if request.method == "POST":
@@ -85,9 +88,7 @@ def review():
     sender, date, body = None, None, None
 
     if request.method == "GET":
-        # authorize user
-        authorize()
-        sender, date, body = BindIncomingEmails(gmail_service, thread_id)
+        sender, date, body = bind_incoming_emails(gmail_service, thread_id)
 
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 

@@ -1,6 +1,7 @@
+import os
 import os.path
+from pathlib import Path
 from time import sleep
-
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -10,9 +11,14 @@ import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
           'https://www.googleapis.com/auth/gmail.send']
+ASSET_PATH = "assets"
+
+
+def create_asset_folder():
+    if not os.path.exists(ASSET_PATH):
+        os.makedirs(ASSET_PATH)
 
 
 def remove_token():
@@ -96,19 +102,58 @@ def gmail_send_message(service, message):
     return message, thread_id
 
 
-# function to fetch and print replies to an email thread
+def download_attachment(service, message_id):
+    """Get and store attachment from Message with given id.
+
+    Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    message_id: ID of Message containing attachment.
+    prefix: prefix which is added to the attachment filename on saving
+    """
+    try:
+        # response = service.users().threads().get(userId='me', id=message_id).execute()
+        message = service.users().messages().get(userId='me', id=message_id).execute()
+        print("DOWNLOAD")
+        print("message:", message)
+        for part in message['payload']['parts']:
+            newvar = part['body']
+            if 'attachmentId' in newvar:
+                att_id = newvar['attachmentId']
+                att = service.users().messages().attachments().get(
+                    userId='me', messageId=message_id, id=att_id).execute()
+                data = att['data']
+
+                file_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
+                print(part['filename'])
+
+                # save file
+                path = os.path.join(ASSET_PATH, part['filename'])
+                with open(path, 'wb') as f:
+                    f.write(file_data)
+                    f.close()
+    except HttpError as error:
+        print('An error occurred: %s' % error)
+
+
 def fetch_gmail_replies(service, thread_id):
     try:
-        response = service.users().threads().get(
-            userId='me', id=thread_id).execute()
+        response = service.users().threads().get(userId='me', id=thread_id).execute()
+
         messages = response['messages']
+
         print('Number of messages in thread: %d' % len(messages))
         print("messages:", messages)
+
         for message in messages:
             # only consider messages in Inbox
             if 'INBOX' in message['labelIds']:
                 print("---------------------------\nINBOX")
                 headers = message['payload']['headers']
+
+                message_id = message['id']
+                download_attachment(service, message_id)
 
                 sender = 'anonymous'
                 for header in headers:
@@ -132,7 +177,7 @@ def fetch_gmail_replies(service, thread_id):
         return None, None, None
 
 
-def BindIncomingEmails(service, thread_id):
+def bind_incoming_emails(service, thread_id):
     while True:
         try:
             sender, date, body = fetch_gmail_replies(service, thread_id)
@@ -140,13 +185,15 @@ def BindIncomingEmails(service, thread_id):
             if (sender is not None) and (date is not None) and (body is not None):
                 return sender, date, body
 
-            sleep(5)
+            sleep(10)
         except:
             pass
 
 
 def main():
     try:
+        create_asset_folder()
+
         # create credential
         creds = create_gmail_credential()
 
@@ -173,6 +220,7 @@ def main():
             sleep(5)
 
         # logout(service)
+        # download_attachment(service, "187a1a3561d66ff3")
 
     except HttpError as error:
         print(f'An error occurred: {error}')

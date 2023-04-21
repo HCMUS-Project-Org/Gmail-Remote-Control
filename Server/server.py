@@ -52,7 +52,7 @@ def connect():
 def send_mail(smtp, user, sender, subject):
     # Send a reply message to the sender
     reply_msg = MIMEMultipart()
-    #reply_msg['From'] = f'Mail server TelePC <{user}>'
+    # reply_msg['From'] = f'Mail server TelePC <{user}>'
     reply_msg['From'] = user
     reply_msg['To'] = sender
     reply_msg['Subject'] = subject
