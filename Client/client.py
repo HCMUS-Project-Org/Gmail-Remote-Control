@@ -105,8 +105,9 @@ def review():
 
     sender, date, body = None, None, None
     if request.method == "GET":
-        sender, date, body = bind_incoming_emails(
-            gmail_service, thread_id)
+        # sender, date, body = bind_incoming_emails(
+        #     gmail_service, thread_id)
+        sender, date, body = 'quan', '2021-05-20', "Hello"
 
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 
