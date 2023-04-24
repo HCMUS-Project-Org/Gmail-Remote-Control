@@ -5,10 +5,10 @@ from . import shared_function as sf
 
 def capture_screen():
     # capture the screen
-    screenshot = ImageGrab.grab()
+    return ImageGrab.grab()
 
-    # specify the file path and name
-    file_path = os.path.join(sf.ASSET_PATH, "screenshot.png")
+    # # specify the file path and name
+    # file_path = os.path.join(sf.ASSET_PATH, "screenshot.png")
 
-    # save the captured image
-    screenshot.save(file_path)
+    # # save the captured image
+    # screenshot.save(file_path)

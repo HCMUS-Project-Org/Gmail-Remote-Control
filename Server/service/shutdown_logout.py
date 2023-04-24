@@ -20,3 +20,10 @@ def logout():
         os.system(f"shutdown -l")
     else:
         os.system(f"logout")
+
+def shutdown_logout(function):
+    if "Shutdown" in function:
+        shutdown(5)
+    else:
+        logout()
+

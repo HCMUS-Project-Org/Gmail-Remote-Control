@@ -1,6 +1,8 @@
 import psutil
 import os
+import re
 from . import shared_function as sf
+# import shared_function as sf
 
 
 def list_apps():
@@ -41,7 +43,12 @@ def list_apps():
             app_thread.append(threads)
         except:
             pass
-    return app_name, app_id, app_thread
+
+    result = ''
+    for item in [(id,name,thread)for id, name, thread in zip(app_id, app_name, app_thread)]:
+        result += ' - '.join(str(i) for i in item) + '\n'
+
+    return result
 
 
 def list_processes():
@@ -61,8 +68,12 @@ def list_processes():
 
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
-
-    return proc_name, proc_pid,  proc_thread
+    
+    result = ''
+    for item in [(id,name,thread) for id, name, thread in zip(proc_pid, proc_name, proc_thread)]:
+        result += ' - '.join(str(i) for i in item) + '\n'
+    
+    return result
 
 
 def kill(pid):
@@ -75,45 +86,54 @@ def kill(pid):
         command = "taskkill /F /PID " + str(pid)
 
     # Kill the process
-    os.system(command)
+    
+    if os.system(command) != 0:
+        return (f"Error: Failed to kill process with PID {pid}.\n")
+    else:
+        return f"Process with PID {pid} has been killed.\n"
 
 
 def start(name):
-    os.system(name)
+    # TODO: STUPID
+    if sf.check_os() == "linux":
+        command = name
+    else:
+        command = "start " + name
+
+    if os.system(command) != 0:
+        return (f"Error: Failed to start application with name {name}.\n")
+    else:
+        return f"Server has start application with name {name}.\n"
 
 
 def parse_msg(msg):
-    command = [x.upper() for x in msg.split(" - ")]
-    return command[1:]
+    command = [x for x in msg.split(" - ")]
+    return command
 
+def application_process(func):
+    command = parse_msg(func)
+    return_text = ""
+    for item in command:
+        print(item)
+        result = ""
+        if "Application" in item:
+            result = "===List of application===\n" + "Id - Name - Thread\n" + list_apps()
+        if "List" in item:
+            result = "===List of process===\n" + "Id - Name - Thread\n" + list_processes()
+        if "Kill" in item:
+            id = re.search(r"id:(\d+)]",item).group(1)
+            result = kill(id)
+        if "Start" in item:
+            name = re.search(r"id:(\w+)", item).group(1)
+            print(name)
+            result = start(name)
 
-if __name__ == '__main__':
-    '''
-    if linux -> list_app = list_proc
-    '''
-    pass
-    # # commands = parse_msg("Application/Process - List")
+        if result != "":
+            return_text += "\n" + result
 
-    # for command in commands:
-    #     print(command)
-    #     res = 0
-    #     ls1 = list()
-    #     ls2 = list()
-    #     ls3 = list()
+    return return_text
 
-    #     # 1-list
-    #     if command == "LIST":
-    #         if "APPLICATION" in commands:
-    #             ls1, ls2, ls3 = list_apps()
-    #         else:
-    #             ls1, ls2 = list_processes()
-    #         print("l1: ", ls1)
-    #         print("l2: ", ls2)
-    #     # 2 - kill
-    #     elif command == "KILL":
-    #         pass
-    #     # 3 - clear
-    #     elif command == "CLEAR":
-    #         pass
-    #     elif command == "START":
-    #         pass
+    
+# with open('example.txt', 'w') as f:
+#     f.write(("Application - List - Kill[id:3] - Start[id:zalo]"))
+#- Kill[id:3] - Start[id:notepad.exe] 

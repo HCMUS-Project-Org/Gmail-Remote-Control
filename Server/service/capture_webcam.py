@@ -9,16 +9,19 @@ def capture_webcam_image():
 
     # check if camera is opened successfully
     if not camera.isOpened():
-        print("Unable to open camera")
+        return "Unable to open camera"
     else:
         # capture a frame from the camera
-        _, image = camera.read()
+        bool, image = camera.read()
 
-        # specify the file path and name
-        file_path = os.path.join(sf.ASSET_PATH, "webcam_image.png")
+        if bool: 
+            return image
 
-        # Save image
-        cv2.imwrite(file_path, image)
+        # # specify the file path and name
+        # file_path = os.path.join(sf.ASSET_PATH, "webcam_image.png")
 
-        # release the camera
-        camera.release()
+        # # Save image
+        # cv2.imwrite(file_path, image)
+
+        # # release the camera
+        # camera.release()
