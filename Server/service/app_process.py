@@ -90,7 +90,7 @@ def kill(pid):
     if os.system(command) != 0:
         return (f"Error: Failed to kill process with PID {pid}.\n")
     else:
-        return f"Process with PID {pid} has been killed.\n"
+        return f"Process with PID {pid} was killed.\n"
 
 
 def start(name):
@@ -103,7 +103,7 @@ def start(name):
     if os.system(command) != 0:
         return (f"Error: Failed to start application with name {name}.\n")
     else:
-        return f"Server has start application with name {name}.\n"
+        return f"Server started application with name {name}.\n"
 
 
 def parse_msg(msg):
@@ -114,7 +114,6 @@ def application_process(func):
     command = parse_msg(func)
     return_text = ""
     for item in command:
-        print(item)
         result = ""
         if "Application" in item:
             result = "===List of application===\n" + "Id - Name - Thread\n" + list_apps()
@@ -125,7 +124,6 @@ def application_process(func):
             result = kill(id)
         if "Start" in item:
             name = re.search(r"id:(\w+)", item).group(1)
-            print(name)
             result = start(name)
 
         if result != "":

@@ -1,7 +1,7 @@
 import os
 from time import sleep
 from . import shared_function as sf
-
+#import shared_function as sf
 
 def shutdown(delay):
     '''Delay then shutdown the computer'''
@@ -13,8 +13,9 @@ def shutdown(delay):
         os.system("shutdown -h now")
 
 
-def logout():
-    '''Log out the computer'''
+def logout(delay):
+    '''Delay then Log out the computer'''
+    sleep(int(delay))
 
     if sf.check_os() == 'window':
         os.system(f"shutdown -l")
@@ -22,8 +23,12 @@ def logout():
         os.system(f"logout")
 
 def shutdown_logout(function):
+    #TODO: shutdown before it can send mail
     if "Shutdown" in function:
         shutdown(5)
-    else:
-        logout()
+        return "\nWindow shutdown"
+    elif "Logout":
+        logout(5)
+        return "\nWindow shutdown"
 
+shutdown_logout("Logout")

@@ -1,9 +1,9 @@
 import cv2
-import os
-from . import shared_function as sf
+#import os
+#from . import shared_function as sf
 
 
-def capture_webcam_image():
+def capture_webcam_image(default_value=None):
     # initialize the camera
     camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
@@ -16,6 +16,8 @@ def capture_webcam_image():
 
         if bool: 
             return image
+        else:
+            return "Unable to capture"
 
         # # specify the file path and name
         # file_path = os.path.join(sf.ASSET_PATH, "webcam_image.png")
