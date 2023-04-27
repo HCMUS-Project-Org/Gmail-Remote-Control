@@ -51,6 +51,10 @@
 	height: 100px;
 }
 
+.empty-command-btn {
+	height: 40px;
+}
+
 .command-btn button {
 	border-width: 0px;
 	border-radius: 7px;

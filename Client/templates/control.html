@@ -7,8 +7,9 @@
 
 <!-- ------------------------------ -->
 {% block email %} Email Remote Control <br />
+{% if isAuthor == True: %}
 <span>{{client_email}}</span>
-{% endblock %}
+{% endif %} {% endblock %}
 
 <!-- ------------------------------ -->
 {% block body %}
@@ -49,6 +50,7 @@
 			</div>
 
 			<!-- action button -->
+			{% if isAuthor == True: %}
 			<div
 				class="command-btn d-flex align-items-start justify-content-end px-3 mt-2"
 			>
@@ -67,6 +69,9 @@
 					</button>
 				</div>
 			</div>
+			{% else %}
+			<div class="empty-command-btn"></div>
+			{% endif %}
 			<!-- end action button -->
 		</div>
 	</div>
@@ -78,14 +83,23 @@
 {% endblock %} {% block ribbon_button %}
 
 <div
-	class="ribbon-btn-group d-flex justify-content-center align-items-center gap-3"
+	class="ribbon-btn-group d-flex justify-content-center align-items-center gap-2"
 >
 	<button data-bs-toggle="modal" data-bs-target="#aboutUsModal">
 		<div data-bs-toggle="tooltip" data-bs-placement="top" title="About us">
 			<img src="../static/assets/icons/team.png" alt="about us icon" />
 		</div>
 	</button>
+	<button data-bs-toggle="modal" data-bs-target="#instructionModal">
+		<div data-bs-toggle="tooltip" data-bs-placement="top" title="Instruction">
+			<img
+				src="../static/assets/icons/instruction.png"
+				alt="Instruction icon"
+			/>
+		</div>
+	</button>
 
+	{% if isAuthor == True: %}
 	<form action="/disconnect" method="POST">
 		<button
 			data-bs-toggle="tooltip"
@@ -95,6 +109,13 @@
 			<img src="../static/assets/icons/exit.png" alt="exit icon" />
 		</button>
 	</form>
+	{% else %}
+	<form action="/" method="GET">
+		<button data-bs-toggle="tooltip" data-bs-placement="top" title="Login">
+			<img src="../static/assets/icons/login.png" alt="login icon" />
+		</button>
+	</form>
+	{% endif %}
 </div>
 
 {% endblock %} {% block script %}

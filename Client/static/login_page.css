@@ -5,11 +5,7 @@
 	background-size: 400px;
 }
 
-.bg-computer {
-	width: 400px;
-}
-
-.login-btn {
+.btn {
 	width: 300px;
 	height: 70px;
 	background-color: #ea4335;
@@ -17,11 +13,19 @@
 	border-width: 0px;
 }
 
-.login-btn:hover {
+.anonymous {
+	background-color: #949494;
+}
+
+.anonymous:hover {
+	background-color: #333939 !important;
+}
+
+.btn:hover {
 	background-color: #b83024;
 }
 
-.login-btn > img {
+.btn > img {
 	width: 50px;
 	background-color: white;
 	border-radius: 50%;
@@ -29,11 +33,11 @@
 	margin: auto 7px !important;
 }
 
-.login-btn:hover > img {
+.btn:hover > img {
 	background-color: rgb(215, 215, 215);
 }
 
-.login-btn span {
+.btn span {
 	color: white;
 	font-size: 22px;
 }

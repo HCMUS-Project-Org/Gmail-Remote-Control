@@ -93,9 +93,9 @@ def control():
 
     # authorize user
     if not authorize():
-        return redirect(url_for('login'))
+        return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL, isAuthor=False)
 
-    return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL)
+    return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL,  isAuthor=True)
 
 
 @app.route('/review', methods=['GET', 'POST'])
