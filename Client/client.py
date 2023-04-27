@@ -51,8 +51,6 @@ def authorize():
 def index():
     return redirect(url_for('login'))
 
-# TODO: fix loi neu khong cap du 2 quyen thi bi loi
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
