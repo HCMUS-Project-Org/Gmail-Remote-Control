@@ -21,3 +21,5 @@ psutil: pip install psutil
 google:
 pip install google-api-python-client
 pip install google-auth google-auth-oauthlib google-auth-httplib2
+
+TODO: update README.md instruction

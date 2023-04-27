@@ -14,10 +14,14 @@
 <div class="w-100">
 	<!-- begin login form -->
 	<div
-		class="d-flex flex-column justify-content-center align-items-center gap-2 mt-5 pt-5"
+		class="d-flex flex-column justify-content-center align-items-center gap-2 mt-5"
 	>
 		<h1 class="mt-5">Login</h1>
-		<form method="post" action="/control">
+		<form
+			method="post"
+			action="/control"
+			class="w-100 d-flex flex-column justify-content-center align-items-center"
+		>
 			<button
 				class="anonymous btn d-flex justify-content-between align-items-center"
 				type="submit"
@@ -30,9 +34,11 @@
 					<span>Use without account </span>
 				</div>
 			</button>
-			<div class="text-center text-danger">{{error}}</div>
 		</form>
-		<form method="post">
+		<form
+			method="post"
+			class="w-100 d-flex flex-column justify-content-center align-items-center"
+		>
 			<button
 				class="btn d-flex justify-content-between align-items-center"
 				type="submit"

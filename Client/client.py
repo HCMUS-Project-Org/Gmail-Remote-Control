@@ -61,19 +61,30 @@ def login():
     if request.method == "POST":
         global client_profile, gmail_credential, gmail_service
 
-        gmail_credential = create_gmail_credential()
-        gmail_service = build_gmail_service(gmail_credential)
+        try:
+            gmail_credential = create_gmail_credential()
+            gmail_service = build_gmail_service(gmail_credential)
+        except:
+            error = "You must grant permission to access your Gmail account"
 
-        isSuccess, client_profile = check_authentication_success(gmail_service)
+        try:
+            isSuccess, client_profile = check_authentication_success(
+                gmail_service)
+        except:
+            isSuccess = False
+            client_profile = {
+                'emailAddress': None,
+            }
 
-        if isSuccess:
+        if isSuccess and error == "":
             print("AUTHENTICATION: Success")
             print("CLIENT PROFILE:", client_profile)
 
             return redirect(url_for('control'))
         else:
             print("AUTHENTICATION: Fail")
-            error = "Authentication failed"
+            if error == "":
+                error = "Authentication failed"
 
     return render_template('login.html', error=error)
 
