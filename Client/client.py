@@ -25,7 +25,9 @@ Bootstrap(app)
 gmail_credential = None
 gmail_service = None
 thread_id = None
-client_profile = None
+client_profile = {
+    'emailAddress': None,
+}
 
 
 def create_asset_folder():
@@ -48,6 +50,8 @@ def authorize():
 @app.route('/')
 def index():
     return redirect(url_for('login'))
+
+# TODO: fix loi neu khong cap du 2 quyen thi bi loi
 
 
 @app.route('/login', methods=['GET', 'POST'])

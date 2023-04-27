@@ -8,3 +8,4 @@ Client/watch.json
 
 # Server
 Server/assets
+Server/service/__pycache__

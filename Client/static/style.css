@@ -79,6 +79,24 @@ h2 {
 	font-weight: bold;
 }
 
+.instruction {
+	max-height: 550px !important;
+}
+
+.instruction .modal-body {
+	height: 500px;
+}
+
 .modal-body img {
 	object-fit: cover;
+}
+
+.instruction img {
+	object-fit: contain !important;
+}
+
+.img-caption {
+	text-align: center;
+	color: gray;
+	font-size: 13px;
 }

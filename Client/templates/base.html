@@ -51,7 +51,7 @@
 			</div>
 		</div>
 
-		<!-- Modal -->
+		<!-- Modal About us-->
 		<div
 			class="modal fade"
 			id="aboutUsModal"
@@ -159,6 +159,153 @@
 				</div>
 			</div>
 		</div>
+		<!-- End modal About us -->
+
+		<!-- Modal instruction-->
+		<div
+			class="modal fade"
+			id="instructionModal"
+			tabindex="-1"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content instruction rounded">
+					<div
+						class="ribbon-bar rounded py-2 d-flex justify-content-between align-items-center"
+					>
+						<button
+							class="action-dot dot-red border-0 ms-3"
+							data-bs-dismiss="modal"
+						>
+							<span class="action-dot dot-red"></span>
+						</button>
+						<h5 class="modal-title w-100 text-center" id="modal-label">
+							User manual
+						</h5>
+					</div>
+					<div class="modal-body overflow-scroll mx-1 mb-3">
+						<div>
+							Program to control remote computer by email, in which:
+							<ul>
+								<li>
+									<b>The user</b> (client) sends an email (containing
+									requests to be made by the server) to the server's
+									email (server).
+								</li>
+								<li>
+									<b>The server</b> reads the incoming email, performs
+									the tasks the client sends and sends the results back
+									to the client by replying to the client's email.
+								</li>
+							</ul>
+						</div>
+						<div class="d-flex flex-column gap-3">
+							<!-- Login -->
+							<div>
+								<h4><b>Login</b></h4>
+								<div>
+									<img
+										class="w-100"
+										src="../static/assets/page/login.png"
+										alt="login page"
+									/>
+									<p class="img-caption">Picture 1: Login page</p>
+									<div class="content">
+										User have 2 choice to using the program:
+										<ul>
+											<li>
+												<b>Without google account</b>, in this
+												option, user can use program in anonymous
+												mode
+												<i
+													>(In this feature, the user has to send
+													and view the response manually, the
+													program only helps the user to write
+													valid commands to the server)</i
+												>
+											</li>
+											<li>
+												<b>Within google account</b>, in this
+												option, user must provide read and send
+												email permission
+												<i
+													>(In this feature, the program will help
+													you to send and view reply email)</i
+												>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- Control -->
+							<div>
+								<h4><b>Control</b></h4>
+								<div>
+									<img
+										class="w-100"
+										src="../static/assets/page/control.png"
+										alt="control page"
+									/>
+									<p class="img-caption">Picture 2: Control page</p>
+									<div class="content">
+										Allow user selects the command to be executed by
+										the server, the program will auto generate email
+										and send to server.
+									</div>
+								</div>
+							</div>
+							<!-- Review -->
+							<div>
+								<h4><b>Review</b></h4>
+								<div>
+									<img
+										class="w-100"
+										src="../static/assets/page/receive.png"
+										alt="receive page"
+									/>
+									<p class="img-caption">Picture 3: Receive page</p>
+									<div class="content">
+										The application will wait for the server to reply
+										then display the result in the window. User can:
+										<ul>
+											<li>See the content of the reply mail</li>
+											<li>See the details of the attached file</li>
+											<li>
+												Download the attached file to the Download
+												folder
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- Ribbon -->
+							<div>
+								<h4><b>Ribbon bar</b></h4>
+								<div>
+									<img
+										class="w-100"
+										src="../static/assets/page/ribbon-bar.png"
+										alt="ribbon bar"
+									/>
+									<p class="img-caption">Picture 4: Ribbon bar</p>
+									<div class="content">
+										User can view detail information of application,
+										include:
+										<ul>
+											<li>About us</li>
+											<li>User manual</li>
+											<li>Disconnect (for who login)</li>
+											<li>Login (for anonymous mode)</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end modal Instruction -->
 	</body>
 
 	<script
