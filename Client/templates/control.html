@@ -40,12 +40,37 @@
 		<div
 			class="h-100 mail-box d-flex flex-column justify-content-center gap-2 px-3 py-3"
 		>
-			<div class="email-from">
-				<span class="fw-bold">To:&nbsp;</span>
-				<span>{{server_email}}</span>
+			<div class="email-from d-flex justify-content-between">
+				<div>
+					<span class="fw-bold">To:&nbsp;</span>
+					<span>{{server_email}}</span>
+				</div>
+				<button class="copy-btn" onclick="CopyContent('from')">
+					<div
+						data-bs-toggle="tooltip"
+						data-bs-placement="top"
+						title="Copy"
+					>
+						<img src="../static/assets/icons/copy.png" alt="copy icon" />
+					</div>
+				</button>
 			</div>
 			<div class="email-body h-100">
-				<span class="fw-bold">Content:</span><br />
+				<div class="d-flex justify-content-between align-items-center">
+					<span class="fw-bold">Content:</span>
+					<button class="copy-btn" onclick="CopyContent('content')">
+						<div
+							data-bs-toggle="tooltip"
+							data-bs-placement="top"
+							title="Copy"
+						>
+							<img
+								src="../static/assets/icons/copy.png"
+								alt="copy icon"
+							/>
+						</div>
+					</button>
+				</div>
 				<span id="email_body"></span>
 			</div>
 
@@ -367,6 +392,16 @@
 	let extend_board_index = 0;
 	for (let i = 0; i < command_tree.length + 1; i++) {
 		list_command.push([]);
+	}
+
+	async function CopyContent(field) {
+		clipboard = content.replaceAll("<br/>", "\n");
+
+		if (field == "from") {
+			clipboard = `{{server_email}}`;
+		}
+
+		await navigator.clipboard.writeText(clipboard);
 	}
 
 	function SendingAnimate() {
