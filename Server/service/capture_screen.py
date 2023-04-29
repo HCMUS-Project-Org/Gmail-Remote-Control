@@ -12,4 +12,3 @@ def capture_screen(default_value=None):
 
     # # save the captured image
     # screenshot.save(file_path)
-

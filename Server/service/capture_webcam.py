@@ -1,4 +1,5 @@
 import cv2
+from PIL import Image
 #import os
 #from . import shared_function as sf
 
@@ -15,7 +16,13 @@ def capture_webcam_image(default_value=None):
         bool, image = camera.read()
 
         if bool: 
-            return image
+            #convert color space from BGR to RGB
+            rgb_frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+            # create a PIL Image from the numpy array
+            pil_image = Image.fromarray(rgb_frame)
+
+            return pil_image
         else:
             return "Unable to capture"
 
