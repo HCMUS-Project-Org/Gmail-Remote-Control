@@ -154,40 +154,9 @@
 			command: "Key logger",
 			id: "key-logger",
 			input: [],
-			child_command: [
-				{
-					command: "Hook",
-					id: "hook",
-					input: [],
-					child_command: [],
-				},
-				{
-					command: "Print",
-					id: "print",
-					input: [],
-					child_command: [],
-				},
-			],
+			child_command: [],
 		},
-		{
-			command: "Shutdown/Logout",
-			id: "shutdown-logout",
-			input: [],
-			child_command: [
-				{
-					command: "Shutdown",
-					id: "shutdown",
-					input: [],
-					child_command: [],
-				},
-				{
-					command: "Logout",
-					id: "logout",
-					input: [],
-					child_command: [],
-				},
-			],
-		},
+
 		{
 			command: "Capture screen",
 			id: "capture-screen",
@@ -332,7 +301,12 @@
 						{
 							field: "path",
 							type: "text",
-							placeholder: "C:/",
+							placeholder: "HKEY_CURRENT_USER\\SOFTWARE\\MyKey",
+						},
+						{
+							field: "name-value",
+							type: "text",
+							placeholder: "Test123",
 						},
 					],
 					child_command: [],
@@ -344,17 +318,29 @@
 						{
 							field: "path",
 							type: "text",
-							placeholder: "C:/",
+							placeholder: "HKEY_CURRENT_USER\\SOFTWARE\\MyKey",
+						},
+						{
+							field: "name-value",
+							type: "text",
+							placeholder: "Test123",
 						},
 						{
 							field: "value",
 							type: "text",
-							placeholder: "C:/",
+							placeholder: "Test123, 0101,...",
 						},
 						{
 							field: "value-type",
-							type: "text",
-							placeholder: "C:/",
+							type: "radio",
+							value: [
+								"REG_SZ",
+								"REG_BINARY",
+								"REG_DWORD",
+								"REG_QWORD",
+								"REG_MULTI_SZ",
+								"REG_EXTEND_SZ",
+							],
 						},
 					],
 					child_command: [],
@@ -366,7 +352,7 @@
 						{
 							field: "path",
 							type: "text",
-							placeholder: "C:/",
+							placeholder: "HKEY_CURRENT_USER\\SOFTWARE\\MyKey\\NewKey",
 						},
 					],
 					child_command: [],
@@ -378,9 +364,28 @@
 						{
 							field: "path",
 							type: "text",
-							placeholder: "C:/",
+							placeholder: "HKEY_CURRENT_USER\\SOFTWARE\\MyKey\\NewKey",
 						},
 					],
+					child_command: [],
+				},
+			],
+		},
+		{
+			command: "Shutdown/Logout",
+			id: "shutdown-logout",
+			input: [],
+			child_command: [
+				{
+					command: "Shutdown",
+					id: "shutdown",
+					input: [],
+					child_command: [],
+				},
+				{
+					command: "Logout",
+					id: "logout",
+					input: [],
 					child_command: [],
 				},
 			],
@@ -479,26 +484,49 @@
 							>
 								<span class="action-dot dot-red"></span>
 							</button>
-							<h5 class="modal-title w-75 text-center" id="modal-label">${child_command.command}</h5>
+							<h5 class="modal-title w-100 text-center" id="modal-label">${child_command.command}</h5>
 						</div>
 						<div class="modal-body">
 							<div>`;
 
 		for (let i = 0; i < child_command.input.length; i++) {
-			modal_html += `
-								<div class="mb-2 row">
-									<label class="col-2" for="input-${parent_idx}.${child_idx}_${child_command.input[i].field}" class="col-form-label">
-										${child_command.input[i].field}:
-									</label>
-									<input
-										type="${child_command.input[i].type}"
-										class="col"
-										id="${parent_idx}.${child_idx}_input-${command_tree[parent_idx].child_command[child_idx].id}-${child_command.input[i].field}"
-										placeholder="${child_command.input[i].placeholder}"
-										oninput="InputValue(this.id)"
-									/>
-								</div>
-						`;
+			if (child_command.input[i].type == "radio") {
+				modal_html += `
+									<div class="mb-2 row">
+										<label class="col-2" for="input-${parent_idx}.${child_idx}_${child_command.input[i].field}" class="col-form-label">
+											${child_command.input[i].field}:
+										</label>
+										<div class="col row">
+										`;
+
+				for (let j = 0; j < child_command.input[i].value.length; j++) {
+					modal_html += `
+										<span class="col-6">
+											<div class="d-flex gap-2">
+												<input type="radio" id="${child_command.input[i].value[j]}" name="${child_command.id}_${child_command.input[i].type}" value="${child_command.input[i].value[j]}">
+												<label for="${child_command.input[i].value[j]}">${child_command.input[i].value[j]}</label>
+											</div>
+										</span>
+										`;
+				}
+
+				modal_html += `</div></div>`;
+			} else {
+				modal_html += `
+									<div class="mb-2 row">
+										<label class="col-2" for="input-${parent_idx}.${child_idx}_${child_command.input[i].field}" class="col-form-label">
+											${child_command.input[i].field}:
+										</label>
+										<input
+											type="${child_command.input[i].type}"
+											class="col"
+											id="${parent_idx}.${child_idx}_input-${command_tree[parent_idx].child_command[child_idx].id}-${child_command.input[i].field}"
+											placeholder="${child_command.input[i].placeholder}"
+											oninput="InputValue(this.id)"
+										/>
+									</div>
+							`;
+			}
 		}
 		modal_html += `
 							</div>
@@ -709,9 +737,6 @@
 				);
 
 				command_btn.dataset.bsTarget = `#inputCommandModal-${command_tree[parentIndex].child_command[childIndex].id}`;
-				// command_btn.onclick = () => {
-				// 	null;
-				// };
 				command_btn.innerHTML = `
 					<div>
 						${command_tree[parentIndex].child_command[childIndex].command}
