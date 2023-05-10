@@ -55,6 +55,10 @@
 	height: 40px;
 }
 
+.submit-btn:disabled {
+	background-color: #868686;
+}
+
 .copy-btn {
 	border: none;
 	width: 15px;

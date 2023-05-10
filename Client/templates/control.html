@@ -437,10 +437,17 @@
 
 			element = document.getElementById(id);
 
-			if (!element.value) {
-				flag = false;
-				break;
-			}
+			console.log(
+				"🚀  command_tree[parent_idx].child_command[child_idx].input[i].field:",
+				command_tree[parent_idx].child_command[child_idx].input[i].field,
+			);
+
+			try {
+				if (!element.value) {
+					flag = false;
+					break;
+				}
+			} catch (error) {}
 		}
 
 		return flag;
@@ -462,6 +469,11 @@
 			: true;
 
 		// print("list_command", list_command);
+	}
+
+	function PositiveNumber(number) {
+		number = !!number && Math.abs(number) >= 0 ? Math.abs(number) : null;
+		return number;
 	}
 
 	function GenModalHTML(parent_idx, child_idx, child_command) {
@@ -503,8 +515,14 @@
 					modal_html += `
 										<span class="col-6">
 											<div class="d-flex gap-2">
-												<input type="radio" id="${child_command.input[i].value[j]}" name="${child_command.id}_${child_command.input[i].type}" value="${child_command.input[i].value[j]}">
-												<label for="${child_command.input[i].value[j]}">${child_command.input[i].value[j]}</label>
+												<input type="radio" id="${child_command.input[i].value[j]}" name="${
+						child_command.id
+					}_${child_command.input[i].type}" value="${
+						child_command.input[i].value[j]
+					}" ${j == 0 ? "checked" : ""}>
+												<label for="${child_command.input[i].value[j]}">${
+						child_command.input[i].value[j]
+					}</label>
 											</div>
 										</span>
 										`;
@@ -514,15 +532,24 @@
 			} else {
 				modal_html += `
 									<div class="mb-2 row">
-										<label class="col-2" for="input-${parent_idx}.${child_idx}_${child_command.input[i].field}" class="col-form-label">
+										<label class="col-2" for="input-${parent_idx}.${child_idx}_${
+					child_command.input[i].field
+				}" class="col-form-label">
 											${child_command.input[i].field}:
 										</label>
 										<input
-											type="${child_command.input[i].type}"
 											class="col"
-											id="${parent_idx}.${child_idx}_input-${command_tree[parent_idx].child_command[child_idx].id}-${child_command.input[i].field}"
+											type="${child_command.input[i].type}" 
+											${child_command.input[i].type == "number" ? " min='0'" : ""}
+											id="${parent_idx}.${child_idx}_input-${
+					command_tree[parent_idx].child_command[child_idx].id
+				}-${child_command.input[i].field}"
 											placeholder="${child_command.input[i].placeholder}"
-											oninput="InputValue(this.id)"
+											oninput="${
+												child_command.input[i].type == "number"
+													? "PositiveNumber(this.value); InputValue(this.id)"
+													: "InputValue(this.id);"
+											}"
 										/>
 									</div>
 							`;
@@ -542,7 +569,7 @@
 							<button
 								id="${parent_idx}.${child_idx}-submit-modal"
 								type="button"
-								class="bg-light-black text-white"
+								class="submit-btn bg-light-black text-white"
 								data-bs-dismiss="modal"
 								onclick="AddCommand(
 									'${parent_idx}.${child_idx}_${command_tree[parent_idx].child_command[child_idx].command}'
@@ -781,16 +808,33 @@
 							.length;
 						i++
 					) {
-						command_id = `${parentIndex}.${childIndex}_input-${command_tree[parentIndex].child_command[childIndex].id}-${command_tree[parentIndex].child_command[childIndex].input[i].field}`;
+						try {
+							command_id = `${parentIndex}.${childIndex}_input-${command_tree[parentIndex].child_command[childIndex].id}-${command_tree[parentIndex].child_command[childIndex].input[i].field}`;
 
-						console.log("🚀  command_id:", command_id);
-						command_value = document.getElementById(command_id).value;
+							console.log("🚀  command_id:", command_id);
+
+							command_value = document.getElementById(command_id).value;
+						} catch (error) {
+							// radio input case
+							radio_name = `${command_tree[parentIndex].child_command[childIndex].id}_radio`;
+
+							console.log("🚀  radio_name:", radio_name);
+
+							values = document.getElementsByName(radio_name);
+							for (radio of values) {
+								if (radio.checked) {
+									command_value = radio.value;
+								}
+							}
+						}
 
 						command += i == 0 ? "" : ", ";
 						command += `${command_tree[parentIndex].child_command[childIndex].input[i].field}:${command_value}`;
 					}
 
 					command += "]";
+
+					// set-val_radio
 
 					// change data-bs-target
 					let command_btn = document.getElementById(
