@@ -6,6 +6,8 @@ import re
 import winreg
 import json
 import os
+from . import shared_function as sf
+#import shared_function as sf
 
 
 def parse_data(full_path):
@@ -58,8 +60,6 @@ def str_to_dec(s):
     return res
 
 
-
-
 '''
 Get a value of a registry key
 Input: 
@@ -77,9 +77,9 @@ def get_value(full_path):
         value_of_value, value_type = winreg.QueryValueEx(
             opened_key, value_list[2])
         winreg.CloseKey(opened_key)
-        return ["1", value_of_value]
+        return f'"{full_path}" value is "{value_of_value}"'
     except:
-        return ["0", "0"]
+        return "Server can not read value"
 
 
 '''
@@ -115,9 +115,9 @@ def set_value(full_path, value, value_type):
         winreg.SetValueEx(opened_key, value_list[2], 0, getattr(
             winreg, value_type), value)
         winreg.CloseKey(opened_key)
-        return ["1", "1"]
+        return "Server set value successfully"
     except:
-        return ["0", "0"]
+        return "Server set value fail"
 
 
 
@@ -126,9 +126,9 @@ def create_key(full_path):
     try:
         winreg.CreateKey(
             getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2])
-        return ["1", "1"]
+        return f"Server created new key at {full_path}"
     except:
-        return ["0", "0"]
+        return "Server cannot create new key"
 
 
 def delete_key(full_path):
@@ -136,65 +136,53 @@ def delete_key(full_path):
     try:
         winreg.DeleteKey(
             getattr(winreg, value_list[0]), value_list[1] + r'\\' + value_list[2])
-        return ["1", "1"]
+        return f"Server deleted key at {full_path}"
     except:
-        return ["0", "0"]
+        return "Server cannot delete key"
+
+def parse_msg(msg):
+    command = [x for x in msg.split(" - ")]
+    return command
+
+def parse_cmd(item):
+    path = re.search(r'path:([\w\\]+)', item)
+    path = path.group(1) if path else None
+
+    name = re.search(r'name:([\w]+)', item)
+    name = name.group(1) if name else None
+
+    value = re.search(r'value:([\w]+)', item)
+    value = value.group(1) if value else None
+
+    value_type = re.search(r'type:([\w]+)', item)
+    value_type = value_type.group(1) if value_type else None
+
+    return path, name, value ,value_type
 
 
-def registry(client):
-    BUFSIZ = 32768
-    while True:
-        header = client.recv(BUFSIZ).decode("utf8")
-        if ("STOP_EDIT_REGISTRY" in header):
-            break
-        data_sz = int(header)
-        data = b""
-        while len(data) < data_sz:
-            packet = client.recv(BUFSIZ)
-            data += packet
+def registry(msg):
+    if sf.check_os() != "window":
+        return f"Server running on {sf.check_os()}"
+    command = parse_msg(msg)
+    return_text = ""
 
-        msg = json.loads(data.decode('utf8'))
-        # extract elements
-        ID = msg['ID']
-        full_path = msg['path']
-        name_value = msg['name_value']
-        value = msg['value']
-        v_type = msg['v_type']
-        res = ['0', '0']
+    for item in command:
+        path, name, value, value_type = parse_cmd(item)
+        result = ''
+        if "Get value" in item: 
+            result = "<p><b>===Get registry value===</b></p>\n" + get_value(path + '\\' + name)
 
-        print(ID)
-        print(full_path)
-        print(name_value)
-        print(value)
-        print(v_type)
+        elif "Set value" in item:
+            result = "<p><b>===Set registry value===</b></p>\n" + set_value(path + '\\' + name, value, value_type)
 
-        # ID==0 run file.reg
-        # path is detail of file .reg
-        if ID == 0:
-            try:
-                outout_file = os.getcwd() + '\\run.reg'
-                with open(outout_file, 'w+') as f:
-                    f.write(full_path)
-                    f.close()
-                os.system(r'regedit /s ' + os.getcwd() + '\\run.reg')
-                res = ["1", "1"]
-                print('file reg created')
-            except:
-                res = ["0", "0"]
-                print('cannot create file reg')
+        elif "Create key" in item:
+            result = "<p><b>===Create new registry key===</b></p>\n" + create_key(path)
 
-        elif ID == 1:
-            res = get_value(full_path + r'\\' + name_value)
+        elif "Delete key" in item:
+            result = "<p><b>===Delete registry key===</b></p>\n" + delete_key(path + '\\')
 
-        elif ID == 2:
-            res = set_value(full_path + r'\\' + name_value, value, v_type)
+        if result != '':
+            return_text += "\n" + result 
 
-        elif ID == 3:
-            res = create_key(full_path)
+    return "<p><b><u>++++REGISTRY MANAGEMENT++++</u></b></p>\n" + return_text
 
-        elif ID == 4:
-            res = delete_key(full_path + r'\\')
-        client.sendall(bytes(res[0], "utf8"))
-        client.sendall(bytes(str(res[1]), "utf8"))
-
-    return

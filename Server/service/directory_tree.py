@@ -2,8 +2,16 @@ from itertools import islice
 from pathlib import Path
 import os
 import shutil
+import re
+import platform
 from . import shared_function as sf
+#import shared_function as sf
 
+# def check_path(path):
+#     if "~" in path:
+#         return sf.check_os() == "linux"
+#     else:
+#         return sf.check_os() == "window"
 
 def show_directory_tree(root, deep_level=2):
     # prefix components:
@@ -19,6 +27,7 @@ def show_directory_tree(root, deep_level=2):
         dir_path = Path(dir_path)  # accept string coerceable to Path
         files = 0
         directories = 0
+        result = ""
 
         def inner(dir_path: Path, prefix: str = '', level=-1):
             nonlocal files, directories
@@ -38,20 +47,26 @@ def show_directory_tree(root, deep_level=2):
                 elif not limit_to_directories:
                     yield prefix + pointer + path.name
                     files += 1
-        print(dir_path.name)
+        result = str(dir_path.name)
         iterator = inner(dir_path, level=level)
         for line in islice(iterator, length_limit):
-            print(line)
+            result += "\n" + line
         if next(iterator, None):
-            print(f'... length_limit, {length_limit}, reached, counted:')
-        print(f'\n{directories} directories' +
+            result += f'\n... length_limit, {length_limit}, reached, counted:'
+        result += (f'\n{directories} directories' +
               (f', {files} files' if files else ''))
+        
+        return result
 
     directory = sf.convert_to_path(root)
+    print(directory)
 
+    result = ""
+        
     try:
         for line in tree(directory, level=deep_level, limit_to_directories=True):
-            print(line)
+            result += line
+        return result
     except:
         pass
 
@@ -61,25 +76,37 @@ def copy_file(src_path, dst_path):
     src_path = sf.convert_to_path(src_path)
     dst_path = sf.convert_to_path(dst_path)
 
+
+    # check if source exist
+    if not sf.check_file_exist(src_path):
+        return f'The file "{src_path}" does NOT exist'
+
+    # create the destination directory if it doesn't exist
+    if not sf.check_file_exist(dst_path):
+        os.makedirs(dst_path)
+
     # copy the file
     shutil.copy(src_path, dst_path)
 
     # check if the file was copied successfully
     if sf.check_file_exist(dst_path):
-        print("The file was copied successfully")
+        return f'The file "{src_path}" was COPIED to "{dst_path}" successfully'
     else:
-        print("The file could not be copied")
+        return f'The file "{src_path}" could NOT be COPIED'
 
 
 def send_file_to_folder(src_path, dst_dir):
     '''send a file to another directory in server'''
-
     src_path = sf.convert_to_path(src_path)
     dst_dir = sf.convert_to_path(dst_dir)
 
+    # check if source exist
+    if not sf.check_file_exist(src_path):
+        return f'The file "{src_path}" does NOT EXIST'
+
     # create the destination directory if it doesn't exist
     if not sf.check_file_exist(dst_dir):
-        os.mkdir(dst_dir)
+        os.makedirs(dst_dir)
 
     # move the file to the destination directory
     shutil.move(src_path, dst_dir)
@@ -88,29 +115,80 @@ def send_file_to_folder(src_path, dst_dir):
     dst_path = os.path.join(dst_dir, os.path.basename(src_path))
 
     if sf.check_file_exist(dst_path):
-        print("The file was moved successfully")
+        return f'The file "{src_path}" was SENDED to "{dst_dir}" SUCCESSFULLY'
     else:
-        print("The file could not be moved")
+        return f'The file "{src_path}" could NOT be SENDED to "{dst_dir}"'
 
 
 def delete_file(file_path):
     '''delete file in server'''
     file_path = sf.convert_to_path(file_path)
 
+    # check if the file was deleted successfully
     if sf.check_file_exist(file_path):
         os.remove(file_path)
-        return "File deleted"
+        return f'File "{file_path}" was DELETED'
     else:
-        return "File not found"
+        return f'File "{file_path}" does NOT EXIST'
 
 
-if __name__ == "__main__":
-    # # linux: root = ~
-    # # windows: root = C:/
-    show_directory_tree(root="~", deep_level=2)
+def parse_msg(msg):
+    command = [x for x in msg.split(" - ")]
+    return command
 
-    # print(delete_file(file_path=r'C:\Users\Admin\Desktop\hi.txt'))
-    # copy_file(src_path="~/Desktop/hi.txt", dst_path="~/hi2.txt")
+def parse_cmd(item):
+    if "Show" in item:
+        match = re.search(r'Show\[path:(.*), level:(\d+)\]', item)
+        return match.group(1), int(match.group(2))
+        
+    elif "Delete file" in item:
+        return re.search(r'Delete file\[path:(.*)\]', item).group(1)
+    
+    # copy and send file
+    else:
+        match = re.search(r'\[source:(.*), destination:(.*)\]', item)
+        return match.group(1), match.group(2)
+    
 
-    # send_file_to_folder(src_path="~/Desktop/hi.txt",
-    #                     dst_dir="~/Desktop/Gmail-Remote-Controls.txt")
+def directory_manage(msg):
+    command = parse_msg(msg)
+    return_text = ""
+    for item in command:
+        result = ""
+        if "Show" in item:
+            param1, param2 = parse_cmd(item)
+            result = "===Show directory tree===\n" + show_directory_tree(param1,param2)
+
+        if "Copy file" in item:
+            print(item)
+            param1, param2 = parse_cmd(item)
+            print(param1,param2)
+            result = "===Copy file===\n" + copy_file(param1,param2)
+
+        if "Send file to folder" in item:
+            param1, param2 = parse_cmd(item)
+            result = "===Send file to another folder===\n" + send_file_to_folder(param1,param2)
+
+        if "Delete file" in item:
+            param = parse_cmd(item)
+            result = "===Delete file===\n" + delete_file(param)
+        
+        # if result == False:
+        #     return "===Directory tree===\n" + f"Server is currently using {platform.system()} please input right path"
+        
+        if result != "":
+            return_text += "\n" + result
+        
+    
+    return "++++DIRECTORY TREE MANAGEMENT++++\n" + return_text
+
+
+
+#msg = "Send file to folder[source:D:/a.txt, destination:D:/code]"
+#msg = "Delete file[path:D:/a.txt]"
+#msg = "Copy file[source:D:/code/a.txt, destination:D:/]""
+#msg = "Show[path:D:\etc, level:2]"
+
+
+
+

@@ -2,7 +2,7 @@ import psutil
 import os
 import re
 from . import shared_function as sf
-# import shared_function as sf
+#import shared_function as sf
 
 
 def list_apps():
@@ -94,14 +94,13 @@ def kill(pid):
 
 
 def start(name):
-    # TODO: STUPID
     if sf.check_os() == "linux":
         command = name
     else:
         command = "start " + name
 
     if os.system(command) != 0:
-        return (f"Error: Failed to start application with name {name}.\n")
+        return f"Error: Failed to start application with name {name}.\n"
     else:
         return f"Server started application with name {name}.\n"
 
@@ -120,18 +119,13 @@ def application_process(func):
         if "List" in item:
             result = "===List of process===\n" + "Id - Name - Thread\n" + list_processes()
         if "Kill" in item:
-            id = re.search(r"id:(\d+)]",item).group(1)
-            result = kill(id)
+            id = re.search(r"id:(\d+)\]",item).group(1)
+            result = "===Kill process===\n" + kill(id)
         if "Start" in item:
-            name = re.search(r"id:(\w+)", item).group(1)
-            result = start(name)
+            name = re.search(r'Start\[name:(.*)\]', item).group(1)
+            result = "===Start application===\n" + start(name)
 
         if result != "":
             return_text += "\n" + result
 
-    return return_text
-
-    
-# with open('example.txt', 'w') as f:
-#     f.write(("Application - List - Kill[id:3] - Start[id:zalo]"))
-#- Kill[id:3] - Start[id:notepad.exe] 
+    return "++++APP PROCESS MANAGEMENT++++\n" + return_text
