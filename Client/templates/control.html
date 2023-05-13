@@ -869,7 +869,7 @@
 		for (let i = 0; i < list_command.length; i++) {
 			if (list_command[i].length != 0) {
 				content += list_command[i].filter(Boolean).join(" - ");
-				content += "<br/>";
+				content += "|<br/>";
 			}
 		}
 		email_body.innerHTML = content;
