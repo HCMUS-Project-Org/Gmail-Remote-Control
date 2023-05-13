@@ -156,12 +156,12 @@ def fetch_gmail_replies(service, thread_id):
 
         messages = response['messages']
 
-        print('Number of messages in thread: %d' % len(messages))
+        print('\nNumber of messages in thread: %d' % len(messages))
         print("messages:", messages)
 
         for message in messages:
             # only consider messages in Inbox
-            if 'INBOX' in message['labelIds']:
+            if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
                 print("---------------------------\nINBOX")
                 headers = message['payload']['headers']
 
@@ -213,18 +213,19 @@ def main():
         # build service
         service = build_gmail_service(creds)
 
-        check_authentication_success(service)
+        # check_authentication_success(service)
 
-        # send email
-        to = 'quannguyenthanh558@gmail.com'
-        subject = 'Test Email'
-        message_text = 'This is a test email sent through Gmail API.'
+        # # send email
+        # to = 'quannguyenthanh558@gmail.com'
+        # subject = 'Test Email'
+        # message_text = 'This is a test email sent through Gmail API.'
 
-        message = create_gmail_message(to, subject, message_text)
-        message, thread_id = gmail_send_message(service, message)
+        # message = create_gmail_message(to, subject, message_text)
+        # message, thread_id = gmail_send_message(service, message)
 
         while True:
-            sender, date, body = fetch_gmail_replies(service, thread_id)
+            sender, date, body = fetch_gmail_replies(
+                service, "1881362dc08f0e03")
 
             if (sender is not None) and (date is not None) and (body is not None):
                 break

@@ -4,8 +4,8 @@ Client/.env
 Client/static/assets/received_files
 Client/credentials.json
 Client/token.json
-Client/watch.json
+Client/test.json
 
 # Server
-Server/assets
+Server/static/assets/received_files
 Server/service/__pycache__

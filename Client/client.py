@@ -118,9 +118,8 @@ def review():
 
     sender, date, body = None, None, None
     if request.method == "GET":
-        # sender, date, body = bind_incoming_emails(
-        #     gmail_service, thread_id)
-        sender, date, body = 'quan', '2021-05-20', "Hello"
+        sender, date, body = bind_incoming_emails(gmail_service, thread_id)
+        # sender, date, body = 'quan', '2021-05-20', "Hello"
 
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 
@@ -140,7 +139,7 @@ def send_request():
 
         # email content
         to = SERVER_EMAIL
-        subject = 'Control Request'
+        subject = 'TelePCEST'
         message_text = data["content"].replace("<br/>", "\n")
 
         print("message_txt:", message_text)
