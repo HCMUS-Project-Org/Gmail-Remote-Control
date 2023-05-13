@@ -11,15 +11,6 @@ import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
-          'https://www.googleapis.com/auth/gmail.send']
-ASSET_PATH = "./static/assets/received_files"
-
-
-def create_asset_folder():
-    if not os.path.exists(ASSET_PATH):
-        os.makedirs(ASSET_PATH)
-
 
 def setup_path(file_path):
     # Set up the path to the file.
@@ -27,6 +18,16 @@ def setup_path(file_path):
     path = os.path.join(dir_path, file_path)
 
     return path
+
+
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
+          'https://www.googleapis.com/auth/gmail.send']
+ASSET_PATH = setup_path("static/assets/received_files")
+
+
+def create_asset_folder():
+    if not os.path.exists(ASSET_PATH):
+        os.makedirs(ASSET_PATH)
 
 
 def remove_token():

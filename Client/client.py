@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 from flask_bootstrap import Bootstrap
 import glob
 
-
+dotenv_path = Path('../.env')
 load_dotenv()  # take environment variables from .env.
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 PORT = os.getenv("PORT")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL")
-ASSET_PATH = "./static/assets/received_files"
+ASSET_PATH = setup_path("./static/assets/received_files")
 
 
 app = Flask(__name__)

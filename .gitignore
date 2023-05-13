@@ -1,11 +1,12 @@
 # Client
 Client/__pycache__
-Client/.env
 Client/static/assets/received_files
 Client/credentials.json
 Client/token.json
 Client/test.json
 
 # Server
-Server/static/assets/received_files
 Server/service/__pycache__
+
+# Environment
+.env

