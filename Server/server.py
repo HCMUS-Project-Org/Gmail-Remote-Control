@@ -24,20 +24,19 @@ import datetime
 from dotenv import load_dotenv
 
 
+# Global variables
+global client
+
 dotenv_path = Path('../.env')
 load_dotenv()  # take environment variables from .env.
 
-
-# Global variables
-global client
 BUFSIZ = 1024 * 4
+# EMAIL_ADDRESS = os.getenv("SERVER_EMAIL")
+EMAIL_ADDRESS = "telepcest@gmail.com"
+EMAIL_PASSWORD = 'xthfegvikcjsqzvb'
 
-user = os.getenv("SERVER_EMAIL")
-# user = "telepcest@gmail.com"
-password = 'xthfegvikcjsqzvb'
-
-imap_url = 'imap.gmail.com'
-smtp_url = 'smtp.gmail.com'
+IMAP_URL = 'imap.gmail.com'
+SMTP_URL = 'smtp.gmail.com'
 
 
 command = []
@@ -50,13 +49,13 @@ def create_asset_folder():
 
 def connect():
     # create an IMAP4 class with SSL
-    imap = imaplib.IMAP4_SSL(imap_url, 993)
-    smtp = smtplib.SMTP_SSL(smtp_url)
+    imap = imaplib.IMAP4_SSL(IMAP_URL, 993)
+    smtp = smtplib.SMTP_SSL(SMTP_URL)
 
     # authenticate imap and smtp
     try:
-        imap.login(user, password)
-        smtp.login(user, password)
+        imap.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         # rest of your code for reading emails
     except imaplib.IMAP4.error as e:
         print(f"Login failed. Reason: {e}")
@@ -72,7 +71,7 @@ def send_mail(smtp, user, mail_message, content, msg: MIMEMultipart):
     # reply_msg['From'] = f'Mail server TelePC <{user}>'
     reply_msg['From'] = user
     reply_msg['To'] = sender
-    reply_msg['Subject'] = "Result of server TelePC"
+    reply_msg['Subject'] = "Server TelePC reply"
 
     reply_msg.attach(MIMEText('<div dir="ltr"><div>{content}</div><br><br><div><br></div><div>--<br><div dir="ltr" class="gmail_quote"><div class="gmail_quote"><div dir="ltr"><div><a href="mailto:{sender}?subject={subject}&body={content}"><strong>Reply</strong></a></div></div></div></div></div></div>'.format(
         sender=sender,
@@ -132,7 +131,7 @@ def receive_mail(imap, smtp):
                     res = function(format_content)
 
                     # reply back to sender
-                    send_mail(smtp, user, mail_message, content,  res)
+                    send_mail(smtp, EMAIL_ADDRESS, mail_message, content,  res)
 
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)

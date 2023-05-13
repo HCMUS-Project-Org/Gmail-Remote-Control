@@ -10,6 +10,7 @@ from googleapiclient.errors import HttpError
 import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
 
 
 def setup_path(file_path):
@@ -20,9 +21,15 @@ def setup_path(file_path):
     return path
 
 
+dotenv_path = Path('../.env')
+load_dotenv()  # take environment variables from .env.
+
+
+SERVER_EMAIL = os.getenv("SERVER_EMAIL")
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
-          'https://www.googleapis.com/auth/gmail.send']
-ASSET_PATH = setup_path("static/assets/received_files")
+          'https://www.googleapis.com/auth/gmail.send',
+          'https://www.googleapis.com/auth/gmail.modify']
+ASSET_PATH = setup_path("./static/assets/received_files")
 
 
 def create_asset_folder():
@@ -130,23 +137,28 @@ def download_attachment(service, message_id):
         # response = service.users().threads().get(userId='me', id=message_id).execute()
         message = service.users().messages().get(userId='me', id=message_id).execute()
         print("DOWNLOAD")
-        print("message:", message)
+        # print("message:", message)
         for part in message['payload']['parts']:
-            newvar = part['body']
-            if 'attachmentId' in newvar:
-                att_id = newvar['attachmentId']
-                att = service.users().messages().attachments().get(
-                    userId='me', messageId=message_id, id=att_id).execute()
-                data = att['data']
+            if part['mimeType'] == "multipart/mixed":
+                for prt in part['parts']:
+                    print("\npart:", prt)
+                    newvar = prt['body']
+                    if 'attachmentId' in newvar:
+                        att_id = newvar['attachmentId']
+                        att = service.users().messages().attachments().get(
+                            userId='me', messageId=message_id, id=att_id).execute()
+                        data = att['data']
 
-                file_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
-                print(part['filename'])
+                        file_data = base64.urlsafe_b64decode(
+                            data.encode('UTF-8'))
+                        print(prt['filename'])
 
-                # save file
-                path = os.path.join(ASSET_PATH, part['filename'])
-                with open(path, 'wb') as f:
-                    f.write(file_data)
-                    f.close()
+                        # save file
+                        path = os.path.join(ASSET_PATH, prt['filename'])
+                        print("part['filename']:", prt['filename'])
+                        with open(path, 'wb') as f:
+                            f.write(file_data)
+                            f.close()
     except HttpError as error:
         print('An error occurred: %s' % error)
 
@@ -191,10 +203,66 @@ def fetch_gmail_replies(service, thread_id):
         return None, None, None
 
 
+def read_email(service):
+    # Call the Gmail API to fetch the latest emails from the inbox
+    try:
+        # Fetch a list of all the message IDs in the INBOX folder
+        message_response = service.users().messages().list(userId='me').execute()
+
+        # Get the 5 newly messages
+        message_list = message_response['messages']
+        message_list = message_list[:5]
+        print("\nmessage list:", message_list)
+
+        # Loop through each message in the list and print the subject and sender
+        for message in message_list:
+            message_id = message['id']
+            message = service.users().messages().get(userId='me', id=message_id).execute()
+
+            # only consider messages in Inbox
+            if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
+                print("---------------------------\nINBOX")
+                headers = message['payload']['headers']
+
+                sender = 'anonymous'
+                for header in headers:
+                    if header['name'] == 'From':
+                        sender = header['value']
+
+                        if sender != SERVER_EMAIL:
+                            return None, None, None
+
+                    if header['name'] == "Date":
+                        date = header['value']
+                        date = date.split("+")[0].strip()
+
+                # download attachment
+                download_attachment(service, message_id)
+
+                body = message['snippet']
+                body = body.split("&amp;&amp;&amp;")[0].strip()
+
+                print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
+                      (sender, date, body))
+
+                # Add label to the email to mark it as read
+                service.users().messages().modify(
+                    userId='me', id=message_id, body={'removeLabelIds': ['UNREAD']}).execute()
+
+                # return result
+                return sender, date, body
+        return None, None, None
+
+    except HttpError as error:
+        print(f'An error occurred: {error}')
+        return False
+
+
 def bind_incoming_emails(service, thread_id):
     while True:
         try:
-            sender, date, body = fetch_gmail_replies(service, thread_id)
+            # sender, date, body = fetch_gmail_replies(service, thread_id)
+            sender, date, body = read_email(service)
 
             if (sender is not None) and (date is not None) and (body is not None):
                 return sender, date, body
@@ -225,8 +293,9 @@ def main():
         # message, thread_id = gmail_send_message(service, message)
 
         while True:
-            sender, date, body = fetch_gmail_replies(
-                service, "1881362dc08f0e03")
+            sender, date, body = read_email(service)
+            # sender, date, body = fetch_gmail_replies(
+            #     service, "1881362dc08f0e03")
 
             if (sender is not None) and (date is not None) and (body is not None):
                 break
