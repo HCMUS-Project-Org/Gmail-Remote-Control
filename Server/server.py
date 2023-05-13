@@ -179,7 +179,7 @@ def function(msg):
 
             else:
                 print(result)
-                res.attach(MIMEText(result.encode('utf-8'),'html', 'utf-8'))
+                res.attach(MIMEText(result.encode('utf-8'),'plain', 'utf-8'))
 
         elif isinstance(result, Image.Image):
             #convert to binary and to MIMEImage
@@ -191,17 +191,16 @@ def function(msg):
             if func[0] == "Capture screen":
                 #annouce to mail
                 text = "<p><b><u>++++CAPTURE SCREEN++++</u></b></p>" + "Picture has been capture"
-                res.attach(MIMEText(text.encode('utf-8'),'html', 'utf-8'))
+                res.attach(MIMEText(text.encode('utf-8'),'plain', 'utf-8'))
                 #attach picture
                 result.add_header('Content-Disposition', 'attachment', filename='screenshot.png')
                 res.attach(result)
 
-                
             
             elif func[0] == "Capture webcam":
                 #annouce to mail
                 text = "<p><b><u>++++CAPTURE WEBCAM++++</u></b></p>" + "Picture has been capture"
-                res.attach(MIMEText(text.encode('utf-8'),'html', 'utf-8'))
+                res.attach(MIMEText(text.encode('utf-8'),'plain', 'utf-8'))
                 #attach picture
                 result.add_header('Content-Disposition', 'attachment', filename='webcam_image.png')
                 res.attach(result)
