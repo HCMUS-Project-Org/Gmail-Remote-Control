@@ -44,7 +44,7 @@ def remove_asset_file():
 
 
 def authorize():
-    return os.path.exists('token.json')
+    return os.path.exists(setup_path('token.json'))
 
 
 @app.route('/')
@@ -59,11 +59,11 @@ def login():
     if request.method == "POST":
         global client_profile, gmail_credential, gmail_service
 
-        try:
-            gmail_credential = create_gmail_credential()
-            gmail_service = build_gmail_service(gmail_credential)
-        except:
-            error = "You must grant permission to access your Gmail account"
+        # try:
+        gmail_credential = create_gmail_credential()
+        gmail_service = build_gmail_service(gmail_credential)
+        # except:
+        #     error = "You must grant permission to access your Gmail account"
 
         try:
             isSuccess, client_profile = check_authentication_success(

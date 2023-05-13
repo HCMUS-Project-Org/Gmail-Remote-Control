@@ -21,9 +21,17 @@ def create_asset_folder():
         os.makedirs(ASSET_PATH)
 
 
+def setup_path(file_path):
+    # Set up the path to the file.
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(dir_path, file_path)
+
+    return path
+
+
 def remove_token():
     try:
-        file_path = 'token.json'
+        file_path = setup_path('token.json')
         os.remove(file_path)
         print(f"File '{file_path}' has been removed successfully")
     except OSError as error:
@@ -35,9 +43,9 @@ def create_gmail_credential():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.json'):
+    if os.path.exists(setup_path('token.json')):
         creds = Credentials.from_authorized_user_file(
-            'token.json', SCOPES)
+            setup_path('token.json'), SCOPES)
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -45,14 +53,15 @@ def create_gmail_credential():
             creds.refresh(Request())
         else:
             try:
+                print("credentials.json")
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
+                    setup_path('credentials.json'), SCOPES)
                 creds = flow.run_local_server(port=0)
             except:
                 creds = None
                 return creds
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open(setup_path('token.json'), 'w') as token:
             token.write(creds.to_json())
     return creds
 
