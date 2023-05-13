@@ -55,6 +55,21 @@
 					</div>
 				</button>
 			</div>
+			<div class="email-from d-flex justify-content-between">
+				<div>
+					<span class="fw-bold">Subject:&nbsp;</span>
+					<span>TelePCEST</span>
+				</div>
+				<button class="copy-btn" onclick="CopyContent('subject')">
+					<div
+						data-bs-toggle="tooltip"
+						data-bs-placement="top"
+						title="Copy"
+					>
+						<img src="../static/assets/icons/copy.png" alt="copy icon" />
+					</div>
+				</button>
+			</div>
 			<div class="email-body h-100">
 				<div class="d-flex justify-content-between align-items-center">
 					<span class="fw-bold">Content:</span>
@@ -404,6 +419,8 @@
 
 		if (field == "from") {
 			clipboard = `{{server_email}}`;
+		} else if (field == "subject") {
+			clipboard = `TelePCEST`;
 		}
 
 		await navigator.clipboard.writeText(clipboard);
