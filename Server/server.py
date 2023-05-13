@@ -58,26 +58,30 @@ def connect():
     return imap, smtp
 
 
-def send_mail(smtp, user, sender, msg:MIMEMultipart):
+def send_mail(smtp, user, mail_message, content, msg:MIMEMultipart):
+    sender = mail_message['From']
+    subject = mail_message['Subject']
     # Send a reply message to the sender
     reply_msg = MIMEMultipart()
     # reply_msg['From'] = f'Mail server TelePC <{user}>'
     reply_msg['From'] = user
     reply_msg['To'] = sender
     reply_msg['Subject'] = "Result of server TelePC"
+    
+
+    reply_msg.attach(MIMEText('<div dir="ltr"><div>{content}</div><br><br><div><br></div><div>--<br><div dir="ltr" class="gmail_quote"><div class="gmail_quote"><div dir="ltr"><div><a href="mailto:{sender}?subject={subject}&body={content}"><strong>Reply</strong></a></div></div></div></div></div></div>'.format(
+        sender=sender,
+        subject=subject,
+        content=content
+    ), 'html'))
+    
     reply_msg.attach(msg)
-    # reply_content = """
-    #     <p><b>Bold text</b></p>
-    #     <p><u>Underlined text</u></p>
-    #     <p><i>Italicized text</i></p>
-    # """
-    # reply_msg.attach(MIMEText(reply_content, 'html'))
+
+
     smtp.sendmail(user, sender, reply_msg.as_string())
     print('Reply sent to', sender)
 
 # receive and return mail
-
-
 def receive_mail(imap, smtp):
     while True:
         # refresh mail box
@@ -120,10 +124,12 @@ def receive_mail(imap, smtp):
                 # do something here
                 if subject == "TelePCEST":
                     #Format input
-                    content = content.replace("\r\n", " ")
-                    res = function(content)
+                    format_content = content.replace("\r\n", " ")
+                    res = function(format_content)
+
+
                     # reply back to sender
-                    send_mail(smtp, user, sender, res)
+                    send_mail(smtp, user, mail_message, content,  res)
 
 
 
