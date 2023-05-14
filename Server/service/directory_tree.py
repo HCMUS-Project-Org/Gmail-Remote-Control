@@ -59,7 +59,6 @@ def show_directory_tree(root, deep_level=2):
         return result
 
     directory = sf.convert_to_path(root)
-    print(directory)
 
     result = ""
         
@@ -160,9 +159,7 @@ def directory_manage(msg):
             result = "===Show directory tree===\n" + show_directory_tree(param1,param2)
 
         if "Copy file" in item:
-            print(item)
             param1, param2 = parse_cmd(item)
-            print(param1,param2)
             result = "===Copy file===\n" + copy_file(param1,param2)
 
         if "Send file to folder" in item:
