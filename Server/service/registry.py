@@ -163,8 +163,9 @@ def parse_cmd(item):
         value_type = re.search(r'type:([\w]+)', item)
         value_type = value_type.group(1) if value_type else None
 
-        return path, name, value, 
-    except: return False
+        return path, name, value, value_type 
+    except: 
+        return False
 
 
 def registry(msg):
@@ -175,23 +176,25 @@ def registry(msg):
 
     for item in command:
         path, name, value, value_type = parse_cmd(item)
-        if path == False:
-            result = "Wrong format"
         result = ''
+        if path == False:
+            return_text += f"Wrong format at {item}"
+            continue
+
         if "Get value" in item:
-            result = "Get registry value\n" + \
+            result = "<p>Get registry value</p>\n" + \
                 get_value(path + '\\' + name)
 
         elif "Set value" in item:
-            result = "Set registry value\n" + \
+            result = "<p>Set registry value</p>\n" + \
                 set_value(path + '\\' + name, value, value_type)
 
         elif "Create key" in item:
-            result = "Create new registry key\n" + \
+            result = "<p>Create new registry key</p>\n" + \
                 create_key(path)
 
         elif "Delete key" in item:
-            result = "Delete registry key\n" + \
+            result = "<p>Delete registry key</p>\n" + \
                 delete_key(path + '\\')
 
         if result != '':

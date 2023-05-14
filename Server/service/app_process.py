@@ -115,22 +115,28 @@ def application_process(func):
     return_text = ""
     for item in command:
         result = ""
+
         if "Application" in item:
             result = "List of application\n" + "Id - Name - Thread\n" + list_apps()
+
         if "List" in item:
             result = "List of process\n" + "Id - Name - Thread\n" + list_processes()
+
         if "Kill" in item:
             try:
                 id = re.search(r"id:(\d+)\]", item).group(1)
             except:
-                result = "Wrong 'kill' format"
+                return_text += f"Wrong format at {item}"
+                continue
 
             result = "Kill process\n" + kill(id)
+
         if "Start" in item:
             try:
                 name = re.search(r'Start\[name:(.*)\]', item).group(1)
             except:
-                result = "Wrong 'start' format"
+                return_text += f"Wrong format at {item}"
+                continue
 
             result = "Start application\n" + start(name)
 

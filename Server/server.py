@@ -163,8 +163,9 @@ def function(msg):
                 result = action_map[func[0]]()
             else:
                 result = action_map[func[0]](func[1])
-        except:
-            result = "Wrong Format"
+        except ValueError as error:
+            print("Error:", error)
+            result = f"Wrong Format at {func[0]}"
 
         if isinstance(result, str):
             # plaintext result
@@ -200,7 +201,7 @@ def function(msg):
 
             if func[0] == "Capture screen":
                 # annouce to mail
-                text = "<p><b>CAPTURE SCREEN</b></p>" + "Picture has been capture"
+                text = "<p><b>Capture screen</b></p>" + "Picture has been capture"
                 res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',
@@ -209,7 +210,7 @@ def function(msg):
 
             elif func[0] == "Capture webcam":
                 # annouce to mail
-                text = "<p><b>CAPTURE WEBCAM</b></p>" + "Picture has been capture"
+                text = "<p><b>Capture wbcam</b></p>" + "Picture has been capture"
                 res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',

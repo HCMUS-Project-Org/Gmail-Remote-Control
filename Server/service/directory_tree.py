@@ -157,33 +157,22 @@ def directory_manage(msg):
     return_text = ""
     for item in command:
         result = ""
+        param1, param2 = parse_cmd(item)
+        if param1 == False:
+                return_text += f"Wrong format in {item}"
+                continue
+        
         if "Show" in item:
-            param1, param2 = parse_cmd(item)
-            if param1 == False:
-                result = "Wrong format for show directory tree"
-            else:
-                result = "Show directory tree\n" + show_directory_tree(param1,param2)
+            result = "Show directory tree\n" + show_directory_tree(param1,param2)
 
         if "Copy file" in item:
-            param1, param2 = parse_cmd(item)
-            if param1 == False:
-                result = "Wrong format for show directory tree"
-            else:
-                result = "Copy file\n" + copy_file(param1,param2)
+            result = "Copy file\n" + copy_file(param1,param2)
 
         if "Send file to folder" in item:
-            param1, param2 = parse_cmd(item)
-            if param1 == False:
-                result = "Wrong format for show directory tree"
-            else:
-                result = "Send file to another folder\n" + send_file_to_folder(param1,param2)
+            result = "Send file to another folder\n" + send_file_to_folder(param1,param2)
 
         if "Delete file" in item:
-            param = parse_cmd(item)
-            if param == False:
-                result = "Wrong format for show directory tree"
-            else:
-                result = "Delete file\n" + delete_file(param)
+            result = "Delete file\n" + delete_file(param1)
         
         # if result == False:
         #     return "===Directory tree===\n" + f"Server is currently using {platform.system()} please input right path"

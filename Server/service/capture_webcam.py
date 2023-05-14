@@ -10,7 +10,7 @@ def capture_webcam_image(default_value=None):
 
     # check if camera is opened successfully
     if not camera.isOpened():
-        return "<p><b>CAPTURE WEBCAM</b></p>\n" + "Unable to open camera"
+        return "<p><b>Capture webcam</b></p>\n" + "Unable to open camera"
     else:
         # capture a frame from the camera
         bool, image = camera.read()
@@ -24,7 +24,7 @@ def capture_webcam_image(default_value=None):
 
             return pil_image
         else:
-            return "<p><b>CAPTURE WEBCAM</b></p>\n" + "Unable to capture"
+            return "<p><b>Capture webcam</b></p>\n" + "Unable to capture"
 
         # # specify the file path and name
         # file_path = os.path.join(sf.ASSET_PATH, "webcam_image.png")
