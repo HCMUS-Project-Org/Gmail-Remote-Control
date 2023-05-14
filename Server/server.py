@@ -119,7 +119,10 @@ def receive_mail(imap, smtp):
                 # do something here
                 if subject == "TelePCEST":
                     # Format input
-                    format_content = content.replace("\r\n", " ")
+                    try:
+                        format_content = content.replace("\r\n", " ")
+                    except:
+                        pass
                     res = function(format_content)
 
                     # reply back to sender
@@ -157,10 +160,14 @@ def function(msg):
     res = MIMEMultipart()
     for func in options:
         result = None
-        if (len(func) == 1):
-            result = action_map[func[0]]()
-        else:
-            result = action_map[func[0]](func[1])
+        try:
+            if (len(func) == 1):
+                result = action_map[func[0]]()
+            else:
+                result = action_map[func[0]](func[1])
+        except ValueError as error:
+            print("Error:", error)
+            result = f"Wrong Format at {func[0]}"
 
         if isinstance(result, str):
             # plaintext result
