@@ -116,17 +116,25 @@ def application_process(func):
     for item in command:
         result = ""
         if "Application" in item:
-            result = "===List of application===\n" + "Id - Name - Thread\n" + list_apps()
+            result = "List of application\n" + "Id - Name - Thread\n" + list_apps()
         if "List" in item:
-            result = "===List of process===\n" + "Id - Name - Thread\n" + list_processes()
+            result = "List of process\n" + "Id - Name - Thread\n" + list_processes()
         if "Kill" in item:
-            id = re.search(r"id:(\d+)\]", item).group(1)
-            result = "===Kill process===\n" + kill(id)
+            try:
+                id = re.search(r"id:(\d+)\]", item).group(1)
+            except:
+                result = "Wrong ' - kill' format"
+
+            result = "Kill process\n" + kill(id)
         if "Start" in item:
-            name = re.search(r'Start\[name:(.*)\]', item).group(1)
-            result = "===Start application===\n" + start(name)
+            try:
+                name = re.search(r'Start\[name:(.*)\]', item).group(1)
+            except:
+                result = "Wrong ' - start' format"
+
+            result = "Start application\n" + start(name)
 
         if result != "":
             return_text += "\n" + result
 
-    return "++++APP PROCESS MANAGEMENT++++\n" + return_text
+    return "Application/process management\n" + return_text

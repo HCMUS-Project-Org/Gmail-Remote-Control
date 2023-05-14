@@ -39,6 +39,9 @@ IMAP_URL = 'imap.gmail.com'
 SMTP_URL = 'smtp.gmail.com'
 
 
+command = []
+
+
 def create_asset_folder():
     if not os.path.exists(ASSET_PATH):
         os.makedirs(ASSET_PATH)
@@ -60,9 +63,7 @@ def connect():
     return imap, smtp
 
 
-def send_mail(smtp, user, mail_message, content, msg: MIMEMultipart):
-    sender = mail_message['From']
-    subject = mail_message['Subject']
+def send_mail(smtp, user, sender, msg: MIMEMultipart):
     # Send a reply message to the sender
     reply_msg = MIMEMultipart()
     # reply_msg['From'] = f'Mail server TelePC <{user}>'
@@ -70,19 +71,7 @@ def send_mail(smtp, user, mail_message, content, msg: MIMEMultipart):
     reply_msg['To'] = sender
     reply_msg['Subject'] = "Server TelePC reply"
 
-    # reply_msg.attach(MIMEText('<div dir="ltr"><div>{content}</div><br><br><div><br></div><div>--<br><div dir="ltr" class="gmail_quote"><div class="gmail_quote"><div dir="ltr"><div><a href="mailto:{sender}?subject={subject}&body={content}"><strong>Reply</strong></a></div></div></div></div></div></div>'.format(
-    #     sender=sender,
-    #     subject=subject,
-    #     content=content
-    # ), 'html'))
-
-    # reply_msg.attach(MIMEText('<div dir="ltr"><div>--<br><div dir="ltr" class="gmail_quote"><div class="gmail_quote"><div dir="ltr"><div></div></div></div></div></div></div>'.format(
-    #     content=content
-    # ), 'html'))
-
     reply_msg.attach(msg)
-
-    # print("reply_msg.as_string():", reply_msg.as_string())
 
     smtp.sendmail(user, sender, reply_msg.as_string())
     print('Reply sent to', sender)
@@ -134,8 +123,7 @@ def receive_mail(imap, smtp):
                     res = function(format_content)
 
                     # reply back to sender
-                    send_mail(smtp, EMAIL_ADDRESS, mail_message,
-                              content,  res)
+                    send_mail(smtp, EMAIL_ADDRESS , sender,  res)
 
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)
@@ -167,7 +155,6 @@ action_map = {
 def function(msg):
     options = parse_msg(msg)
     res = MIMEMultipart()
-
     for func in options:
         result = None
         if (len(func) == 1):
@@ -197,8 +184,8 @@ def function(msg):
                 res.attach(attachment)
 
             else:
-                print(result)
-                res.attach(MIMEText(result.encode('utf-8'), 'plain', 'utf-8'))
+                    print(result)
+                    res.attach(MIMEText(result.encode('utf-8'), 'html', 'utf-8'))
 
         elif isinstance(result, Image.Image):
             # convert to binary and to MIMEImage
@@ -209,8 +196,8 @@ def function(msg):
 
             if func[0] == "Capture screen":
                 # annouce to mail
-                text = "++++Capture screen++++" + "Picture has been capture"
-                res.attach(MIMEText(text.encode('utf-8'), 'plain', 'utf-8'))
+                text = "<p><b>CAPTURE SCREEN</b></p>" + "Picture has been capture"
+                res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',
                                   'attachment', filename='screenshot.png')
@@ -218,8 +205,8 @@ def function(msg):
 
             elif func[0] == "Capture webcam":
                 # annouce to mail
-                text = "++++Capture screen++++" + "Picture has been capture"
-                res.attach(MIMEText(text.encode('utf-8'), 'plain', 'utf-8'))
+                text = "<p><b>CAPTURE WEBCAM</b></p>" + "Picture has been capture"
+                res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',
                                   'attachment', filename='webcam_image.png')

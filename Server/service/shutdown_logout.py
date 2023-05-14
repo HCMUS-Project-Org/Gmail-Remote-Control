@@ -27,4 +27,4 @@ def shutdown_logout(function):
     elif "Logout" in function:
         result = "Server will logout in 30s"
         threading.Timer(30, logout).start()
-    return "++++SHUTDOWN|LOGOUT++++" + result
+    return "<p><b>Shutdown/Logout</b></p>" + result
