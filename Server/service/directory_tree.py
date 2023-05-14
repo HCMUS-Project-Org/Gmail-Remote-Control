@@ -13,6 +13,7 @@ from . import shared_function as sf
 #     else:
 #         return sf.check_os() == "window"
 
+
 def show_directory_tree(root, deep_level=2):
     # prefix components:
     space = '    '
@@ -54,14 +55,14 @@ def show_directory_tree(root, deep_level=2):
         if next(iterator, None):
             result += f'\n... length_limit, {length_limit}, reached, counted:'
         result += (f'\n{directories} directories' +
-              (f', {files} files' if files else ''))
-        
+                   (f', {files} files' if files else ''))
+
         return result
 
     directory = sf.convert_to_path(root)
 
     result = ""
-        
+
     try:
         for line in tree(directory, level=deep_level, limit_to_directories=True):
             result += line
@@ -74,7 +75,6 @@ def copy_file(src_path, dst_path):
     '''copy file from server to destination path in client'''
     src_path = sf.convert_to_path(src_path)
     dst_path = sf.convert_to_path(dst_path)
-
 
     # check if source exist
     if not sf.check_file_exist(src_path):
@@ -135,19 +135,20 @@ def parse_msg(msg):
     command = [x for x in msg.split(" - ")]
     return command
 
+
 def parse_cmd(item):
     if "Show" in item:
         match = re.search(r'Show\[path:(.*), level:(\d+)\]', item)
         return match.group(1), int(match.group(2))
-        
+
     elif "Delete file" in item:
         return re.search(r'Delete file\[path:(.*)\]', item).group(1)
-    
+
     # copy and send file
     else:
         match = re.search(r'\[source:(.*), destination:(.*)\]', item)
         return match.group(1), match.group(2)
-    
+
 
 def directory_manage(msg):
     command = parse_msg(msg)
@@ -156,36 +157,32 @@ def directory_manage(msg):
         result = ""
         if "Show" in item:
             param1, param2 = parse_cmd(item)
-            result = "Show directory tree\n" + show_directory_tree(param1,param2)
+            result = "Show directory tree\n" + \
+                show_directory_tree(param1, param2)
 
         if "Copy file" in item:
             param1, param2 = parse_cmd(item)
-            result = "Copy file\n" + copy_file(param1,param2)
+            result = "Copy file\n" + copy_file(param1, param2)
 
         if "Send file to folder" in item:
             param1, param2 = parse_cmd(item)
-            result = "Send file to another folder\n" + send_file_to_folder(param1,param2)
+            result = "Send file to another folder\n" + \
+                send_file_to_folder(param1, param2)
 
         if "Delete file" in item:
             param = parse_cmd(item)
             result = "Delete file\n" + delete_file(param)
-        
+
         # if result == False:
         #     return "===Directory tree===\n" + f"Server is currently using {platform.system()} please input right path"
-        
+
         if result != "":
             return_text += "\n" + result
-        
-    
-    return "Directory tree management\n" + return_text
 
+    return "</br><b>Directory tree management:<b> " + return_text
 
 
 #msg = "Send file to folder[source:D:/a.txt, destination:D:/code]"
 #msg = "Delete file[path:D:/a.txt]"
-#msg = "Copy file[source:D:/code/a.txt, destination:D:/]""
+# msg = "Copy file[source:D:/code/a.txt, destination:D:/]""
 #msg = "Show[path:D:\etc, level:2]"
-
-
-
-

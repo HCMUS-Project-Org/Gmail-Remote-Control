@@ -30,6 +30,8 @@ client_profile = {
 }
 sender, date, body = None, None, None
 
+# body = "</br><b>Key logger</b></br>Server input: Key.esc 's' 'a' 'o' Key.space 'v' Key.enter Key.esc <p><b>CAPTURE SCREEN</b></p>Picture has been capture<p><b>CAPTURE WEBCAM</b></p>Picture has been capture<p><b>MAC Address</b></p>7c:b2:7d:03:d1:09"
+
 
 def create_asset_folder():
     if not os.path.exists(ASSET_PATH):
@@ -153,6 +155,9 @@ def send_request():
         print("-   sender:", sender)
         print("-   date:", date)
         print("-   body:", body)
+        body = body.replace("<br/>", "\n")
+
+        body = "<p><b>Key logger</b></p>Server input: Key.esc 's' 'a' 'o' Key.space 'v' Key.enter Key.esc <p><b>CAPTURE SCREEN</b></p>Picture has been capture<p><b>CAPTURE WEBCAM</b></p>Picture has been capture<p><b>MAC Address</b></p>7c:b2:7d:03:d1:09"
 
     return redirect(url_for('review'))
 

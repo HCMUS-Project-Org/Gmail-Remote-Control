@@ -116,9 +116,9 @@ def application_process(func):
     for item in command:
         result = ""
         if "Application" in item:
-            result = "List of application\n" + "Id - Name - Thread\n" + list_apps()
+            result = "<b>List of application:</b>\n" + "Id - Name - Thread\n" + list_apps()
         if "List" in item:
-            result = "List of process\n" + "Id - Name - Thread\n" + list_processes()
+            result = "<b>List of process:</b>\n" + "Id - Name - Thread\n" + list_processes()
         if "Kill" in item:
             try:
                 id = re.search(r"id:(\d+)\]", item).group(1)
@@ -137,4 +137,4 @@ def application_process(func):
         if result != "":
             return_text += "\n" + result
 
-    return "Application/process management\n" + return_text
+    return "</br><b>Application/process management</b>\n" + return_text

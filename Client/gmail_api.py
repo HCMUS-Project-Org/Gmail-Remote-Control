@@ -163,46 +163,46 @@ def download_attachment(service, message_id):
         print('An error occurred: %s' % error)
 
 
-def fetch_gmail_replies(service, thread_id):
-    try:
-        response = service.users().threads().get(userId='me', id=thread_id).execute()
+# def fetch_gmail_replies(service, thread_id):
+#     try:
+#         response = service.users().threads().get(userId='me', id=thread_id).execute()
 
-        messages = response['messages']
+#         messages = response['messages']
 
-        print('\nNumber of messages in thread: %d' % len(messages))
-        print("messages:", messages)
+#         print('\nNumber of messages in thread: %d' % len(messages))
+#         print("messages:", messages)
 
-        for message in messages:
-            # only consider messages in Inbox
-            if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
-                print("---------------------------\nINBOX")
-                headers = message['payload']['headers']
+#         for message in messages:
+#             # only consider messages in Inbox
+#             if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
+#                 print("---------------------------\nINBOX")
+#                 headers = message['payload']['headers']
 
-                message_id = message['id']
-                download_attachment(service, message_id)
+#                 message_id = message['id']
+#                 download_attachment(service, message_id)
 
-                sender = 'anonymous'
-                for header in headers:
-                    if header['name'] == 'From':
-                        sender = header['value']
+#                 sender = 'anonymous'
+#                 for header in headers:
+#                     if header['name'] == 'From':
+#                         sender = header['value']
 
-                    if header['name'] == "Date":
-                        date = header['value']
-                        date = date.split("+")[0].strip()
+#                     if header['name'] == "Date":
+#                         date = header['value']
+#                         date = date.split("+")[0].strip()
 
-                # get b
-                body = message['snippet']
+#                 # get b
+#                 body = message['snippet']
 
-                body = body.split("&amp;&amp;&amp;")[0].strip()
+#                 body = body.split("&amp;&amp;&amp;")[0].strip()
 
-                print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
-                      (sender, date, body))
-                return sender, date, body
-        return None, None, None
+#                 print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
+#                       (sender, date, body))
+#                 return sender, date, body
+#         return None, None, None
 
-    except HttpError as error:
-        print('An error occurred: %s' % error)
-        return None, None, None
+#     except HttpError as error:
+#         print('An error occurred: %s' % error)
+#         return None, None, None
 
 
 def read_email(service):

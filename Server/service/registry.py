@@ -175,22 +175,22 @@ def registry(msg):
         path, name, value, value_type = parse_cmd(item)
         result = ''
         if "Get value" in item:
-            result = "Get registry value\n" + \
+            result = "- Get registry value\n" + \
                 get_value(path + '\\' + name)
 
         elif "Set value" in item:
-            result = "Set registry value\n" + \
+            result = "- Set registry value\n" + \
                 set_value(path + '\\' + name, value, value_type)
 
         elif "Create key" in item:
-            result = "Create new registry key\n" + \
+            result = "- Create new registry key\n" + \
                 create_key(path)
 
         elif "Delete key" in item:
-            result = "Delete registry key\n" + \
+            result = "- Delete registry key\n" + \
                 delete_key(path + '\\')
 
         if result != '':
             return_text += "\n" + result
 
-    return "<p><b>Registry management</b></p>\n" + return_text
+    return "</br><b>Registry management:</b>\n" + return_text

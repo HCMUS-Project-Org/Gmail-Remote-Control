@@ -123,7 +123,7 @@ def receive_mail(imap, smtp):
                     res = function(format_content)
 
                     # reply back to sender
-                    send_mail(smtp, EMAIL_ADDRESS , sender,  res)
+                    send_mail(smtp, EMAIL_ADDRESS, sender,  res)
 
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)
@@ -184,8 +184,8 @@ def function(msg):
                 res.attach(attachment)
 
             else:
-                    print(result)
-                    res.attach(MIMEText(result.encode('utf-8'), 'html', 'utf-8'))
+                print(result)
+                res.attach(MIMEText(result.encode('utf-8'), 'html', 'utf-8'))
 
         elif isinstance(result, Image.Image):
             # convert to binary and to MIMEImage
@@ -196,7 +196,7 @@ def function(msg):
 
             if func[0] == "Capture screen":
                 # annouce to mail
-                text = "<p><b>CAPTURE SCREEN</b></p>" + "Picture has been capture"
+                text = "</br><b>Capture screen:</b> " + "Picture has been capture"
                 res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',
@@ -205,7 +205,7 @@ def function(msg):
 
             elif func[0] == "Capture webcam":
                 # annouce to mail
-                text = "<p><b>CAPTURE WEBCAM</b></p>" + "Picture has been capture"
+                text = "</br><b>Capture webcam</b>" + "Picture has been capture"
                 res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',
