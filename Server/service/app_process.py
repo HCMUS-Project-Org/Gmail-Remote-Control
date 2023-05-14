@@ -129,7 +129,7 @@ def application_process(func):
                 return_text += f"Wrong format at {item}"
                 continue
 
-            result = "Kill process\n" + kill(id)
+            result = "Kill process:\n" + kill(id)
 
         if "Start" in item:
             try:
@@ -138,9 +138,9 @@ def application_process(func):
                 return_text += f"Wrong format at {item}"
                 continue
 
-            result = "Start application\n" + start(name)
+            result = "Start application:\n" + start(name)
 
         if result != "":
             return_text += "\n" + result
 
-    return "</br><b>Application/process management</b>\n" + return_text
+    return "Application/process management:\n" + return_text

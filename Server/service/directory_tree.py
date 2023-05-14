@@ -3,7 +3,6 @@ from pathlib import Path
 import os
 import shutil
 import re
-import platform
 from . import shared_function as sf
 #import shared_function as sf
 
@@ -94,7 +93,7 @@ def copy_file(src_path, dst_path):
         else:
             return f'The file "{src_path}" could NOT be COPIED'
     except:
-        return f'The file {src_path} exist at destination'
+        return f'The file {src_path} exist at destination or wrong file path'
 
 
 def send_file_to_folder(src_path, dst_dir):
@@ -122,7 +121,7 @@ def send_file_to_folder(src_path, dst_dir):
         else:
             return f'The file "{src_path}" could NOT be SENDED to "{dst_dir}"'
     except:
-        return f'The file {src_path} exist at destination'
+        return f'The file {src_path} exist at destination or wrong file path'
 
 
 def delete_file(file_path):
@@ -130,12 +129,14 @@ def delete_file(file_path):
     file_path = sf.convert_to_path(file_path)
 
     # check if the file was deleted successfully
-    if sf.check_file_exist(file_path):
-        os.remove(file_path)
-        return f'The file "{file_path}" was DELETED'
-    else:
-        return f'The file "{file_path}" does NOT EXIST'
-
+    try:
+        if sf.check_file_exist(file_path):
+            os.remove(file_path)
+            return f'The file "{file_path}" was DELETED'
+        else:
+            return f'The file "{file_path}" does NOT EXIST'
+    except:
+        return f'The file {file_path} wrong file path'
 
 def parse_msg(msg):
     command = [x for x in msg.split(" - ")]
@@ -171,32 +172,24 @@ def directory_manage(msg):
 
         if "Show" in item:
             try:
-                result = "Show directory tree\n" + \
+                result = "Show directory tree:\n" + \
                     show_directory_tree(param1, param2)
             except:
                 return_text += "\n" + "Cannot show directory at that folder"
                 continue
 
         if "Copy file" in item:
-            result = "Copy file\n" + copy_file(param1, param2)
+            result = "Copy file:\n" + copy_file(param1, param2)
 
         if "Send file to folder" in item:
-            result = "Send file to another folder\n" + \
+            result = "Send file to another folder:\n" + \
                 send_file_to_folder(param1, param2)
 
         if "Delete file" in item:
-            result = "Delete file\n" + delete_file(param1)
-
-        # if result == False:
-        #     return "===Directory tree===\n" + f"Server is currently using {platform.system()} please input right path"
+            result = "Delete file:\n" + delete_file(param1)
 
         if result != "":
             return_text += "\n" + result
 
-    return "</br><b>Directory tree management:<b> " + return_text
+    return "Directory tree management: " + return_text
 
-
-#msg = "Send file to folder[source:D:/a.txt, destination:D:/code]"
-#msg = "Delete file[path:D:/a.txt]"
-# msg = "Copy file[source:D:/code/a.txt, destination:D:/]""
-#msg = "Show[path:D:\etc, level:2]"

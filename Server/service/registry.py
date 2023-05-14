@@ -4,8 +4,6 @@ NOTE: Linux do not have REGISTRY
 
 import re
 import winreg
-import json
-import os
 from . import shared_function as sf
 #import shared_function as sf
 
@@ -182,20 +180,19 @@ def registry(msg):
             continue
 
         if "Get value" in item:
-            result = "<p>Get registry value</p>\n" + \
+            result = "<p>Get registry value:</p>\n" + \
                 get_value(path + '\\' + name)
 
         elif "Set value" in item:
-            print(value)
-            result = "<p>Set registry value</p>\n" + \
+            result = "<p>Set registry value:</p>\n" + \
                 set_value(path + '\\' + name, value, value_type)
 
         elif "Create key" in item:
-            result = "<p>Create new registry key</p>\n" + \
+            result = "<p>Create new registry key:</p>\n" + \
                 create_key(path)
 
         elif "Delete key" in item:
-            result = "<p>Delete registry key</p>\n" + \
+            result = "<p>Delete registry key:</p>\n" + \
                 delete_key(path + '\\')
 
         if result != '':
