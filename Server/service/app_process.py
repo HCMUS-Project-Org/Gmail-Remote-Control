@@ -123,14 +123,14 @@ def application_process(func):
             try:
                 id = re.search(r"id:(\d+)\]", item).group(1)
             except:
-                result = "Wrong ' - kill' format"
+                result = "Wrong 'kill' format"
 
             result = "Kill process\n" + kill(id)
         if "Start" in item:
             try:
                 name = re.search(r'Start\[name:(.*)\]', item).group(1)
             except:
-                result = "Wrong ' - start' format"
+                result = "Wrong 'start' format"
 
             result = "Start application\n" + start(name)
 

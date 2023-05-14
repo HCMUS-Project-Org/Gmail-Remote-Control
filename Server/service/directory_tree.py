@@ -136,18 +136,21 @@ def parse_msg(msg):
     return command
 
 def parse_cmd(item):
-    if "Show" in item:
-        match = re.search(r'Show\[path:(.*), level:(\d+)\]', item)
-        return match.group(1), int(match.group(2))
+    try:
+        if "Show" in item:
+            match = re.search(r'Show\[path:(.*), level:(\d+)\]', item)
+            return match.group(1), int(match.group(2))
+            
+        elif "Delete file" in item:
+            return re.search(r'Delete file\[path:(.*)\]', item).group(1)
         
-    elif "Delete file" in item:
-        return re.search(r'Delete file\[path:(.*)\]', item).group(1)
-    
-    # copy and send file
-    else:
-        match = re.search(r'\[source:(.*), destination:(.*)\]', item)
-        return match.group(1), match.group(2)
-    
+        # copy and send file
+        else:
+            match = re.search(r'\[source:(.*), destination:(.*)\]', item)
+            return match.group(1), match.group(2)
+    except:
+        return False
+        
 
 def directory_manage(msg):
     command = parse_msg(msg)
@@ -156,19 +159,31 @@ def directory_manage(msg):
         result = ""
         if "Show" in item:
             param1, param2 = parse_cmd(item)
-            result = "Show directory tree\n" + show_directory_tree(param1,param2)
+            if param1 == False:
+                result = "Wrong format for show directory tree"
+            else:
+                result = "Show directory tree\n" + show_directory_tree(param1,param2)
 
         if "Copy file" in item:
             param1, param2 = parse_cmd(item)
-            result = "Copy file\n" + copy_file(param1,param2)
+            if param1 == False:
+                result = "Wrong format for show directory tree"
+            else:
+                result = "Copy file\n" + copy_file(param1,param2)
 
         if "Send file to folder" in item:
             param1, param2 = parse_cmd(item)
-            result = "Send file to another folder\n" + send_file_to_folder(param1,param2)
+            if param1 == False:
+                result = "Wrong format for show directory tree"
+            else:
+                result = "Send file to another folder\n" + send_file_to_folder(param1,param2)
 
         if "Delete file" in item:
             param = parse_cmd(item)
-            result = "Delete file\n" + delete_file(param)
+            if param == False:
+                result = "Wrong format for show directory tree"
+            else:
+                result = "Delete file\n" + delete_file(param)
         
         # if result == False:
         #     return "===Directory tree===\n" + f"Server is currently using {platform.system()} please input right path"
@@ -178,14 +193,3 @@ def directory_manage(msg):
         
     
     return "Directory tree management\n" + return_text
-
-
-
-#msg = "Send file to folder[source:D:/a.txt, destination:D:/code]"
-#msg = "Delete file[path:D:/a.txt]"
-#msg = "Copy file[source:D:/code/a.txt, destination:D:/]""
-#msg = "Show[path:D:\etc, level:2]"
-
-
-
-
