@@ -151,16 +151,16 @@ def parse_msg(msg):
 
 def parse_cmd(item):
     try:
-        path = re.search(r'path:([\w\\]+)', item)
+        path = re.search(r'path:(.*?)(,|\])', item)
         path = path.group(1) if path else None
 
-        name = re.search(r'name:([\w]+)', item)
+        name = re.search(r'name:(.*?)(,|\])', item)
         name = name.group(1) if name else None
 
-        value = re.search(r'value:(.*),', item)
+        value = re.search(r'value:(.*?)(,|\])', item)
         value = value.group(1) if value else None
 
-        value_type = re.search(r'type:([\w]+)', item)
+        value_type = re.search(r"type:(.*?)(,|\])", item)
         value_type = value_type.group(1) if value_type else None
 
         return path, name, value, value_type
@@ -202,3 +202,4 @@ def registry(msg):
             return_text += "\n" + result
 
     return "</br><b>Registry management:</b>\n" + return_text
+

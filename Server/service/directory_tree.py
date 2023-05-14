@@ -163,7 +163,6 @@ def directory_manage(msg):
     command = parse_msg(msg)
     return_text = ""
     for item in command:
-        print(item)
         result = ""
         param1, param2 = parse_cmd(item)
         if param1 == False:
@@ -171,8 +170,12 @@ def directory_manage(msg):
             continue
 
         if "Show" in item:
-            result = "Show directory tree\n" + \
-                show_directory_tree(param1, param2)
+            try:
+                result = "Show directory tree\n" + \
+                    show_directory_tree(param1, param2)
+            except:
+                return_text += "\n" + "Cannot show directory at that folder"
+                continue
 
         if "Copy file" in item:
             result = "Copy file\n" + copy_file(param1, param2)
