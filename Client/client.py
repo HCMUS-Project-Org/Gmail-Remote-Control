@@ -28,6 +28,7 @@ thread_id = None
 client_profile = {
     'emailAddress': None,
 }
+sender, date, body = None, None, None
 
 
 def create_asset_folder():
@@ -113,22 +114,11 @@ def control():
 
 @app.route('/review', methods=['GET', 'POST'])
 def review():
+    global sender, date, body
+
     if not authorize():
         return redirect(url_for('login'))
 
-    sender, date, body = None, None, None
-
-    if request.method == "GET":
-        print("Bind incoming emails")
-
-        sender, date, body = bind_incoming_emails(gmail_service)
-        print("-   sender:", sender)
-        print("-   date:", date)
-        print("-   body:", body)
-
-        # return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
-
-    # return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL,  isAuthor=True)
     return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
 
 
@@ -157,6 +147,12 @@ def send_request():
 
         message, thread_id = gmail_send_message(gmail_service, message)
         print("thread_id:", thread_id)
+
+        global sender, date, body
+        sender, date, body = bind_incoming_emails(gmail_service)
+        print("-   sender:", sender)
+        print("-   date:", date)
+        print("-   body:", body)
 
     return redirect(url_for('review'))
 

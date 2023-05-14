@@ -248,12 +248,10 @@ def read_email(service):
                 body_content = ''
                 body_parts = message['payload']['parts'][0]['parts']
                 for part in body_parts:
-                    if part['mimeType'] == "text/plain":
+                    if part['mimeType'] == "text/html":
                         body = part['body']['data']
                         body_content += base64.urlsafe_b64decode(
                             body.encode('UTF-8')).decode('UTF-8')
-                # body = message['snippet']
-                # body = body.split("&amp;&amp;&amp;")[0].strip()
 
                 print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
                       (sender, date, body_content))
