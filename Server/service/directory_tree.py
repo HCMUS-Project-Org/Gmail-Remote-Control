@@ -84,14 +84,17 @@ def copy_file(src_path, dst_path):
     if not sf.check_file_exist(dst_path):
         os.makedirs(dst_path)
 
-    # copy the file
-    shutil.copy(src_path, dst_path)
+    try:
+        # copy the file
+        shutil.copy(src_path, dst_path)
 
-    # check if the file was copied successfully
-    if sf.check_file_exist(dst_path):
-        return f'The file "{src_path}" was COPIED to "{dst_path}" successfully'
-    else:
-        return f'The file "{src_path}" could NOT be COPIED'
+        # check if the file was copied successfully
+        if sf.check_file_exist(dst_path):
+            return f'The file "{src_path}" was COPIED to "{dst_path}" successfully'
+        else:
+            return f'The file "{src_path}" could NOT be COPIED'
+    except:
+        return f'The file {src_path} exist at destination'
 
 
 def send_file_to_folder(src_path, dst_dir):
@@ -107,16 +110,19 @@ def send_file_to_folder(src_path, dst_dir):
     if not sf.check_file_exist(dst_dir):
         os.makedirs(dst_dir)
 
-    # move the file to the destination directory
-    shutil.move(src_path, dst_dir)
+    try:
+        # move the file to the destination directory
+        shutil.move(src_path, dst_dir)
 
-    # check if the file was moved successfully
-    dst_path = os.path.join(dst_dir, os.path.basename(src_path))
+        # check if the file was moved successfully
+        dst_path = os.path.join(dst_dir, os.path.basename(src_path))
 
-    if sf.check_file_exist(dst_path):
-        return f'The file "{src_path}" was SENDED to "{dst_dir}" SUCCESSFULLY'
-    else:
-        return f'The file "{src_path}" could NOT be SENDED to "{dst_dir}"'
+        if sf.check_file_exist(dst_path):
+            return f'The file "{src_path}" was SENDED to "{dst_dir}" SUCCESSFULLY'
+        else:
+            return f'The file "{src_path}" could NOT be SENDED to "{dst_dir}"'
+    except:
+        return f'The file {src_path} exist at destination'
 
 
 def delete_file(file_path):
@@ -126,9 +132,9 @@ def delete_file(file_path):
     # check if the file was deleted successfully
     if sf.check_file_exist(file_path):
         os.remove(file_path)
-        return f'File "{file_path}" was DELETED'
+        return f'The file "{file_path}" was DELETED'
     else:
-        return f'File "{file_path}" does NOT EXIST'
+        return f'The file "{file_path}" does NOT EXIST'
 
 
 def parse_msg(msg):
@@ -143,7 +149,7 @@ def parse_cmd(item):
             return match.group(1), int(match.group(2))
 
         elif "Delete file" in item:
-            return re.search(r'Delete file\[path:(.*)\]', item).group(1)
+            return re.search(r'Delete file\[path:(.*)\]', item).group(1), None
 
         # copy and send file
         else:
@@ -157,10 +163,11 @@ def directory_manage(msg):
     command = parse_msg(msg)
     return_text = ""
     for item in command:
+        print(item)
         result = ""
         param1, param2 = parse_cmd(item)
         if param1 == False:
-            return_text += f"Wrong format in {item}"
+            return_text += f"Wrong format at {item}"
             continue
 
         if "Show" in item:

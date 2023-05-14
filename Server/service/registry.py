@@ -157,7 +157,7 @@ def parse_cmd(item):
         name = re.search(r'name:([\w]+)', item)
         name = name.group(1) if name else None
 
-        value = re.search(r'value:([\w]+)', item)
+        value = re.search(r'value:(.*),', item)
         value = value.group(1) if value else None
 
         value_type = re.search(r'type:([\w]+)', item)
@@ -186,6 +186,7 @@ def registry(msg):
                 get_value(path + '\\' + name)
 
         elif "Set value" in item:
+            print(value)
             result = "<p>Set registry value</p>\n" + \
                 set_value(path + '\\' + name, value, value_type)
 
