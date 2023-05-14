@@ -10,13 +10,13 @@ def capture_webcam_image(default_value=None):
 
     # check if camera is opened successfully
     if not camera.isOpened():
-        return "<p><b><u>++++CAPTURE WEBCAM++++</u></b></p>\n" + "Unable to open camera"
+        return "++++CAPTURE WEBCAM++++\n" + "Unable to open camera"
     else:
         # capture a frame from the camera
         bool, image = camera.read()
 
-        if bool: 
-            #convert color space from BGR to RGB
+        if bool:
+            # convert color space from BGR to RGB
             rgb_frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
             # create a PIL Image from the numpy array
@@ -24,7 +24,7 @@ def capture_webcam_image(default_value=None):
 
             return pil_image
         else:
-            return "<p><b><u>++++CAPTURE WEBCAM++++</u></b></p>\n" + "Unable to capture"
+            return "++++CAPTURE WEBCAM++++\n" + "Unable to capture"
 
         # # specify the file path and name
         # file_path = os.path.join(sf.ASSET_PATH, "webcam_image.png")

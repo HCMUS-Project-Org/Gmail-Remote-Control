@@ -190,7 +190,9 @@ def fetch_gmail_replies(service, thread_id):
                         date = header['value']
                         date = date.split("+")[0].strip()
 
+                # get b
                 body = message['snippet']
+
                 body = body.split("&amp;&amp;&amp;")[0].strip()
 
                 print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
@@ -221,8 +223,11 @@ def read_email(service):
 
             # only consider messages in Inbox
             if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
+                # if 'INBOX' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
+
                 print("---------------------------\nINBOX")
                 headers = message['payload']['headers']
+                print("message:", message)
 
                 sender = 'anonymous'
                 for header in headers:
@@ -239,26 +244,34 @@ def read_email(service):
                 # download attachment
                 download_attachment(service, message_id)
 
-                body = message['snippet']
-                body = body.split("&amp;&amp;&amp;")[0].strip()
+                # get body
+                body_content = ''
+                body_parts = message['payload']['parts'][0]['parts']
+                for part in body_parts:
+                    if part['mimeType'] == "text/plain":
+                        body = part['body']['data']
+                        body_content += base64.urlsafe_b64decode(
+                            body.encode('UTF-8')).decode('UTF-8')
+                # body = message['snippet']
+                # body = body.split("&amp;&amp;&amp;")[0].strip()
 
                 print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
-                      (sender, date, body))
+                      (sender, date, body_content))
 
                 # Add label to the email to mark it as read
                 service.users().messages().modify(
                     userId='me', id=message_id, body={'removeLabelIds': ['UNREAD']}).execute()
 
                 # return result
-                return sender, date, body
+                return sender, date, body_content
         return None, None, None
 
     except HttpError as error:
         print(f'An error occurred: {error}')
-        return False
+        return None, None, None
 
 
-def bind_incoming_emails(service, thread_id):
+def bind_incoming_emails(service):
     while True:
         try:
             # sender, date, body = fetch_gmail_replies(service, thread_id)
@@ -270,6 +283,8 @@ def bind_incoming_emails(service, thread_id):
             sleep(10)
         except:
             pass
+
+        print("end while")
 
 
 def main():

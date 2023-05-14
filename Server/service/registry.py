@@ -69,6 +69,8 @@ Input:
 Usage: 
     res = get_value(full_path + r'\\' + name_value)
 '''
+
+
 def get_value(full_path):
     value_list = parse_data(full_path)
     try:
@@ -93,6 +95,8 @@ Input:
 Usage: 
     res = get_value(full_path + r'\\' + name_value, value, value_type)
 '''
+
+
 def set_value(full_path, value, value_type):
     value_list = parse_data(full_path)
     try:
@@ -120,7 +124,6 @@ def set_value(full_path, value, value_type):
         return "Server set value fail"
 
 
-
 def create_key(full_path):
     value_list = parse_data(full_path)
     try:
@@ -140,9 +143,11 @@ def delete_key(full_path):
     except:
         return "Server cannot delete key"
 
+
 def parse_msg(msg):
     command = [x for x in msg.split(" - ")]
     return command
+
 
 def parse_cmd(item):
     path = re.search(r'path:([\w\\]+)', item)
@@ -157,7 +162,7 @@ def parse_cmd(item):
     value_type = re.search(r'type:([\w]+)', item)
     value_type = value_type.group(1) if value_type else None
 
-    return path, name, value ,value_type
+    return path, name, value, value_type
 
 
 def registry(msg):
@@ -169,20 +174,23 @@ def registry(msg):
     for item in command:
         path, name, value, value_type = parse_cmd(item)
         result = ''
-        if "Get value" in item: 
-            result = "<p><b>===Get registry value===</b></p>\n" + get_value(path + '\\' + name)
+        if "Get value" in item:
+            result = "===Get registry value===\n" + \
+                get_value(path + '\\' + name)
 
         elif "Set value" in item:
-            result = "<p><b>===Set registry value===</b></p>\n" + set_value(path + '\\' + name, value, value_type)
+            result = "===Set registry value===\n" + \
+                set_value(path + '\\' + name, value, value_type)
 
         elif "Create key" in item:
-            result = "<p><b>===Create new registry key===</b></p>\n" + create_key(path)
+            result = "===Create new registry key===\n" + \
+                create_key(path)
 
         elif "Delete key" in item:
-            result = "<p><b>===Delete registry key===</b></p>\n" + delete_key(path + '\\')
+            result = "===Delete registry key===\n" + \
+                delete_key(path + '\\')
 
         if result != '':
-            return_text += "\n" + result 
+            return_text += "\n" + result
 
-    return "<p><b><u>++++REGISTRY MANAGEMENT++++</u></b></p>\n" + return_text
-
+    return "++++REGISTRY MANAGEMENT++++\n" + return_text

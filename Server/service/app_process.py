@@ -45,7 +45,7 @@ def list_apps():
             pass
 
     result = ''
-    for item in [(id,name,thread)for id, name, thread in zip(app_id, app_name, app_thread)]:
+    for item in [(id, name, thread)for id, name, thread in zip(app_id, app_name, app_thread)]:
         result += ' - '.join(str(i) for i in item) + '\n'
 
     return result
@@ -68,11 +68,11 @@ def list_processes():
 
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
-    
+
     result = ''
-    for item in [(id,name,thread) for id, name, thread in zip(proc_pid, proc_name, proc_thread)]:
+    for item in [(id, name, thread) for id, name, thread in zip(proc_pid, proc_name, proc_thread)]:
         result += ' - '.join(str(i) for i in item) + '\n'
-    
+
     return result
 
 
@@ -86,7 +86,7 @@ def kill(pid):
         command = "taskkill /F /PID " + str(pid)
 
     # Kill the process
-    
+
     if os.system(command) != 0:
         return (f"Error: Failed to kill process with PID {pid}.\n")
     else:
@@ -109,6 +109,7 @@ def parse_msg(msg):
     command = [x for x in msg.split(" - ")]
     return command
 
+
 def application_process(func):
     command = parse_msg(func)
     return_text = ""
@@ -119,7 +120,7 @@ def application_process(func):
         if "List" in item:
             result = "===List of process===\n" + "Id - Name - Thread\n" + list_processes()
         if "Kill" in item:
-            id = re.search(r"id:(\d+)\]",item).group(1)
+            id = re.search(r"id:(\d+)\]", item).group(1)
             result = "===Kill process===\n" + kill(id)
         if "Start" in item:
             name = re.search(r'Start\[name:(.*)\]', item).group(1)
