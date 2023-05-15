@@ -152,7 +152,7 @@ def download_attachment(service, message_id):
 
                         file_data = base64.urlsafe_b64decode(
                             data.encode('UTF-8'))
-                        print("- Download: ", prt['filename'])
+                        print("- Download:", prt['filename'])
 
                         # save file
                         path = os.path.join(ASSET_PATH, prt['filename'])
@@ -210,7 +210,7 @@ def read_email(service):
                             body.encode('UTF-8')).decode('UTF-8')
 
                 print('[Info] Server reply:')
-                print('- Reply from: %s\n- Datetime: %s\n- Body: %s\n' %
+                print('- Reply from: %s\n- Datetime: %s\n- Body: %s' %
                       (sender, date, body_content))
 
                 # Add label to the email to mark it as read

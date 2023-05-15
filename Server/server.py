@@ -54,45 +54,49 @@ def connect():
 
     # authenticate imap and smtp
     try:
+        print("[Info] Authenticating...")
         imap.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-        # rest of your code for reading emails
+        print("[Info] Login successfully")
     except imaplib.IMAP4.error as e:
-        print(f"Login failed. Reason: {e}")
+        print(f"[Error] Login failed. Reason: {e}")
 
     return imap, smtp
 
 
 def send_mail(smtp, user, sender, msg: MIMEMultipart):
-    # Send a reply message to the sender
+    print("[Info] Sending mail...")
+
+    # Create a reply message
     reply_msg = MIMEMultipart()
-    # reply_msg['From'] = f'Mail server TelePC <{user}>'
     reply_msg['From'] = user
     reply_msg['To'] = sender
     reply_msg['Subject'] = "Server TelePC reply"
-
     reply_msg.attach(msg)
 
+    # Send a reply message to the sender
     smtp.sendmail(user, sender, reply_msg.as_string())
-    print('Reply sent to', sender)
 
-# receive and return mail
+    print("[Info] Mail sent to", sender, "successfully")
 
 
 def receive_mail(imap, smtp):
+    print("[Info] Receiving mail...")
     while True:
         # refresh mail box
         imap.select('Inbox')
 
-        # search since last day
+        # search for unseen messages since last day
         date_since = (datetime.date.today() -
                       datetime.timedelta(days=1)).strftime("%d-%b-%Y")
         status, data = imap.search(None, '(UNSEEN SINCE "' + date_since + '")')
 
         if data[0] == b'':
-            print('No new emails')
+            print('[Info] No new emails')
         else:
-            # Otherwise, process the new messages
+            print('[Info] New emails received')
+
+            # Process the new messages
             for msg_id in data[0].split():
                 typ, data = imap.fetch(msg_id, '(RFC822)')
                 email_body = data[0][1]
@@ -109,9 +113,9 @@ def receive_mail(imap, smtp):
                     content = mail_message.get_payload()
 
                 # Print the message details to the console
-                print('New message received from:', sender)
-                print('Subject:', subject)
-                print('Content:', content)
+                print('- From:', sender)
+                print('- Subject:', subject)
+                print('- Content:', content)
 
                 # Mark the message as read
                 imap.store(msg_id, '+FLAGS', '\\SEEN')
@@ -131,10 +135,11 @@ def receive_mail(imap, smtp):
         # Sleep for 10 second before checking for new emails again
         time.sleep(10)
 
-# Separate each line into main part and sub part
-
 
 def parse_msg(msg):
+    '''
+    Separate each line into main part and sub part
+    '''
     options = []
     for line in filter(None, msg.strip().split('|')):
         options.append(line.strip().split(' - ', 1))
@@ -156,6 +161,7 @@ action_map = {
 
 
 def function(msg):
+    print("[Info] Processing message...")
     options = parse_msg(msg)
     res = MIMEMultipart()
     for func in options:
@@ -166,7 +172,7 @@ def function(msg):
             else:
                 result = action_map[func[0]](func[1])
         except ValueError as error:
-            print("Error:", error)
+            print("[Error]", error)
             result = f"Wrong Format at {func[0]}"
 
         if isinstance(result, str):
@@ -176,25 +182,19 @@ def function(msg):
                     'utf-8'), Name="directory_tree.txt", _subtype="txt")
                 attachment.add_header(
                     'Content-Disposition', 'attachment', filename="directory_tree.txt")
-                print("Directory tree")
+                print("- Directory tree")
                 res.attach(attachment)
-
-            # elif func[0] == "Key logger":
-            #     attachment = MIMEApplication(result.encode('utf-8'), Name="key_logger.log", _subtype="log")
-            #     attachment.add_header('Content-Disposition', 'attachment', filename="key_logger.log")
-            #     print("key logger")
-            #     res.attach(attachment)
 
             elif func[0] == "Application/Process":
                 attachment = MIMEApplication(result.encode(
                     'utf-8'), Name="app_process.txt", _subtype="txt")
                 attachment.add_header(
                     'Content-Disposition', 'attachment', filename="app_process.txt")
-                print("Application/process")
+                print("- Application/process")
                 res.attach(attachment)
 
             else:
-                print(result)
+                print('-', result)
                 res.attach(MIMEText(result.encode('utf-8'), 'html', 'utf-8'))
 
         elif isinstance(result, Image.Image):
@@ -205,27 +205,17 @@ def function(msg):
             result = MIMEImage(png_bytes, _subtype="png")
 
             if func[0] == "Capture screen":
-                # # annouce to mail
-                # text = "<div class='mb-2'><b>Capture screen:</b> " + \
-                #     "Picture has been capture" + "</div>"
-                # res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
-
                 # attach picture
                 result.add_header('Content-Disposition',
                                   'attachment', filename='screenshot.png')
-                print("Capture screen")
+                print("- Capture screen")
                 res.attach(result)
 
             elif func[0] == "Capture webcam":
-                # # annouce to mail
-                # text = "<div class='mb-2'><b>Capture webcam:</b> " + \
-                #     "Picture has been capture" + "</div>"
-                # res.attach(MIMEText(text.encode('utf-8'), 'html', 'utf-8'))
-
                 # attach picture
                 result.add_header('Content-Disposition',
                                   'attachment', filename='webcam_image.png')
-                print("Capture webcam")
+                print("- Capture webcam")
                 res.attach(result)
 
     return res
