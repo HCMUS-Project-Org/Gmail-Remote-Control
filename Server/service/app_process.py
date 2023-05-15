@@ -143,4 +143,4 @@ def application_process(func):
         if result != "":
             return_text += "\n" + result
 
-    return "Application/process management:\n" + return_text
+    return "<div class='mb-2'><b>Application/process management:</b> " + return_text + "</div>"

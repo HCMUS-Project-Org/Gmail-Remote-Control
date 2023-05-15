@@ -180,23 +180,22 @@ def registry(msg):
             continue
 
         if "Get value" in item:
-            result = "<p>Get registry value:</p>\n" + \
+            result = "</br>- Get registry value: " + \
                 get_value(path + '\\' + name)
 
         elif "Set value" in item:
-            result = "<p>Set registry value:</p>\n" + \
+            result = "</br>- Set registry value: " + \
                 set_value(path + '\\' + name, value, value_type)
 
         elif "Create key" in item:
-            result = "<p>Create new registry key:</p>\n" + \
+            result = "</br>- Create new registry key: " + \
                 create_key(path)
 
         elif "Delete key" in item:
-            result = "<p>Delete registry key:</p>\n" + \
+            result = "</br>- Delete registry key: " + \
                 delete_key(path + '\\')
 
         if result != '':
-            return_text += "\n" + result
+            return_text += result
 
-    return "</br><b>Registry management:</b>\n" + return_text
-
+    return "<div class='mb-2'><b>Registry management:</b> " + return_text + "</div>"

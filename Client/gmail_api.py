@@ -41,9 +41,10 @@ def remove_token():
     try:
         file_path = setup_path('token.json')
         os.remove(file_path)
-        print(f"File '{file_path}' has been removed successfully")
+        print(f"[Info] File '{file_path}' has been removed successfully")
     except OSError as error:
-        print(f"Error: {error} - '{file_path}' file cannot be removed")
+        print(
+            f"[Remove token] Error: {error} - '{file_path}' file cannot be removed")
 
 
 def create_gmail_credential():
@@ -61,7 +62,6 @@ def create_gmail_credential():
             creds.refresh(Request())
         else:
             try:
-                print("credentials.json")
                 flow = InstalledAppFlow.from_client_secrets_file(
                     setup_path('credentials.json'), SCOPES)
                 creds = flow.run_local_server(port=0)
@@ -84,16 +84,18 @@ def check_authentication_success(service):
         profile = service.users().getProfile(userId='me').execute()
         return True, profile
     except HttpError as error:
-        print('An error occurred: %s' % error)
+        print('[Check authentication success] An error occurred: %s' % error)
         return False, None
 
 
 def logout(service):
     try:
+        print("[Info] Logging out...")
         service.users().stop(userId='me').execute()
         remove_token()
+        print("[Info] Logged out successfully")
     except HttpError as error:
-        print(f"An error occurred: {error}")
+        print(f"[Logout] An error occurred: {error}")
     # handle the error
 
 
@@ -114,9 +116,9 @@ def gmail_send_message(service, message):
             userId="me", body=message).execute())
 
         thread_id = message['threadId']
-        print(F'Thread Id: {message["threadId"]}')
+        print(F'[Info] Sent message (msg thread Id: {message["threadId"]})')
     except Exception as error:
-        print(F'An error occurred: {error}')
+        print(F'[Gmail send msg] An error occurred: {error}')
         message = None
         thread_id = None
 
@@ -134,14 +136,13 @@ def download_attachment(service, message_id):
     prefix: prefix which is added to the attachment filename on saving
     """
     try:
-        # response = service.users().threads().get(userId='me', id=message_id).execute()
+        print("[Info] Start downloading attachment...")
+
         message = service.users().messages().get(userId='me', id=message_id).execute()
-        print("DOWNLOAD")
-        # print("message:", message)
+
         for part in message['payload']['parts']:
             if part['mimeType'] == "multipart/mixed":
                 for prt in part['parts']:
-                    print("\npart:", prt)
                     newvar = prt['body']
                     if 'attachmentId' in newvar:
                         att_id = newvar['attachmentId']
@@ -151,62 +152,22 @@ def download_attachment(service, message_id):
 
                         file_data = base64.urlsafe_b64decode(
                             data.encode('UTF-8'))
-                        print(prt['filename'])
+                        print("- Download: ", prt['filename'])
 
                         # save file
                         path = os.path.join(ASSET_PATH, prt['filename'])
-                        print("part['filename']:", prt['filename'])
+
                         with open(path, 'wb') as f:
                             f.write(file_data)
                             f.close()
+        print("[Info] Downloading attachment completed")
     except HttpError as error:
-        print('An error occurred: %s' % error)
-
-
-# def fetch_gmail_replies(service, thread_id):
-#     try:
-#         response = service.users().threads().get(userId='me', id=thread_id).execute()
-
-#         messages = response['messages']
-
-#         print('\nNumber of messages in thread: %d' % len(messages))
-#         print("messages:", messages)
-
-#         for message in messages:
-#             # only consider messages in Inbox
-#             if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
-#                 print("---------------------------\nINBOX")
-#                 headers = message['payload']['headers']
-
-#                 message_id = message['id']
-#                 download_attachment(service, message_id)
-
-#                 sender = 'anonymous'
-#                 for header in headers:
-#                     if header['name'] == 'From':
-#                         sender = header['value']
-
-#                     if header['name'] == "Date":
-#                         date = header['value']
-#                         date = date.split("+")[0].strip()
-
-#                 # get b
-#                 body = message['snippet']
-
-#                 body = body.split("&amp;&amp;&amp;")[0].strip()
-
-#                 print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
-#                       (sender, date, body))
-#                 return sender, date, body
-#         return None, None, None
-
-#     except HttpError as error:
-#         print('An error occurred: %s' % error)
-#         return None, None, None
+        print('[Download attachment] An error occurred: %s' % error)
 
 
 def read_email(service):
     # Call the Gmail API to fetch the latest emails from the inbox
+    print("[Info] Fetch a list of the message")
     try:
         # Fetch a list of all the message IDs in the INBOX folder
         message_response = service.users().messages().list(userId='me').execute()
@@ -214,7 +175,6 @@ def read_email(service):
         # Get the 5 newly messages
         message_list = message_response['messages']
         message_list = message_list[:5]
-        print("\nmessage list:", message_list)
 
         # Loop through each message in the list and print the subject and sender
         for message in message_list:
@@ -223,11 +183,7 @@ def read_email(service):
 
             # only consider messages in Inbox
             if 'INBOX' in message['labelIds'] and 'UNREAD' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
-                # if 'INBOX' in message['labelIds'] and 'IMPORTANT' in message['labelIds']:
-
-                print("---------------------------\nINBOX")
                 headers = message['payload']['headers']
-                print("message:", message)
 
                 sender = 'anonymous'
                 for header in headers:
@@ -253,7 +209,8 @@ def read_email(service):
                         body_content += base64.urlsafe_b64decode(
                             body.encode('UTF-8')).decode('UTF-8')
 
-                print('Reply from: %s\nDatetime: %s\nBody: %s\n' %
+                print('[Info] Server reply:')
+                print('- Reply from: %s\n- Datetime: %s\n- Body: %s\n' %
                       (sender, date, body_content))
 
                 # Add label to the email to mark it as read
@@ -265,24 +222,24 @@ def read_email(service):
         return None, None, None
 
     except HttpError as error:
-        print(f'An error occurred: {error}')
+        print(f'[Read email] An error occurred: {error}')
         return None, None, None
 
 
 def bind_incoming_emails(service):
+    print("[Info] Bind incoming emails")
     while True:
         try:
             # sender, date, body = fetch_gmail_replies(service, thread_id)
             sender, date, body = read_email(service)
 
             if (sender is not None) and (date is not None) and (body is not None):
+                print("[Info] Bind incoming emails completed")
                 return sender, date, body
 
             sleep(10)
         except:
             pass
-
-        print("end while")
 
 
 def main():
@@ -320,7 +277,7 @@ def main():
         # download_attachment(service, "187a1a3561d66ff3")
 
     except HttpError as error:
-        print(f'An error occurred: {error}')
+        print(f'[Main] An error occurred: {error}')
 
 
 if __name__ == '__main__':

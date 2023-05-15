@@ -29,6 +29,6 @@ def key_logger(default_value=None):
         listener.stop()
 
     if key_string != "":
-        return "</br><b>Key logger:</b> " + "Server input: " + key_string
+        return "<div class='mb-2'><b>Key logger:</b> " + key_string + "</div>"
     else:
-        return "</br><b>Key logger:</b> " + "Server did not input anything!"
+        return "<div class='mb-2'><b>Key logger:</b> " + "Server did not input anything!" + "</div>"

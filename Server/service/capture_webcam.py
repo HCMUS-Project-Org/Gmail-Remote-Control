@@ -8,7 +8,7 @@ def capture_webcam_image(default_value=None):
 
     # check if camera is opened successfully
     if not camera.isOpened():
-        return "</br><b>Capture webcam:</b> " + "Unable to open camera"
+        return "<div class='mb-2'><b>Capture webcam:</b> " + "Unable to open camera" + "</div>"
     else:
         # capture a frame from the camera
         bool, image = camera.read()
@@ -22,4 +22,4 @@ def capture_webcam_image(default_value=None):
 
             return pil_image
         else:
-            return "</br><b>Capture webcam:</b> " + "Unable to capture"
+            return "<div class='mb-2'><b>Capture webcam:</b> " + "Unable to capture" + "</div>"

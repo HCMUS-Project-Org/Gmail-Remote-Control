@@ -138,6 +138,7 @@ def delete_file(file_path):
     except:
         return f'The file {file_path} wrong file path'
 
+
 def parse_msg(msg):
     command = [x for x in msg.split(" - ")]
     return command
@@ -191,5 +192,4 @@ def directory_manage(msg):
         if result != "":
             return_text += "\n" + result
 
-    return "Directory tree management: " + return_text
-
+    return "<div class='mb-2'><b>Directory tree management:</b> " + return_text + "</div>"

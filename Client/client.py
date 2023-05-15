@@ -30,8 +30,6 @@ client_profile = {
 }
 sender, date, body = None, None, None
 
-# body = "</br><b>Key logger</b></br>Server input: Key.esc 's' 'a' 'o' Key.space 'v' Key.enter Key.esc <p><b>CAPTURE SCREEN</b></p>Picture has been capture<p><b>CAPTURE WEBCAM</b></p>Picture has been capture<p><b>MAC Address</b></p>7c:b2:7d:03:d1:09"
-
 
 def create_asset_folder():
     if not os.path.exists(ASSET_PATH):
@@ -39,11 +37,16 @@ def create_asset_folder():
 
 
 def remove_asset_file():
-    files_path = os.path.join(ASSET_PATH, '/*')
-    files = glob.glob(files_path)
+    try:
+        print("[Info] Remove all files in [received_files]")
+        files_path = os.path.join(ASSET_PATH, '/*')
+        files = glob.glob(files_path)
 
-    for f in files:
-        os.remove(f)
+        for f in files:
+            os.remove(f)
+    except OSError as error:
+        print(
+            f"[Remove asset file] Error: {error} - '{files_path}' file cannot be removed")
 
 
 def authorize():
@@ -62,11 +65,11 @@ def login():
     if request.method == "POST":
         global client_profile, gmail_credential, gmail_service
 
-        # try:
-        gmail_credential = create_gmail_credential()
-        gmail_service = build_gmail_service(gmail_credential)
-        # except:
-        #     error = "You must grant permission to access your Gmail account"
+        try:
+            gmail_credential = create_gmail_credential()
+            gmail_service = build_gmail_service(gmail_credential)
+        except:
+            error = "You must grant permission to access your Gmail account"
 
         try:
             isSuccess, client_profile = check_authentication_success(
@@ -78,34 +81,34 @@ def login():
             }
 
         if isSuccess and error == "":
-            print("AUTHENTICATION: Success")
-            print("CLIENT PROFILE:", client_profile)
+            print("[Info] Authenticate: Success")
+            print("[Info] client profile: ", client_profile)
 
             return redirect(url_for('control'))
         else:
-            print("AUTHENTICATION: Fail")
+            print("[Info] Authenticate: Fail")
             if error == "":
-                error = "Authentication failed"
+                error = "[Error] Authenticate failed"
 
     return render_template('login.html', error=error)
 
 
 @app.route('/disconnect', methods=['GET', 'POST'])
 def disconnect():
-    try:
-        logout(gmail_service)
-    except:
-        pass
+    logout(gmail_service)
 
     return redirect(url_for('login'))
 
 
+@app.route('/anonymous-control', methods=['GET', 'POST'])
+def anonymous_control():
+    remove_token()
+    return redirect(url_for('control'))
+
+
 @app.route('/control', methods=['GET', 'POST'])
 def control():
-    try:
-        remove_asset_file()
-    except:
-        pass
+    remove_asset_file()
 
     # authorize user
     if not authorize():
@@ -135,29 +138,19 @@ def send_request():
 
         data = request.get_json()
 
-        print("data:", data)
-
         # email content
         to = SERVER_EMAIL
         subject = 'TelePCEST'
         message_text = data["content"].replace("<br/>", "\n")
 
-        print("message_txt:", message_text)
         # create and send email
         message = create_gmail_message(to, subject, message_text)
-        print("message:", message)
-
         message, thread_id = gmail_send_message(gmail_service, message)
-        print("thread_id:", thread_id)
 
+        # get reply email
         global sender, date, body
         sender, date, body = bind_incoming_emails(gmail_service)
-        print("-   sender:", sender)
-        print("-   date:", date)
-        print("-   body:", body)
         body = body.replace("<br/>", "\n")
-
-        body = "<p><b>Key logger</b></p>Server input: Key.esc 's' 'a' 'o' Key.space 'v' Key.enter Key.esc <p><b>CAPTURE SCREEN</b></p>Picture has been capture<p><b>CAPTURE WEBCAM</b></p>Picture has been capture<p><b>MAC Address</b></p>7c:b2:7d:03:d1:09"
 
     return redirect(url_for('review'))
 
