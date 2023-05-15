@@ -1,4 +1,5 @@
 import os
+import shutil
 from gmail_api import *
 
 from flask import Flask, render_template, redirect, url_for, request
@@ -13,7 +14,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 PORT = os.getenv("PORT")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL")
 ASSET_PATH = setup_path("./static/assets/received_files")
-
 
 app = Flask(__name__)
 
@@ -37,28 +37,22 @@ def create_asset_folder():
 
 
 def remove_asset_file():
-    try:
-        print("[Info] Remove all files in [received_files]")
-        files_path = os.path.join(ASSET_PATH, '/*')
-        files = glob.glob(files_path)
-
-        for f in files:
-            os.remove(f)
-    except OSError as error:
-        print(
-            f"[Remove asset file] Error: {error} - '{files_path}' file cannot be removed")
+    print("[Info] Remove all files in [received_files]")
+    if os.path.exists(ASSET_PATH):
+        shutil.rmtree(ASSET_PATH)
+        create_asset_folder()
 
 
 def authorize():
     return os.path.exists(setup_path('token.json'))
 
 
-@app.route('/')
+@ app.route('/')
 def index():
     return redirect(url_for('login'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@ app.route('/login', methods=['GET', 'POST'])
 def login():
     error = ""
 
