@@ -87,7 +87,7 @@ Program to control remote computer by email, in which:
 
       -  `SECRET_KEY`: a key used by Flask to encrypt and sign session data.
       -  `PORT`: specify which port the Flask application should listen on.
-      -  `SERVER_EMAIL`: the email address of the server, which is received email from client
+      -  `SERVER_EMAIL_ADDRESS`: the email address of the server, which is received email from client
 
       Example:
 
@@ -95,7 +95,7 @@ Program to control remote computer by email, in which:
       # .env
       SECRET_KEY = "RemoteControlByEmail-HCMUS"
       PORT = 3000
-      SERVER_EMAIL = "server@example.com"
+      SERVER_EMAIL_ADDRESS = "server@example.com"
       ```
 
    -  **Credentials:** get Gmail API credentials file by [Gmail API instruction](https://developers.google.com/gmail/api/quickstart/python#authorize_credentials_for_a_desktop_application) then add file `credentials.json` in `/Client`

@@ -25,7 +25,7 @@ dotenv_path = Path('../.env')
 load_dotenv()  # take environment variables from .env.
 
 
-SERVER_EMAIL = os.getenv("SERVER_EMAIL")
+SERVER_EMAIL_ADDRESS = os.getenv("SERVER_EMAIL_ADDRESS")
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
           'https://www.googleapis.com/auth/gmail.send',
           'https://www.googleapis.com/auth/gmail.modify']
@@ -190,7 +190,7 @@ def read_email(service):
                     if header['name'] == 'From':
                         sender = header['value']
 
-                        if sender != SERVER_EMAIL:
+                        if sender != SERVER_EMAIL_ADDRESS:
                             return None, None, None
 
                     if header['name'] == "Date":

@@ -12,7 +12,7 @@ load_dotenv()  # take environment variables from .env.
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 PORT = os.getenv("PORT")
-SERVER_EMAIL = os.getenv("SERVER_EMAIL")
+SERVER_EMAIL_ADDRESS = os.getenv("SERVER_EMAIL_ADDRESS")
 ASSET_PATH = setup_path("./static/assets/received_files")
 
 app = Flask(__name__)
@@ -106,9 +106,9 @@ def control():
 
     # authorize user
     if not authorize():
-        return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL, isAuthor=False)
+        return render_template('control.html', client_email=client_profile['emailAddress'], SERVER_EMAIL_ADDRESS=SERVER_EMAIL_ADDRESS, isAuthor=False)
 
-    return render_template('control.html', client_email=client_profile['emailAddress'], server_email=SERVER_EMAIL,  isAuthor=True)
+    return render_template('control.html', client_email=client_profile['emailAddress'], SERVER_EMAIL_ADDRESS=SERVER_EMAIL_ADDRESS,  isAuthor=True)
 
 
 @app.route('/review', methods=['GET', 'POST'])
@@ -118,7 +118,7 @@ def review():
     if not authorize():
         return redirect(url_for('login'))
 
-    return render_template('review.html', client_email=client_profile["emailAddress"], server_email=SERVER_EMAIL, date=date, body=body)
+    return render_template('review.html', client_email=client_profile["emailAddress"], SERVER_EMAIL_ADDRESS=SERVER_EMAIL_ADDRESS, date=date, body=body)
 
 
 @app.route('/send-request', methods=['GET', 'POST'])
@@ -133,7 +133,7 @@ def send_request():
         data = request.get_json()
 
         # email content
-        to = SERVER_EMAIL
+        to = SERVER_EMAIL_ADDRESS
         subject = 'TelePCEST'
         message_text = data["content"].replace("<br/>", "\n")
 

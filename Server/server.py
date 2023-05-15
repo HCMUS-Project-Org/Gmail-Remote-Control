@@ -31,9 +31,9 @@ dotenv_path = Path('../.env')
 load_dotenv()  # take environment variables from .env.
 
 BUFSIZ = 1024 * 4
-# EMAIL_ADDRESS = os.getenv("SERVER_EMAIL")
-EMAIL_ADDRESS = "telepcest@gmail.com"
-EMAIL_PASSWORD = 'xthfegvikcjsqzvb'
+
+EMAIL_ADDRESS = os.getenv("SERVER_EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("SERVER_EMAIL_PASSWORD")
 
 IMAP_URL = 'imap.gmail.com'
 SMTP_URL = 'smtp.gmail.com'

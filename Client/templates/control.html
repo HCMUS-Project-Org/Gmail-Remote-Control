@@ -43,7 +43,7 @@
 			<div class="email-from d-flex justify-content-between">
 				<div>
 					<span class="fw-bold">To:&nbsp;</span>
-					<span>{{server_email}}</span>
+					<span>{{SERVER_EMAIL_ADDRESS}}</span>
 				</div>
 				<button class="copy-btn" onclick="CopyContent('from')">
 					<div
@@ -418,7 +418,7 @@
 		clipboard = content.replaceAll("<br/>", "\n");
 
 		if (field == "from") {
-			clipboard = `{{server_email}}`;
+			clipboard = `{{SERVER_EMAIL_ADDRESS}}`;
 		} else if (field == "subject") {
 			clipboard = `TelePCEST`;
 		}
