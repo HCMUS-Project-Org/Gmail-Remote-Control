@@ -159,7 +159,7 @@ The application will wait for the server to reply then display the result in the
 ### Prerequisites
 
 -  Python `>= 3.10.7`
--  Enable MIME in your server email, see [Gmail API instruction](https://developers.google.com/gmail/api/quickstart/python#step_1_turn_on_the)
+-  Enable IMAP in your server email, see [Turn POP & IMAP on or off for users](https://support.google.com/a/answer/105694?hl=en)
 -  Client environment variables:
 
    -  **Environment:** add file `.env` in `/Client`, `.env` config:
@@ -179,26 +179,30 @@ The application will wait for the server to reply then display the result in the
       SERVER_EMAIL_PASSWORD = "server_password"
       ```
 
+      > **Note:** If you want to use this example environment, you need to rename it to .env.
+
    -  **Credentials:** get Gmail API credentials file by [Gmail API instruction](https://developers.google.com/gmail/api/quickstart/python#authorize_credentials_for_a_desktop_application) then add file `credentials.json` in `/Client`
 
-            Example:
+      Example:
 
-            ```json
-            // credentials.json
-            {
-            	"installed": {
-            		"client_id": "client_id.apps.googleusercontent.com",
-            		"project_id": "gmail-remote-control",
-            		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            		"token_uri": "https://oauth2.googleapis.com/token",
-            		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-            		"client_secret": "client_secret",
-            		"redirect_uris": ["http://localhost"]
-            	}
-            }
-            ```
+      ```json
+      // credentials.json
+      {
+      	"installed": {
+      		"client_id": "client_id.apps.googleusercontent.com",
+      		"project_id": "gmail-remote-control",
+      		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      		"token_uri": "https://oauth2.googleapis.com/token",
+      		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      		"client_secret": "client_secret",
+      		"redirect_uris": ["http://localhost"]
+      	}
+      }
+      ```
 
-      > **Note**: The `credentials.json` file is only used for the first time the user logs in, after that the program will automatically generate a `token.json` file to store the user's credentials.
+      > **Note:** If you want to use this example environment, you need to rename it to credentials.json.
+
+> **Note**: The `credentials.json` file is only used for the first time the user logs in, after that the program will automatically generate a `token.json` file to store the user's credentials.
 
 ### Run locally
 
