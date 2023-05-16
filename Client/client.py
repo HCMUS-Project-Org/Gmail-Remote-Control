@@ -2,10 +2,9 @@ import os
 import shutil
 from gmail_api import *
 
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, send_from_directory
 from dotenv import load_dotenv
 from flask_bootstrap import Bootstrap
-import glob
 
 dotenv_path = Path('../.env')
 load_dotenv()  # take environment variables from .env.
@@ -18,6 +17,7 @@ ASSET_PATH = setup_path("./static/assets/received_files")
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = SECRET_KEY
+
 
 Bootstrap(app)
 
